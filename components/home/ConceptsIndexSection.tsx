@@ -14,7 +14,7 @@ type ConceptsIndexSectionProps = {
 export function ConceptsIndexSection({ concepts }: ConceptsIndexSectionProps) {
   return (
     <section className="py-12 sm:py-16 md:py-20">
-      <p className="text-xs font-medium uppercase tracking-wider text-[var(--muted)]">CONCEPTS INDEX</p>
+      <p className="section-label">CONCEPTS INDEX</p>
       <h2 className="mt-2 text-xl font-semibold tracking-tight text-foreground sm:text-2xl md:text-3xl" style={{ fontFamily: "var(--font-noto-serif-kr), ui-serif, serif" }}>
         학습과학 용어를 짧고 정확하게
       </h2>
@@ -28,7 +28,7 @@ export function ConceptsIndexSection({ concepts }: ConceptsIndexSectionProps) {
               <Link
                 key={c.slug}
                 href={fullPath("concepts", c.slug)}
-                className="block rounded-xl border border-[var(--border)] bg-[var(--surface-2)] p-4 transition hover:border-[var(--border-strong)] hover:bg-[var(--surface)] sm:p-5 min-h-[44px] flex flex-col justify-center sm:min-h-0"
+                className="block card-elevated rounded-xl border border-[var(--border)] bg-white p-4 sm:p-5 min-h-[44px] flex flex-col justify-center sm:min-h-0"
               >
                 <p className="font-semibold text-foreground" style={{ fontFamily: "var(--font-noto-serif-kr), ui-serif, serif" }}>
                   {c.title}

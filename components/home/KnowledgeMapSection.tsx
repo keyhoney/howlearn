@@ -30,12 +30,12 @@ export function KnowledgeMapSection({ cards }: KnowledgeMapSectionProps) {
   const blogCard = cards.find((c) => c.type === "blog");
   const booksCard = cards.find((c) => c.type === "books");
 
-  const cardClass = "rounded-2xl border border-[var(--border)] bg-[var(--surface-2)] transition hover:border-[var(--border-strong)] hover:bg-[var(--surface)] hover:shadow-[0_1px_0_0_var(--border)]";
+  const cardClass = "card-elevated rounded-xl border border-[var(--border)] bg-white transition";
   const linkClass = "text-sm font-medium text-[var(--brand-500)] no-underline hover:underline hover:underline-offset-2";
 
   return (
     <section className="py-12 sm:py-16 md:py-20">
-      <p className="text-xs font-medium uppercase tracking-wider text-[var(--muted)]">KNOWLEDGE MAP</p>
+      <p className="section-label">KNOWLEDGE MAP</p>
       <h2 className="mt-2 text-xl font-semibold tracking-tight text-foreground sm:text-2xl md:text-3xl" style={{ fontFamily: "var(--font-noto-serif-kr), ui-serif, serif" }}>
         어디서부터 읽어야 할지 한눈에 보이도록
       </h2>

@@ -49,7 +49,7 @@ export default function RootLayout({
         <div
           className="relative min-h-screen"
           style={{
-            background: "linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%)",
+            background: "var(--background)",
           }}
         >
           <div
@@ -61,14 +61,14 @@ export default function RootLayout({
             aria-hidden
           />
           <div className="relative">
-            <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--background)]/95 shadow-sm backdrop-blur-sm">
+            <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--surface-2)] shadow-sm backdrop-blur-sm">
               <nav className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6 sm:py-4 md:py-5">
-                <Link href="/" className="flex min-w-0 flex-shrink flex-col gap-0 transition hover:opacity-90">
-                  <span className="hidden sm:inline text-xs font-medium uppercase tracking-wider text-[var(--muted)]">
+                <Link href="/" className="flex min-w-0 flex-shrink flex-col gap-0 transition hover:opacity-85">
+                  <span className="hidden sm:inline text-xs font-medium uppercase tracking-[0.15em] text-[var(--muted)]">
                     Learning Science for Parents
                   </span>
                   <span
-                    className="text-lg font-semibold tracking-tight text-foreground sm:text-xl md:text-2xl"
+                    className="text-lg font-semibold tracking-tight text-[var(--foreground)] sm:text-xl md:text-2xl"
                     style={{ fontFamily: "var(--font-noto-serif-kr), ui-serif, serif" }}
                   >
                     학습과학 지식 브랜드

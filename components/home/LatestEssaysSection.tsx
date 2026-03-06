@@ -17,7 +17,7 @@ type LatestEssaysSectionProps = {
 export function LatestEssaysSection({ essays }: LatestEssaysSectionProps) {
   return (
     <section className="py-12 sm:py-16 md:py-20">
-      <p className="text-xs font-medium uppercase tracking-wider text-[var(--muted)]">LATEST ESSAYS</p>
+      <p className="section-label">LATEST ESSAYS</p>
       <h2 className="mt-2 text-xl font-semibold tracking-tight text-foreground sm:text-2xl md:text-3xl" style={{ fontFamily: "var(--font-noto-serif-kr), ui-serif, serif" }}>
         문제 상황에서 시작하는 글
       </h2>

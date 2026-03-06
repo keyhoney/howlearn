@@ -37,21 +37,20 @@ type ContentCardProps = {
 
 function getCardClasses(type: ContentType): string {
   const base =
-    "rounded-2xl border transition-all duration-200 hover:border-[var(--border-strong)] hover:-translate-y-px focus-within:border-[var(--border-strong)]";
-  const hoverBg = "hover:bg-[var(--surface)]";
+    "card-elevated rounded-xl border border-[var(--border)] bg-white transition-all duration-200 focus-within:border-[var(--border-strong)]";
   switch (type) {
     case "guides":
-      return `${base} border-[var(--border)] bg-[var(--surface-2)] p-4 shadow-sm sm:p-5 md:p-7 ${hoverBg}`;
+      return `${base} p-4 sm:p-5 md:p-7`;
     case "blog":
-      return `${base} border-[var(--border)] bg-[var(--surface-2)] p-4 sm:p-5 ${hoverBg}`;
+      return `${base} p-4 sm:p-5`;
     case "concepts":
-      return `${base} border-[var(--border)] bg-[var(--inset)]/40 p-4 sm:p-5 ${hoverBg}`;
+      return `${base} p-4 sm:p-5`;
     case "toolkit":
-      return `${base} border-[var(--border)] bg-[var(--surface-2)] p-4 sm:p-5 ${hoverBg}`;
+      return `${base} p-4 sm:p-5`;
     case "books":
-      return `${base} border-[var(--border)] bg-[var(--surface-2)] p-6 ${hoverBg}`;
+      return `${base} p-6`;
     default:
-      return `${base} border-[var(--border)] bg-[var(--surface-2)] p-6 ${hoverBg}`;
+      return `${base} p-6`;
   }
 }
 
@@ -96,10 +95,15 @@ export function ContentCard({
     >
       <div className="flex flex-wrap items-center gap-2">
         <Link href={href} className="group block">
-          <span className="text-xs font-medium uppercase tracking-wider text-[var(--muted)]">
+          <span className="section-label text-[var(--muted)]">
             {TYPE_LABEL[type]}
           </span>
         </Link>
+        {type === "guides" && (
+          <span className="rounded-full bg-[var(--warm)]/15 px-2.5 py-0.5 text-xs font-medium text-[var(--warm)]">
+            인지심리학 기반
+          </span>
+        )}
         {type === "toolkit" && toolkitType && TOOLKIT_TYPE_LABEL[toolkitType] && (
           <span className="rounded-full border border-[var(--border)] bg-[var(--inset)]/60 px-2.5 py-0.5 text-xs font-medium text-[var(--muted)]">
             {TOOLKIT_TYPE_LABEL[toolkitType]}

@@ -1,6 +1,27 @@
 import type { MDXComponents } from "mdx/types";
 import { Callout } from "@/components/Callout";
 import { ConceptLink } from "@/components/ConceptLink";
+import {
+  TheoryBox,
+  TeacherNote,
+  ForStudents,
+  ForParents,
+  Sources,
+  KeyTakeaways,
+  CommonMisconception,
+  ActionChecklist,
+  RelatedConcepts,
+  ReflectionPrompt,
+  WhyItMatters,
+  RelatedGuides,
+  WhenToUse,
+  Troubleshooting,
+  PrintableBlock,
+  BookOverview,
+  WhoThisIsFor,
+  WhatYouWillLearn,
+  TopicIntro,
+} from "@/components/mdx";
 import { slugify } from "@/lib/headings";
 
 function headingText(children: React.ReactNode): string {
@@ -16,6 +37,27 @@ function headingText(children: React.ReactNode): string {
 export const mdxServerComponents: MDXComponents = {
   Callout,
   ConceptLink,
+  // 에디토리얼 컴포넌트 (필수·선택)
+  TheoryBox,
+  TeacherNote,
+  ForStudents,
+  ForParents,
+  Sources,
+  SourceNote: Sources, // 별칭
+  KeyTakeaways,
+  CommonMisconception,
+  ActionChecklist,
+  RelatedConcepts,
+  ReflectionPrompt,
+  WhyItMatters,
+  RelatedGuides,
+  WhenToUse,
+  Troubleshooting,
+  PrintableBlock,
+  BookOverview,
+  WhoThisIsFor,
+  WhatYouWillLearn,
+  TopicIntro,
   h1: ({ children }) => (
     <h1 className="mb-6 mt-8 text-3xl font-semibold tracking-tight text-[var(--ink)] md:text-4xl" style={{ fontFamily: "var(--font-noto-serif-kr), ui-serif, serif" }}>
       {children}

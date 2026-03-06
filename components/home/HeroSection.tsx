@@ -10,24 +10,21 @@ const TRUST_PANEL_ITEMS = [
   { title: "지식 구조형 아카이브", desc: "가이드, 개념, 툴킷, 블로그가 분리되지 않고 서로 연결되도록 설계했습니다." },
 ];
 
+const HERO_CITATION = {
+  quote: "작업기억 용량의 차이가 수학 성취도 차이의 56%를 설명한다.",
+  source: "Gathercole et al., 2004",
+};
+
 export function HeroSection() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
   return (
-    <section className="relative overflow-hidden py-10 sm:py-14 md:py-20">
-      <div
-        className="pointer-events-none absolute -top-10 left-0 right-0 h-48 bg-[radial-gradient(ellipse_70%_50%_at_50%_0%,var(--brand-500)_0%,transparent_60%)] opacity-[0.06]"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute top-0 right-0 h-64 w-64 bg-[radial-gradient(circle_at_100%_0%,var(--brand-500)_0%,transparent_55%)] opacity-[0.04]"
-        aria-hidden
-      />
+    <section className="relative overflow-hidden py-12 sm:py-16 md:py-24 bg-[var(--background)]">
       <div className="relative grid gap-12 md:grid-cols-[1.4fr,1fr] lg:grid-cols-[7fr,5fr] md:items-start">
         <div className="text-left">
           <p
-            className={`text-xs font-medium uppercase tracking-wider text-[var(--muted)] transition-all duration-300 ${
+            className={`section-label text-[var(--muted)] transition-all duration-300 ${
               mounted ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
             }`}
             style={{ transitionDelay: "0ms" }}
@@ -35,10 +32,10 @@ export function HeroSection() {
             LEARNING SCIENCE FOR PARENTS
           </p>
           <h1
-            className={`mt-2 text-2xl font-semibold tracking-tight text-foreground transition-all duration-500 sm:text-3xl md:text-4xl lg:text-[2.5rem] ${
+            className={`mt-2 text-2xl font-bold tracking-tight text-[var(--foreground)] transition-all duration-500 sm:text-3xl md:text-4xl lg:text-[3.5rem] ${
               mounted ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
             }`}
-            style={{ fontFamily: "var(--font-noto-serif-kr), ui-serif, serif", transitionDelay: "100ms" }}
+            style={{ fontFamily: "var(--font-noto-serif-kr), ui-serif, serif", letterSpacing: "-0.02em", transitionDelay: "100ms" }}
           >
             학습과학 기반 부모 교육
           </h1>
@@ -53,7 +50,7 @@ export function HeroSection() {
             아이가 공부를 포기하는 이유와 가정에서의 적용법을 설명합니다.
           </p>
           <p
-            className={`mt-3 max-w-xl text-sm leading-6 text-[var(--muted)]/90 transition-all duration-500 ${
+            className={`mt-3 max-w-xl text-sm leading-6 text-[var(--muted)] transition-all duration-500 ${
               mounted ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
             }`}
             style={{ transitionDelay: "250ms" }}
@@ -68,40 +65,54 @@ export function HeroSection() {
           >
             <Link
               href="/guides"
-              className="rounded-xl bg-[var(--brand-500)] px-5 py-3 text-sm font-medium text-white no-underline shadow-sm transition hover:bg-[var(--brand-600)] min-h-[44px] inline-flex items-center justify-center sm:min-h-0"
+              className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-5 py-3 text-sm font-medium text-[var(--foreground)] no-underline shadow-sm transition hover:border-[var(--border-strong)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] min-h-[44px] inline-flex items-center justify-center sm:min-h-0"
             >
               가이드 보기
             </Link>
             <Link
               href="/concepts"
-              className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-5 py-3 text-sm font-medium text-foreground no-underline transition hover:border-[var(--border-strong)] min-h-[44px] inline-flex items-center justify-center sm:min-h-0"
+              className="rounded-xl border border-[var(--border)] bg-transparent px-5 py-3 text-sm font-medium text-[var(--foreground)] no-underline transition hover:bg-[var(--inset)] min-h-[44px] inline-flex items-center justify-center sm:min-h-0"
             >
               개념 사전 보기
             </Link>
           </div>
         </div>
         <div
-          className={`rounded-2xl border border-[var(--border)] bg-[var(--surface-2)] p-4 shadow-sm transition-all duration-500 sm:p-6 md:p-7 ${
+          className={`card-elevated rounded-xl p-4 transition-all duration-500 sm:p-6 md:p-7 ${
             mounted ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
           }`}
           style={{ transitionDelay: "400ms" }}
         >
-          <p className="text-sm font-semibold text-foreground">
+          <p className="text-sm font-semibold text-[var(--foreground)]">
             이 사이트는 이렇게 구성되어 있습니다
           </p>
           <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
             핵심 가이드, 학습과학 개념 사전, 부모 적용 툴킷, 문제 상황형 블로그 글, 전자책까지 하나의 지식 구조로 연결합니다.
           </p>
           <ul className="mt-5 space-y-4">
-            {TRUST_PANEL_ITEMS.map((item, i) => (
+            {TRUST_PANEL_ITEMS.map((item) => (
               <li key={item.title} className="flex flex-col gap-0.5">
-                <span className="text-sm font-medium text-foreground">{item.title}</span>
+                <span className="text-sm font-medium text-[var(--foreground)]">{item.title}</span>
                 <span className="text-xs leading-relaxed text-[var(--muted)]">{item.desc}</span>
               </li>
             ))}
           </ul>
         </div>
       </div>
+      {/* 인용 블록: 얇은 테두리 + 크림 배경 */}
+      <blockquote
+        className={`relative mx-auto mt-12 max-w-3xl border-l-4 border-[var(--border-strong)] bg-[var(--surface-2)] px-5 py-4 text-left sm:mt-16 sm:px-6 sm:py-5 ${
+          mounted ? "opacity-100" : "opacity-0"
+        }`}
+        style={{ transition: "opacity 0.5s ease 450ms", boxShadow: "0 1px 2px rgba(0,0,0,0.04)" }}
+      >
+        <p className="text-[15.5px] font-medium italic leading-relaxed text-[var(--ink)] sm:text-base">
+          &ldquo;{HERO_CITATION.quote}&rdquo;
+        </p>
+        <cite className="mt-2 block text-sm not-italic text-[var(--muted)]">
+          — {HERO_CITATION.source}
+        </cite>
+      </blockquote>
     </section>
   );
 }

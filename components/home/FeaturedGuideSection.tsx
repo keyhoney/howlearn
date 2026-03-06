@@ -17,7 +17,7 @@ type FeaturedGuideSectionProps = {
 export function FeaturedGuideSection({ featured, others }: FeaturedGuideSectionProps) {
   return (
     <section className="py-12 sm:py-16 md:py-20 bg-[var(--surface-2)]/40">
-      <p className="text-xs font-medium uppercase tracking-wider text-[var(--muted)]">FEATURED GUIDE</p>
+      <p className="section-label">FEATURED GUIDE</p>
       <h2 className="mt-2 text-xl font-semibold tracking-tight text-foreground sm:text-2xl md:text-3xl" style={{ fontFamily: "var(--font-noto-serif-kr), ui-serif, serif" }}>
         가장 먼저 읽어볼 핵심 문서
       </h2>
@@ -29,9 +29,10 @@ export function FeaturedGuideSection({ featured, others }: FeaturedGuideSectionP
           {featured ? (
             <Link
               href={featured.href}
-              className="group block rounded-2xl border border-[var(--border)] bg-[var(--surface-featured)] p-5 transition hover:border-[var(--border-strong)] hover:bg-[var(--surface-2)] sm:p-6 md:p-8"
+              className="group block card-elevated rounded-xl border border-[var(--border)] bg-white p-5 sm:p-6 md:p-8"
               style={{ borderLeftWidth: "4px", borderLeftColor: "var(--pillar-guides)" }}
             >
+              <span className="rounded-full bg-[var(--warm)]/15 px-2.5 py-0.5 text-xs font-medium text-[var(--warm)]">인지심리학 기반</span>
               <span className="text-xs font-medium uppercase tracking-wider text-[var(--muted)]">대표 가이드</span>
               <h3 className="mt-2 text-xl font-semibold text-foreground group-hover:text-[var(--brand-500)] sm:text-2xl md:text-[1.75rem]" style={{ fontFamily: "var(--font-noto-serif-kr), ui-serif, serif" }}>
                 {featured.title}
@@ -72,7 +73,7 @@ export function FeaturedGuideSection({ featured, others }: FeaturedGuideSectionP
             <Link
               key={g.slug}
               href={g.href}
-              className="group flex flex-wrap items-center justify-between gap-2 rounded-xl border border-[var(--border)]/80 bg-[var(--surface-2)] px-4 py-3 min-h-[48px] transition hover:border-[var(--border-strong)] hover:bg-[var(--surface)] sm:min-h-0 sm:px-5"
+              className="group flex flex-wrap items-center justify-between gap-2 rounded-xl border border-[var(--border)] bg-white px-4 py-3 min-h-[48px] transition hover:border-[var(--border-strong)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.06)] sm:min-h-0 sm:px-5"
             >
               <h4 className="font-semibold text-foreground group-hover:text-[var(--brand-500)] text-base" style={{ fontFamily: "var(--font-noto-serif-kr), ui-serif, serif" }}>
                 {g.title}

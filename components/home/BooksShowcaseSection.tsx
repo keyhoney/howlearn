@@ -28,7 +28,7 @@ export function BooksShowcaseSection({ books }: BooksShowcaseSectionProps) {
 
   return (
     <section className="py-12 sm:py-16 md:py-20">
-      <p className="text-xs font-medium uppercase tracking-wider text-[var(--muted)]">BOOKS</p>
+      <p className="section-label">BOOKS</p>
       <h2 className="mt-2 text-xl font-semibold tracking-tight text-foreground sm:text-2xl md:text-3xl" style={{ fontFamily: "var(--font-noto-serif-kr), ui-serif, serif" }}>
         전자책으로 더 길게 읽기
       </h2>
@@ -39,7 +39,7 @@ export function BooksShowcaseSection({ books }: BooksShowcaseSectionProps) {
         {books.map((item) => (
           <div
             key={item.slug}
-            className="flex flex-col gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface-2)] p-4 transition hover:border-[var(--border-strong)] sm:flex-row sm:gap-6 sm:p-6"
+            className="flex flex-col gap-4 card-elevated rounded-xl border border-[var(--border)] bg-white p-4 sm:flex-row sm:gap-6 sm:p-6"
           >
             {item.coverImage && (
               <div className="h-36 w-28 shrink-0 overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--muted-bg)]">
