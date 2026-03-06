@@ -1,0 +1,295 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* ========== 디자인 토큰 (Tailwind v4 @theme) ========== */
+@theme inline {
+  /* 폰트: sans(본문), serif(헤딩·저널 톤) */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-noto-serif-kr), ui-serif, "Noto Serif KR", serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  /* 잉크·보조 텍스트 */
+  --color-ink: oklch(0.22 0.02 255);
+  --color-muted: oklch(0.55 0.02 255);
+
+  /* 표면: 기본 / 카드·패널 / inset(필터바·리스트) / featured(hero·대표 블록) */
+  --color-surface: oklch(0.992 0.003 255);
+  --color-surface-2: oklch(0.97 0.005 255);
+  --color-inset: oklch(0.955 0.006 255);
+  --color-surface-featured: oklch(0.965 0.008 255);
+
+  /* 경계: 기본 / 강조 (대비 명확화) */
+  --color-border: oklch(0.91 0.008 255);
+  --color-border-strong: oklch(0.82 0.01 255);
+
+  /* 브랜드(링크·CTA) / 강조(Callout 등, 절제) */
+  --color-brand-500: oklch(0.56 0.16 265);
+  --color-brand-600: oklch(0.49 0.18 265);
+  --color-accent: oklch(0.56 0.14 265);
+
+  /* 애니메이션 곡선 */
+  --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
+  --ease-fluid: cubic-bezier(0.3, 0, 0, 1);
+}
+
+/* ========== :root (기존 var() 호환 + 다크모드) ========== */
+:root {
+  --background: oklch(0.99 0.004 255);
+  --foreground: oklch(0.22 0.02 255);
+  --muted: oklch(0.55 0.02 255);
+  --muted-bg: oklch(0.965 0.008 255);
+  --border: oklch(0.91 0.008 255 / 0.9);
+  --border-strong: oklch(0.82 0.01 255);
+  --accent: oklch(0.56 0.14 265);
+  --accent-hover: oklch(0.49 0.18 265);
+  --brand-500: oklch(0.56 0.16 265);
+  --brand-600: oklch(0.49 0.18 265);
+  --surface: oklch(0.992 0.003 255);
+  --surface-2: oklch(0.97 0.005 255);
+  --inset: oklch(0.955 0.006 255);
+  --surface-featured: oklch(0.965 0.008 255);
+  --ink: oklch(0.22 0.02 255);
+  --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
+  --ease-fluid: cubic-bezier(0.3, 0, 0, 1);
+  /* Pillar/카드 타입별 좌측 스트립(2px) */
+  --pillar-guides: oklch(0.56 0.16 265);
+  --pillar-concepts: oklch(0.5 0.12 210);
+  --pillar-toolkit: oklch(0.58 0.14 75);
+  --pillar-blog: oklch(0.52 0.14 280);
+  --pillar-books: oklch(0.5 0.1 160);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: oklch(0.14 0.02 255);
+    --foreground: oklch(0.95 0.01 255);
+    --muted: oklch(0.65 0.02 255);
+    --muted-bg: oklch(0.22 0.02 255);
+    --border: oklch(0.34 0.02 255 / 0.85);
+    --border-strong: oklch(0.48 0.02 255);
+    --accent: oklch(0.65 0.15 265);
+    --accent-hover: oklch(0.72 0.14 265);
+    --brand-500: oklch(0.6 0.18 265);
+    --brand-600: oklch(0.72 0.14 265);
+    --surface: oklch(0.16 0.02 255);
+    --surface-2: oklch(0.2 0.02 255);
+    --inset: oklch(0.24 0.02 255);
+    --surface-featured: oklch(0.22 0.02 255);
+    --ink: oklch(0.95 0.01 255);
+    --pillar-guides: oklch(0.6 0.18 265);
+    --pillar-concepts: oklch(0.55 0.12 210);
+    --pillar-toolkit: oklch(0.65 0.14 75);
+    --pillar-blog: oklch(0.6 0.14 280);
+    --pillar-books: oklch(0.55 0.1 160);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  /* 저널/가이드북: 15.5px → 17px, leading-7 → leading-8 */
+  font-size: 15.5px;
+  line-height: 1.75rem; /* 28px ≈ leading-7 */
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (min-width: 768px) {
+  body {
+    font-size: 17px;
+    line-height: 2rem; /* 32px ≈ leading-8 */
+  }
+}
+
+/* ========== 본문(prose): 최대 너비, 잉크, 링크(밑줄 + hover 진해짐) ========== */
+.prose {
+  max-width: 65ch;
+  color: var(--ink);
+}
+
+.prose h1 {
+  font-family: var(--font-noto-serif-kr), ui-serif, serif;
+  font-size: 1.875rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+
+@media (min-width: 768px) {
+  .prose h1 {
+    font-size: 2.25rem;
+  }
+}
+
+.prose h2 {
+  font-family: var(--font-noto-serif-kr), ui-serif, serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+
+@media (min-width: 768px) {
+  .prose h2 {
+    font-size: 1.5rem;
+  }
+}
+
+.prose h3,
+.prose h4 {
+  color: var(--ink);
+}
+
+.prose a {
+  color: var(--brand-500);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  transition: color 0.15s var(--ease-snappy);
+}
+
+.prose a:hover {
+  color: var(--brand-600);
+}
+
+/* 강조: 색보다 weight/배경톤 */
+.prose strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.prose code {
+  color: var(--ink);
+  background: var(--muted-bg);
+  border: 1px solid var(--border);
+}
+
+.prose blockquote {
+  color: var(--muted);
+  border-left-color: var(--accent);
+  background: var(--muted-bg);
+}
+
+.prose p {
+  line-height: 1.75;
+}
+
+@media (min-width: 768px) {
+  .prose p {
+    line-height: 1.8;
+  }
+}
+
+.prose-lg {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+
+@media (min-width: 768px) {
+  .prose-lg {
+    font-size: 1.125rem;
+    line-height: 1.8;
+  }
+}
+
+/* ========== Prose 확장: lede, editorial blockquote, references, callout, 리스트/표 간격 ========== */
+.prose > p:first-of-type,
+.prose .lead {
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  color: var(--muted);
+}
+
+@media (min-width: 768px) {
+  .prose > p:first-of-type,
+  .prose .lead {
+    font-size: 1.125rem;
+    line-height: 1.85;
+  }
+}
+
+.prose blockquote {
+  border-left-width: 3px;
+  padding-left: 1.25rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  margin-left: 0;
+  font-style: italic;
+}
+
+.prose ul,
+.prose ol {
+  margin-top: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.prose ul ul,
+.prose ol ol,
+.prose ul ol,
+.prose ol ul {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose li {
+  margin-top: 0.35rem;
+  margin-bottom: 0.35rem;
+}
+
+.prose table {
+  margin-top: 1rem;
+  margin-bottom: 1.25rem;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.prose th,
+.prose td {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+}
+
+.prose th {
+  background: var(--inset);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.prose .references,
+.prose [id="references"] ul {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 0.75rem;
+}
+
+.prose .references li,
+.prose [id="references"] li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.prose .references li:last-child,
+.prose [id="references"] li:last-child {
+  border-bottom: none;
+}
+
+/* Callout과 시각 언어 통일 (컴포넌트에서 사용하는 클래스 보조) */
+.prose .callout,
+.prose [data-callout] {
+  border-left: 4px solid var(--accent);
+  background: var(--inset);
+  padding: 1rem 1.25rem;
+  border-radius: 0.5rem;
+  margin: 1.25rem 0;
+}
+
+/* ========== radius/shadow 제한 (카드=rounded-2xl, 버튼=rounded-xl, 배지=rounded-full) ========== */
+/* 전역 유틸은 컴포넌트에서 Tailwind 클래스로 적용 */
