@@ -45,7 +45,7 @@ export function CookieConsentBanner() {
 
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 z-50 border-t border-[var(--border)] bg-[var(--background)] p-6 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]"
+      className="fixed bottom-0 left-0 right-0 z-50 border-t border-[var(--border)] bg-[var(--background)] px-4 py-4 shadow-[0_-2px_10px_rgba(0,0,0,0.04)] sm:px-6 sm:py-4"
       role="dialog"
       aria-label="쿠키 동의"
     >

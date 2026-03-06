@@ -2,25 +2,15 @@
 
 export type SortOption = "latest" | "readingTime";
 
-const GRADE_OPTIONS = [
-  { value: "", label: "전체 학년" },
-  { value: "초등", label: "초등" },
-  { value: "중등", label: "중등" },
-  { value: "고등", label: "고등" },
-  { value: "공통", label: "공통" },
-];
-
 type FiltersBarProps = {
   type: "guides" | "blog" | "toolkit";
   searchPlaceholder?: string;
   categories: string[];
   tags: string[];
   search: string;
-  grade: string;
   category: string;
   tag: string;
   onSearchChange: (q: string) => void;
-  onGradeChange: (grade: string) => void;
   onCategoryChange: (category: string) => void;
   onTagChange: (tag: string) => void;
   onSortChange: (sort: SortOption) => void;
@@ -29,15 +19,13 @@ type FiltersBarProps = {
 
 export function FiltersBar({
   type,
-  searchPlaceholder = "제목, 설명, 태그로 검색…",
+  searchPlaceholder = "주제, 개념, 글 제목으로 검색해보세요",
   categories,
   tags,
   search,
-  grade,
   category,
   tag,
   onSearchChange,
-  onGradeChange,
   onCategoryChange,
   onTagChange,
   onSortChange,
@@ -57,18 +45,6 @@ export function FiltersBar({
           />
         </div>
         <div className="flex flex-wrap items-center gap-2 sm:gap-4">
-        <select
-          value={grade}
-          onChange={(e) => onGradeChange(e.target.value)}
-          className="min-w-[100px] rounded-lg border border-[var(--border)] bg-[var(--background)] px-3 py-2 text-sm text-foreground focus:border-[var(--brand-500)] focus:outline-none"
-          aria-label="학년"
-        >
-          {GRADE_OPTIONS.map((o) => (
-            <option key={o.value || "all"} value={o.value}>
-              {o.label}
-            </option>
-          ))}
-        </select>
         {categories.length > 0 && (
           <select
             value={category}

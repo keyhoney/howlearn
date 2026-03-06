@@ -28,7 +28,6 @@ export default function ToolkitListPage() {
         typeof frontmatter.readingTime === "number" && frontmatter.readingTime > 0
           ? frontmatter.readingTime
           : getReadingTimeMinutes(content),
-      grade: (frontmatter.grade as string) || "",
       toolkitType: toolkitType && ["routine", "template", "checklist"].includes(toolkitType) ? toolkitType : undefined,
     };
   });

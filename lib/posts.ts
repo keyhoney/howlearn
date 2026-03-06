@@ -38,7 +38,6 @@ export type PostFrontmatter = {
   updated?: string;
   category?: string | string[];
   tags?: string[];
-  grade?: string;
   ogImage?: string;
 };
 

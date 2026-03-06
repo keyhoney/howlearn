@@ -37,7 +37,7 @@ type ContentCardProps = {
 
 function getCardClasses(type: ContentType): string {
   const base =
-    "rounded-2xl border transition hover:border-[var(--border-strong)] focus-within:border-[var(--border-strong)]";
+    "rounded-2xl border transition-all duration-200 hover:border-[var(--border-strong)] hover:-translate-y-px focus-within:border-[var(--border-strong)]";
   const hoverBg = "hover:bg-[var(--surface)]";
   switch (type) {
     case "guides":

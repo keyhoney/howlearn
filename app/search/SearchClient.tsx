@@ -77,7 +77,7 @@ export function SearchClient() {
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="제목, 설명, 태그로 검색..."
+          placeholder="주제, 개념, 글 제목으로 검색해보세요"
           className="w-full rounded-lg border border-[var(--border)] bg-[var(--background)] px-4 py-3.5 text-foreground placeholder:text-[var(--muted)] focus:border-[var(--brand-500)] focus:outline-none focus:ring-2 focus:ring-[var(--brand-500)]/20"
           aria-label="검색"
         />

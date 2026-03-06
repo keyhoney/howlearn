@@ -37,7 +37,7 @@ function NavItem({
     <li>
       <Link
         href={href}
-        className={`relative block transition focus:outline-none focus:ring-2 focus:ring-[var(--brand-500)] focus:ring-offset-2 focus:ring-offset-[var(--background)] rounded ${
+        className={`relative block transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--brand-500)] focus:ring-offset-2 focus:ring-offset-[var(--background)] rounded ${
           asButton
             ? "rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2 text-sm font-medium text-foreground no-underline hover:border-[var(--border-strong)] hover:bg-[var(--surface)]"
             : secondary

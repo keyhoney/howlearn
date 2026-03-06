@@ -3,16 +3,20 @@ import {
   getBySlug,
   getDatePublished,
   getDateModified,
+  normalizeTags,
   getCanonicalFromFrontmatter,
   getAuthorFromFrontmatter,
   getLangFromFrontmatter,
   getKeywordsFromFrontmatter,
 } from "@/lib/content";
+import { getRelatedByTags } from "@/lib/related";
+import { getReadingTimeMinutes } from "@/lib/reading-time";
 import { site, author } from "@/lib/site";
 import { mdxServerComponents } from "@/lib/mdx-components";
 import { Disclaimer } from "@/components/Disclaimer";
 import { ReferenceCard } from "@/components/ReferenceCard";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -96,6 +100,13 @@ export default async function BlogPostPage({
   const dateModified = getDateModified(post.frontmatter) ?? datePublished;
   const ogImage = post.frontmatter.ogImage as string | undefined;
   const tags = Array.isArray(post.frontmatter.tags) ? post.frontmatter.tags : [];
+  const readingTime =
+    typeof post.frontmatter.readingTime === "number" && post.frontmatter.readingTime > 0
+      ? post.frontmatter.readingTime
+      : getReadingTimeMinutes(post.content);
+  const relatedTags = normalizeTags(post.frontmatter);
+  const related = getRelatedByTags(relatedTags, "blog", slug, 4);
+  const byType: Record<string, string> = { blog: "블로그", guides: "가이드", toolkit: "툴킷", concepts: "개념", books: "전자책" };
   const defaultCanonical = `${site.url}/blog/${encodeURIComponent(slug)}`;
   const canonicalUrl = getCanonicalFromFrontmatter(post.frontmatter) || defaultCanonical;
   const authorName = getAuthorFromFrontmatter(post.frontmatter) || author.name;
@@ -163,10 +174,21 @@ export default async function BlogPostPage({
               {description}
             </p>
           )}
-          <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm text-[var(--muted)]">
-            {datePublished && <time dateTime={datePublished}>{datePublished}</time>}
+          <div className="mt-6 flex flex-wrap items-center gap-2">
+            {datePublished && (
+              <span className="rounded-full border border-[var(--border)] bg-[var(--surface-2)] px-3 py-1.5 text-xs font-medium text-[var(--muted)]">
+                <time dateTime={datePublished}>{datePublished}</time>
+              </span>
+            )}
             {dateModified && dateModified !== datePublished && (
-              <span>최종 업데이트: {dateModified}</span>
+              <span className="rounded-full border border-[var(--border)] bg-[var(--surface-2)] px-3 py-1.5 text-xs font-medium text-[var(--muted)]">
+                최종 업데이트: {dateModified}
+              </span>
+            )}
+            {readingTime > 0 && (
+              <span className="rounded-full border border-[var(--border)] bg-[var(--surface-2)] px-3 py-1.5 text-xs font-medium text-[var(--muted)]">
+                {readingTime}분 읽기
+              </span>
             )}
           </div>
         </header>
@@ -177,6 +199,27 @@ export default async function BlogPostPage({
           <ReferenceCard
             items={post.frontmatter.references as { title?: string; url: string }[]}
           />
+        )}
+        {related.length > 0 && (
+          <aside className="mt-14 border-t border-[var(--border)] pt-10">
+            <h2 className="mb-2 text-xs font-medium uppercase tracking-wider text-[var(--muted)]">더 읽어보기</h2>
+            <p className="mb-4 text-lg font-semibold text-foreground">관련 콘텐츠</p>
+            <ul className="grid gap-3 sm:grid-cols-2">
+              {related.map((item) => (
+                <li key={`${item.type}-${item.slug}`}>
+                  <Link
+                    href={item.path}
+                    className="block rounded-xl border border-[var(--border)]/80 bg-[var(--surface-2)] px-4 py-3 transition hover:border-[var(--border-strong)] hover:bg-[var(--surface)]"
+                  >
+                    <span className="text-xs font-medium uppercase tracking-wider text-[var(--muted)]">
+                      {byType[item.type] ?? item.type}
+                    </span>
+                    <p className="mt-1 font-medium text-foreground">{item.title}</p>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </aside>
         )}
         <Disclaimer />
       </article>

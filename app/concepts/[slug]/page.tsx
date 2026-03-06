@@ -117,14 +117,18 @@ export default async function ConceptPage({
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <article className="mx-auto max-w-3xl px-6 py-14">
         <header className="mb-10">
-          <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+          <p className="text-xs font-medium uppercase tracking-wider text-[var(--muted)]">개념 사전</p>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl" style={{ fontFamily: "var(--font-noto-serif-kr), ui-serif, serif" }}>
             {title}
           </h1>
-          {dateModified && (
-            <p className="mt-2 text-sm text-[var(--muted)]">최종 업데이트: {dateModified}</p>
-          )}
           {description && (
-            <p className="mt-3 text-lg leading-relaxed text-[var(--muted)]">{description}</p>
+            <div className="mt-4 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-5 py-4">
+              <p className="text-xs font-medium uppercase tracking-wider text-[var(--muted)]">정의</p>
+              <p className="mt-2 text-[15.5px] leading-7 text-foreground md:text-[17px] md:leading-8">{description}</p>
+            </div>
+          )}
+          {dateModified && (
+            <p className="mt-4 text-sm text-[var(--muted)]">최종 업데이트: {dateModified}</p>
           )}
         </header>
         <div className="prose prose-lg max-w-none">
@@ -138,21 +142,22 @@ export default async function ConceptPage({
         {(() => {
           const referring = getContentReferringToConcept(slug, title, 8);
           if (referring.length === 0) return null;
-          const typeLabel: Record<string, string> = { blog: "블로그", guides: "가이드", toolkit: "툴킷" };
+          const typeLabel: Record<string, string> = { blog: "블로그", guides: "가이드", toolkit: "툴킷", concepts: "개념", books: "전자책" };
           return (
-            <aside className="mt-14 border-t border-[var(--border)] pt-10">
-              <h2 className="mb-4 text-sm font-medium uppercase tracking-wider text-[var(--muted)]">
-                참고
-              </h2>
-              <p className="mb-5 text-xl font-semibold text-foreground">이 개념이 포함된 글</p>
-              <ul className="space-y-3">
+            <aside className="mt-14 border-t-2 border-[var(--border)] pt-10">
+              <h2 className="mb-2 text-xs font-medium uppercase tracking-wider text-[var(--muted)]">관련 글</h2>
+              <p className="mb-4 text-lg font-semibold text-foreground">이 개념이 포함된 글</p>
+              <ul className="grid gap-3 sm:grid-cols-2">
                 {referring.map((item) => (
                   <li key={`${item.type}-${item.slug}`}>
                     <Link
                       href={item.path}
-                      className="font-medium text-[var(--brand-500)] underline underline-offset-2 transition hover:text-[var(--brand-600)]"
+                      className="block rounded-xl border border-[var(--border)]/80 bg-[var(--surface-2)] px-4 py-3 transition hover:border-[var(--border-strong)] hover:bg-[var(--surface)]"
                     >
-                      [{typeLabel[item.type] ?? item.type}] {item.title}
+                      <span className="text-xs font-medium uppercase tracking-wider text-[var(--muted)]">
+                        {typeLabel[item.type] ?? item.type}
+                      </span>
+                      <p className="mt-1 font-medium text-foreground">{item.title}</p>
                     </Link>
                   </li>
                 ))}

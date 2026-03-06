@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import type { HeadingItem } from "@/lib/headings";
 
 type TableOfContentsProps = {
@@ -8,6 +9,29 @@ type TableOfContentsProps = {
 };
 
 export function TableOfContents({ headings }: TableOfContentsProps) {
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (headings.length === 0) return;
+    const ids = headings.map((h) => h.id);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActiveId(entry.target.id);
+            break;
+          }
+        }
+      },
+      { rootMargin: "-80px 0% -70% 0%", threshold: 0 }
+    );
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, [headings]);
+
   if (headings.length === 0) return null;
 
   return (
@@ -21,7 +45,11 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
             <li key={h.id} className={h.level === 3 ? "pl-2" : ""}>
               <Link
                 href={`#${h.id}`}
-                className="block text-sm text-[var(--muted)] no-underline transition hover:text-foreground"
+                className={`block text-sm no-underline transition hover:text-foreground ${
+                  activeId === h.id
+                    ? "font-medium text-foreground"
+                    : "text-[var(--muted)]"
+                }`}
               >
                 {h.text}
               </Link>

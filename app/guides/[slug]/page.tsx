@@ -133,7 +133,6 @@ export default async function GuidePage({
   };
 
   const headings = extractHeadings(data.content);
-  const grade = (data.frontmatter.grade as string) || (data.frontmatter.audience as string);
   const hasReferences = Array.isArray(data.frontmatter.references) && (data.frontmatter.references as unknown[]).length > 0;
   const readingTime =
     typeof data.frontmatter.readingTime === "number" && data.frontmatter.readingTime > 0
@@ -162,11 +161,6 @@ export default async function GuidePage({
                 {dateModified && (
                   <span className="rounded-full border border-[var(--border)] bg-[var(--surface-2)] px-3 py-1.5 text-xs font-medium text-[var(--muted)]">
                     최종 업데이트: {dateModified}
-                  </span>
-                )}
-                {grade && (
-                  <span className="rounded-full border border-[var(--border)] bg-[var(--surface-2)] px-3 py-1.5 text-xs font-medium text-foreground">
-                    {grade}
                   </span>
                 )}
                 {readingTime > 0 && (

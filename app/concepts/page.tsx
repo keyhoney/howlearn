@@ -31,18 +31,24 @@ export default function ConceptsListPage() {
         description="학습과학 용어·이론 인덱스. 정의와 짧은 설명, 관련 글이 있는 개념을 모았습니다."
         badge="정의·예시·적용"
       />
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((item) => (
-          <ContentCard
-            key={item.slug}
-            type="concepts"
-            title={item.title}
-            href={fullPath("concepts", item.slug)}
-            description={item.description || undefined}
-            conceptReferringCount={item.referringCount}
-          />
-        ))}
-      </div>
+      {items.length === 0 ? (
+        <div className="rounded-xl border border-[var(--border)] bg-[var(--surface-2)] px-6 py-12 text-center">
+          <p className="text-[var(--muted)]">등록된 개념이 없습니다. 콘텐츠가 곧 추가됩니다.</p>
+        </div>
+      ) : (
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {items.map((item) => (
+            <ContentCard
+              key={item.slug}
+              type="concepts"
+              title={item.title}
+              href={fullPath("concepts", item.slug)}
+              description={item.description || undefined}
+              conceptReferringCount={item.referringCount}
+            />
+          ))}
+        </div>
+      )}
     </main>
   );
 }

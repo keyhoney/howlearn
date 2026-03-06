@@ -27,7 +27,6 @@ export default function BlogListPage() {
         typeof frontmatter.readingTime === "number" && frontmatter.readingTime > 0
           ? frontmatter.readingTime
           : getReadingTimeMinutes(content),
-      grade: (frontmatter.grade as string) || "",
     };
   });
   const allOrderedCategories = getOrderedCategoriesForFilter();

@@ -170,7 +170,6 @@ export type ContentFrontmatter = {
   dateModified?: string;
   category?: string | string[];
   tags?: string[];
-  grade?: string;
   ogImage?: string;
   heroImage?: string;
 };

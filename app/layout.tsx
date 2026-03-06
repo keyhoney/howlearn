@@ -112,7 +112,7 @@ export default function RootLayout({
                 <p className="text-xs font-medium uppercase tracking-wider text-[var(--muted)]">정책·연락처</p>
                 <ul className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-[var(--muted)]">
                   <li><Link href="/privacy" className="hover:text-foreground">개인정보 처리방침</Link></li>
-                  <li><Link href="/cookies" className="hover:text-foreground">쿠키</Link></li>
+                  <li><Link href="/cookies" className="hover:text-foreground">쿠키 설정</Link></li>
                   <li><Link href="/terms" className="hover:text-foreground">이용약관</Link></li>
                   <li><Link href="/contact" className="hover:text-foreground">연락처</Link></li>
                   <li><Link href="/disclaimer" className="hover:text-foreground">고지</Link></li>
@@ -125,6 +125,9 @@ export default function RootLayout({
                 </p>
               </div>
             </div>
+            <p className="mt-10 border-t border-[var(--border)] pt-8 text-center text-xs leading-relaxed text-[var(--muted)]">
+              이 사이트의 콘텐츠는 교육 정보 제공을 목적으로 하며, 개별 상황에 대한 진단이나 전문 상담을 대체하지 않습니다.
+            </p>
           </div>
         </footer>
           </div>

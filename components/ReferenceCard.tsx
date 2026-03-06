@@ -12,6 +12,7 @@ export function ReferenceCard({ items }: ReferenceCardProps) {
 
   return (
     <aside id="references" className="mt-14 border-t-2 border-[var(--border)] pt-10 scroll-mt-24">
+      <p className="mb-1 text-[11px] font-medium uppercase tracking-wider text-[var(--muted)]">부록</p>
       <h2 className="mb-4 text-base font-semibold text-foreground" style={{ fontFamily: "var(--font-noto-serif-kr), ui-serif, serif" }}>
         참고 문헌
       </h2>
