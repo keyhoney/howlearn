@@ -12,7 +12,7 @@ export const metadata = constructMetadata({
 
 export default async function Home() {
   const featuredContent = await getFeaturedContent();
-  const latestContent = await getLatestContent(3);
+  const latestContent = await getLatestContent(6);
 
   return (
     <div className="flex flex-col min-h-screen">

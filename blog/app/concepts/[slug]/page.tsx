@@ -1,11 +1,16 @@
 import { notFound } from "next/navigation";
+import { MDXRemote } from "next-mdx-remote/rsc";
 import {
   getContentBySlug,
   getRelatedContent,
   getContentReferringToConcept,
   getAllContent,
 } from "@/lib/content";
+import { getMdxBySlug } from "@/lib/content-files";
 import { ContentDetail } from "@/components/shared/ContentDetail";
+import { MarkdownRenderer } from "@/components/shared/MarkdownRenderer";
+import { extractHeadings } from "@/lib/headings";
+import { mdxComponents } from "@/lib/mdx-components";
 import { constructMetadata } from "@/lib/seo";
 import { generateJsonLd } from "@/lib/schema";
 
@@ -41,6 +46,15 @@ export default async function ConceptDetailPage({
     getContentReferringToConcept(content.slug, content.title),
   ]);
   const jsonLd = generateJsonLd(content);
+  const mdxFile = getMdxBySlug("concept", slug);
+  const tocHeadings = extractHeadings(mdxFile?.content ?? content.body ?? "");
+  const references = content.references;
+
+  const bodyContent = mdxFile ? (
+    <MDXRemote source={mdxFile.content} components={mdxComponents} />
+  ) : (
+    <MarkdownRenderer content={content.body ?? ""} />
+  );
 
   return (
     <>
@@ -52,7 +66,11 @@ export default async function ConceptDetailPage({
         content={content}
         relatedContent={relatedContent}
         referringContent={referringContent}
-      />
+        tocHeadings={tocHeadings}
+        references={references}
+      >
+        {bodyContent}
+      </ContentDetail>
     </>
   );
 }

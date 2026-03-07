@@ -71,6 +71,7 @@ function buildContentFromMdx(
   const coverImage = (fm.coverImage as string) || undefined;
   const ogImage = (fm.ogImage as string) || coverImage;
   const relatedIds = normalizeRelatedIds(fm);
+  const featured = fm.featured === true;
   const base = {
     id,
     type,
@@ -86,6 +87,7 @@ function buildContentFromMdx(
     ...(coverImage && { coverImage }),
     ...(ogImage && { ogImage }),
     ...(relatedIds.length > 0 && { relatedContentIds: relatedIds }),
+    ...(featured && { featured: true }),
   };
 
   if (type === "guide") {

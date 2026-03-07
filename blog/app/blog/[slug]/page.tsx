@@ -1,7 +1,11 @@
 import { notFound } from "next/navigation";
+import { MDXRemote } from "next-mdx-remote/rsc";
 import { getContentBySlug, getRelatedContent, getAllContent } from "@/lib/content";
+import { getMdxBySlug } from "@/lib/content-files";
 import { ContentDetail } from "@/components/shared/ContentDetail";
+import { MarkdownRenderer } from "@/components/shared/MarkdownRenderer";
 import { extractHeadings } from "@/lib/headings";
+import { mdxComponents } from "@/lib/mdx-components";
 import { constructMetadata } from "@/lib/seo";
 import { generateJsonLd } from "@/lib/schema";
 
@@ -33,8 +37,15 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
 
   const relatedContent = await getRelatedContent(content);
   const jsonLd = generateJsonLd(content);
-  const tocHeadings = extractHeadings(content.body ?? "");
+  const mdxFile = getMdxBySlug("blog", slug);
+  const tocHeadings = extractHeadings(mdxFile?.content ?? content.body ?? "");
   const references = content.references;
+
+  const bodyContent = mdxFile ? (
+    <MDXRemote source={mdxFile.content} components={mdxComponents} />
+  ) : (
+    <MarkdownRenderer content={content.body ?? ""} />
+  );
 
   return (
     <>
@@ -48,7 +59,9 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
         tocHeadings={tocHeadings}
         references={references}
         showDisclaimer
-      />
+      >
+        {bodyContent}
+      </ContentDetail>
     </>
   );
 }
