@@ -1,0 +1,50 @@
+import Link from "next/link";
+
+export function SiteFooter() {
+  return (
+    <footer className="border-t border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/50 py-8 sm:py-12 transition-colors">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-2 gap-6 sm:gap-8 md:grid-cols-4">
+          <div className="col-span-2 min-w-0 md:col-span-1">
+            <span className="font-bold text-slate-900 dark:text-slate-100 tracking-tight text-base sm:text-lg">Mathesis</span>
+            <p className="mt-3 sm:mt-4 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+              학습과학 기반 부모 교육을 위한 지식 아카이브입니다. 연구와 실천 사이의 간극을 메웁니다.
+            </p>
+          </div>
+          <div>
+            <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-3 sm:mb-4 text-sm sm:text-base">탐색</h3>
+            <ul className="space-y-2 sm:space-y-3 text-sm text-slate-600 dark:text-slate-400">
+              <li><Link href="/domains" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">도메인</Link></li>
+              <li><Link href="/guides" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">가이드</Link></li>
+              <li><Link href="/concepts" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">개념</Link></li>
+              <li><Link href="/toolkit" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">툴킷</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-3 sm:mb-4 text-sm sm:text-base">자료</h3>
+            <ul className="space-y-2 sm:space-y-3 text-sm text-slate-600 dark:text-slate-400">
+              <li><Link href="/blog" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">블로그</Link></li>
+              <li><Link href="/books" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">도서</Link></li>
+              <li><Link href="/search" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">검색</Link></li>
+              <li><Link href="/rss.xml" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">RSS 피드</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-3 sm:mb-4 text-sm sm:text-base">이용 안내</h3>
+            <ul className="space-y-2 sm:space-y-3 text-sm text-slate-600 dark:text-slate-400">
+              <li><Link href="/about" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">소개</Link></li>
+              <li><Link href="/privacy" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">개인정보처리방침</Link></li>
+              <li><Link href="/terms" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">이용약관</Link></li>
+              <li><Link href="/cookies" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">쿠키 정책</Link></li>
+              <li><Link href="/disclaimer" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">면책 조항</Link></li>
+              <li><Link href="/contact" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">문의</Link></li>
+            </ul>
+          </div>
+        </div>
+        <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-slate-200 dark:border-slate-700 text-center text-sm text-slate-500 dark:text-slate-400">
+          © {new Date().getFullYear()} Mathesis. 저작권 소유.
+        </div>
+      </div>
+    </footer>
+  );
+}

@@ -1,0 +1,28 @@
+type WhatYouWillLearnProps = { items: string[] };
+
+export function WhatYouWillLearn({ items }: WhatYouWillLearnProps) {
+  if (!items?.length) return null;
+  return (
+    <aside
+      className="my-8 rounded-xl border border-slate-200 border-l-4 border-l-indigo-600 bg-slate-50/80 p-5 md:p-6"
+      aria-label="What you will learn"
+    >
+      <p className="text-xs font-semibold uppercase tracking-wider text-indigo-600">
+        What you will learn
+      </p>
+      <ul className="mt-3 space-y-1.5">
+        {items.map((item, i) => (
+          <li
+            key={i}
+            className="flex gap-2 text-[15.5px] leading-7 text-slate-900 md:text-[17px] md:leading-8"
+          >
+            <span className="font-medium text-indigo-600" aria-hidden>
+              {i + 1}.
+            </span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </aside>
+  );
+}
