@@ -5,12 +5,21 @@ import { AssessmentEmbed } from '@/components/assessments/AssessmentEmbed';
 import Link from 'next/link';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
+import { slugify, extractTextFromNode } from '@/lib/headings';
 
 interface MarkdownRendererProps {
   content: string;
 }
 
 const components: Components = {
+  h2: ({ children, ...props }) => {
+    const id = slugify(extractTextFromNode(children));
+    return <h2 id={id} {...props}>{children}</h2>;
+  },
+  h3: ({ children, ...props }) => {
+    const id = slugify(extractTextFromNode(children));
+    return <h3 id={id} {...props}>{children}</h3>;
+  },
   a: ({ href, children, ...props }) => {
     if (href?.startsWith('/')) {
       return (

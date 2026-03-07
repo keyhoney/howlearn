@@ -47,12 +47,12 @@ function CardLink({
   const href = `${typeLinks[content.type]}/${content.slug}`;
   if (content.type === "concept") {
     return (
-      <ConceptLink conceptSlug={content.slug} className="block mt-2">
+      <ConceptLink conceptSlug={content.slug} className="block mt-2 no-underline">
         {children}
       </ConceptLink>
     );
   }
-  return <Link href={href} className="block mt-2">{children}</Link>;
+  return <Link href={href} className="block mt-2 no-underline">{children}</Link>;
 }
 
 function CardFooterLink({
@@ -65,13 +65,13 @@ function CardFooterLink({
   const href = `${typeLinks[content.type]}/${content.slug}`;
   if (content.type === "concept") {
     return (
-      <ConceptLink conceptSlug={content.slug} className="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors">
+      <ConceptLink conceptSlug={content.slug} className="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors no-underline">
         {children}
       </ConceptLink>
     );
   }
   return (
-    <Link href={href} className="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors">
+    <Link href={href} className="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors no-underline">
       {children}
     </Link>
   );
