@@ -15,6 +15,18 @@ function getContentDir(type: ContentType): string {
   return join(process.cwd(), CONTENT_DIR, TYPE_TO_DIR[type]);
 }
 
+/** YAML에서 문자열을 감싼 따옴표("...", '...')를 제거해 화면에 " 기호가 그대로 나오지 않도록 함 */
+function stripYamlQuotes(s: string): string {
+  if (s.length < 2) return s;
+  if (s.startsWith('"') && s.endsWith('"')) {
+    return s.slice(1, -1).replace(/\\"/g, '"');
+  }
+  if (s.startsWith("'") && s.endsWith("'")) {
+    return s.slice(1, -1).replace(/\\'/g, "'");
+  }
+  return s;
+}
+
 function parseMdx(raw: string): { frontmatter: Record<string, unknown>; content: string } {
   const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
   if (!match) return { frontmatter: {}, content: raw };
@@ -26,11 +38,17 @@ function parseMdx(raw: string): { frontmatter: Record<string, unknown>; content:
       if (colon > 0) {
         const key = line.slice(0, colon).trim();
         let value: unknown = line.slice(colon + 1).trim();
-        if (typeof value === "string" && (value.startsWith("[") || value.startsWith("{"))) {
-          try {
-            value = JSON.parse(value);
-          } catch {
-            // keep as string
+        if (typeof value === "string") {
+          if (value.startsWith("[") || value.startsWith("{")) {
+            try {
+              value = JSON.parse(value);
+            } catch {
+              // keep as string
+            }
+          } else {
+            // YAML 스타일 따옴표 제거: "..." 또는 '...' → 내부 문자열만 사용
+            const trimmed = stripYamlQuotes(value);
+            if (trimmed !== value) value = trimmed;
           }
         }
         frontmatter[key] = value;

@@ -1,6 +1,7 @@
 import { AnyContent, ContentType, DomainSlug } from "./types";
 import { domainInfo } from "./domains";
 import { getMdxSlugs, getMdxBySlug } from "./content-files";
+import { ALLOWED_TAGS } from "./content-taxonomy";
 
 /** 카테고리(한글) → 도메인 슬러그. MDX frontmatter category를 domains로 변환할 때 사용 */
 const CATEGORY_TO_DOMAIN: Record<string, DomainSlug> = Object.fromEntries(
@@ -175,6 +176,62 @@ export async function getContentByType(type: ContentType): Promise<AnyContent[]>
   return content.filter(c => c.type === type).sort((a, b) => {
     return new Date(b.publishedAt || "").getTime() - new Date(a.publishedAt || "").getTime();
   });
+}
+
+/** 서버/클라이언트 공용: 검색어 q에 항목이 매칭되는지 (ContentHubFilters와 동일 로직) */
+export function matchesSearchForFilter(item: AnyContent, q: string): boolean {
+  const lower = q.trim().toLowerCase();
+  if (!lower) return true;
+  if (item.title.toLowerCase().includes(lower)) return true;
+  if (item.summary?.toLowerCase().includes(lower)) return true;
+  if (item.tags.some((t) => t.toLowerCase().includes(lower))) return true;
+  if (item.categories.some((c) => c.toLowerCase().includes(lower))) return true;
+  if (item.type === "concept" && "shortDefinition" in item && String(item.shortDefinition).toLowerCase().includes(lower))
+    return true;
+  return false;
+}
+
+export interface FilterContentOptions {
+  q?: string;
+  domain?: string;
+  tag?: string;
+}
+
+/** 서버 필터: q, domain, tag 적용 (정렬 순서 유지) */
+export function filterContentByQuery(content: AnyContent[], opts: FilterContentOptions): AnyContent[] {
+  let list = content;
+  if (opts.q?.trim()) {
+    list = list.filter((c) => matchesSearchForFilter(c, opts.q!));
+  }
+  if (opts.domain) {
+    list = list.filter((c) => c.domains.includes(opts.domain as DomainSlug));
+  }
+  if (opts.tag) {
+    const tag = opts.tag;
+    list = list.filter((c) => c.tags.includes(tag));
+  }
+  return list;
+}
+
+export { isAllowedPerPage, type PerPageOption } from "./pagination";
+
+/** 1-based page, perPage로 슬라이스. totalPages 포함. */
+export function paginateContent<T>(items: T[], page: number, perPage: number): { items: T[]; totalCount: number; totalPages: number } {
+  const totalCount = items.length;
+  const totalPages = Math.max(1, Math.ceil(totalCount / perPage));
+  const safePage = Math.max(1, Math.min(page, totalPages));
+  const start = (safePage - 1) * perPage;
+  const itemsSlice = items.slice(start, start + perPage);
+  return { items: itemsSlice, totalCount, totalPages };
+}
+
+/** 도메인 선택 시 드롭다운에 쓸 태그 목록 (해당 도메인 콘텐츠에 실제로 쓰인 태그만) */
+export function getAvailableTagsForDomain(content: AnyContent[], domain?: string): string[] {
+  let list = content;
+  if (domain) list = list.filter((c) => c.domains.includes(domain as DomainSlug));
+  const tagSet = new Set<string>();
+  list.forEach((c) => c.tags.forEach((t) => tagSet.add(t)));
+  return (ALLOWED_TAGS as readonly string[]).filter((t) => tagSet.has(t));
 }
 
 export async function getContentByDomain(domain: DomainSlug): Promise<AnyContent[]> {

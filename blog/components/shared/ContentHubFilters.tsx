@@ -7,11 +7,17 @@ import { ContentCard } from "@/components/cards/ContentCard";
 import { domainInfo, DOMAIN_ORDER } from "@/lib/domains";
 import { ALLOWED_TAGS } from "@/lib/content-taxonomy";
 import { Search as SearchIcon, ChevronDown, Filter } from "lucide-react";
+import { PaginationBar } from "@/components/shared/PaginationBar";
+import type { ContentHubPagination } from "@/components/shared/ContentHub";
 
 interface ContentHubFiltersProps {
   content: AnyContent[];
   type: ContentType;
   title: string;
+  /** 페이지네이션 사용 시 서버에서 전달. 있으면 content는 이미 필터·슬라이스된 목록이라 그대로 표시 */
+  pagination?: ContentHubPagination;
+  /** 페이지네이션 사용 시 서버에서 계산한 태그 목록 (도메인별) */
+  availableTags?: string[];
 }
 
 function matchesSearch(item: AnyContent, q: string): boolean {
@@ -26,7 +32,7 @@ function matchesSearch(item: AnyContent, q: string): boolean {
   return false;
 }
 
-export function ContentHubFilters({ content, type, title }: ContentHubFiltersProps) {
+export function ContentHubFilters({ content, type, title, pagination, availableTags }: ContentHubFiltersProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -42,38 +48,41 @@ export function ContentHubFilters({ content, type, title }: ContentHubFiltersPro
 
   const domains = DOMAIN_ORDER;
 
-  /** 선택한 카테고리(도메인)에 해당하는 콘텐츠에서만 쓰인 태그만 표시 (도메인 미선택 시 전체 태그) */
-  const availableTags = useMemo(() => {
+  /** 페이지네이션 없을 때만 클라이언트에서 계산 (content가 전체 목록). 페이지네이션 있을 때는 서버에서 availableTags 전달 */
+  const clientAvailableTags = useMemo(() => {
+    if (pagination && availableTags) return availableTags;
     if (!domainParam) return [...ALLOWED_TAGS];
     const itemsInDomain = content.filter((c) => c.domains.includes(domainParam as DomainSlug));
     const tagSet = new Set<string>();
     itemsInDomain.forEach((c) => c.tags.forEach((t) => tagSet.add(t)));
     return ALLOWED_TAGS.filter((t) => tagSet.has(t));
-  }, [content, domainParam]);
+  }, [pagination, availableTags, content, domainParam]);
+
+  const effectiveAvailableTags = useMemo(
+    () => (pagination ? (availableTags ?? []) : clientAvailableTags),
+    [pagination, availableTags, clientAvailableTags]
+  );
 
   /** 카테고리 변경 시 현재 선택된 태그가 새 목록에 없으면 태그 쿼리 제거 */
   useEffect(() => {
     if (!domainParam || !tagParam) return;
-    const allowed = (availableTags as readonly string[]).includes(tagParam);
+    const allowed = effectiveAvailableTags.includes(tagParam);
     if (allowed) return;
     const params = new URLSearchParams(searchParams.toString());
     params.delete("tag");
+    if (pagination) params.set("page", "1");
     router.replace(`${pathname}${params.toString() ? `?${params.toString()}` : ""}`);
-  }, [domainParam, tagParam, availableTags, pathname, router, searchParams]);
+  }, [domainParam, tagParam, effectiveAvailableTags, pathname, router, searchParams, pagination]);
 
-  const filtered = useMemo(() => {
+  /** 페이지네이션 사용 시: 서버가 이미 필터·슬라이스한 content만 표시. 미사용 시: 클라이언트 필터 */
+  const displayList = useMemo(() => {
+    if (pagination) return content;
     let list = content;
-    if (searchInput.trim()) {
-      list = list.filter((c) => matchesSearch(c, searchInput));
-    }
-    if (domainParam) {
-      list = list.filter((c) => c.domains.includes(domainParam as DomainSlug));
-    }
-    if (tagParam) {
-      list = list.filter((c) => c.tags.includes(tagParam));
-    }
+    if (searchInput.trim()) list = list.filter((c) => matchesSearch(c, searchInput));
+    if (domainParam) list = list.filter((c) => c.domains.includes(domainParam as DomainSlug));
+    if (tagParam) list = list.filter((c) => c.tags.includes(tagParam));
     return list;
-  }, [content, searchInput, domainParam, tagParam]);
+  }, [pagination, content, searchInput, domainParam, tagParam]);
 
   useEffect(() => {
     const t = setTimeout(() => {
@@ -83,10 +92,11 @@ export function ContentHubFilters({ content, type, title }: ContentHubFiltersPro
       if (q === current) return;
       if (q) params.set("q", q);
       else params.delete("q");
+      if (pagination) params.set("page", "1");
       router.replace(`${pathname}${params.toString() ? `?${params.toString()}` : ""}`);
     }, 400);
     return () => clearTimeout(t);
-  }, [searchInput, pathname, router, searchParams]);
+  }, [searchInput, pathname, router, searchParams, pagination]);
 
   const setQuery = (q: string) => {
     setSearchInput(q);
@@ -96,6 +106,7 @@ export function ContentHubFilters({ content, type, title }: ContentHubFiltersPro
     const params = new URLSearchParams(searchParams.toString());
     if (domain) params.set("domain", domain);
     else params.delete("domain");
+    params.set("page", "1");
     router.push(`${pathname}${params.toString() ? `?${params.toString()}` : ""}`);
   };
 
@@ -103,6 +114,7 @@ export function ContentHubFilters({ content, type, title }: ContentHubFiltersPro
     const params = new URLSearchParams(searchParams.toString());
     if (tag) params.set("tag", tag);
     else params.delete("tag");
+    params.set("page", "1");
     router.push(`${pathname}${params.toString() ? `?${params.toString()}` : ""}`);
   };
 
@@ -157,7 +169,7 @@ export function ContentHubFilters({ content, type, title }: ContentHubFiltersPro
                 aria-label="태그 선택"
               >
                 <option value="">전체 태그</option>
-                {availableTags.map((t) => (
+                {effectiveAvailableTags.map((t) => (
                   <option key={t} value={t}>
                     {t}
                   </option>
@@ -169,19 +181,31 @@ export function ContentHubFilters({ content, type, title }: ContentHubFiltersPro
         </div>
       </div>
 
-      {filtered.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {filtered.map((item) => (
-            <ContentCard key={item.id} content={item} />
-          ))}
-        </div>
+      {displayList.length > 0 ? (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {displayList.map((item) => (
+              <ContentCard key={item.id} content={item} />
+            ))}
+          </div>
+          {pagination && (
+            <PaginationBar
+              pathname={pagination.pathname}
+              currentPage={pagination.page}
+              totalPages={pagination.totalPages}
+              totalCount={pagination.totalCount}
+              perPage={pagination.perPage}
+              preserveParams
+            />
+          )}
+        </>
       ) : (
         <div className="text-center py-12 sm:py-20 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-dashed border-slate-300 dark:border-slate-600">
           <h3 className="text-lg font-medium text-slate-900 dark:text-slate-100">
-            {searchInput.trim() ? "검색 결과가 없습니다." : `매칭되는 ${title}이 없습니다.`}
+            {searchInput.trim() || domainParam || tagParam ? "검색 결과가 없습니다." : `매칭되는 ${title}이 없습니다.`}
           </h3>
           <p className="mt-2 text-slate-500 dark:text-slate-400">
-            {searchInput.trim() ? "다른 검색어나 필터를 시도해 보세요." : "필터를 바꿔 보세요."}
+            {searchInput.trim() || domainParam || tagParam ? "다른 검색어나 필터를 시도해 보세요." : "필터를 바꿔 보세요."}
           </p>
         </div>
       )}
