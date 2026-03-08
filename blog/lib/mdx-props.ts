@@ -25,9 +25,17 @@ export type SourceItem = {
 };
 
 export function toSourceItemsArray(
-  value: SourceItem[] | SourceItem | null | undefined
+  value: SourceItem[] | SourceItem | string | null | undefined
 ): SourceItem[] {
   if (value == null) return [];
+  if (typeof value === "string") {
+    try {
+      const parsed = JSON.parse(value) as SourceItem[] | SourceItem;
+      return toSourceItemsArray(Array.isArray(parsed) ? parsed : parsed);
+    } catch {
+      return [];
+    }
+  }
   if (Array.isArray(value)) {
     return value
       .filter((x): x is SourceItem => x != null && typeof x === "object" && "author" in x && "title" in x)
@@ -56,9 +64,17 @@ export function toSourceItemsArray(
 export type TroubleshootingItem = { problem: string; solution: string };
 
 export function toTroubleshootingItemsArray(
-  value: TroubleshootingItem[] | TroubleshootingItem | null | undefined
+  value: TroubleshootingItem[] | TroubleshootingItem | string | null | undefined
 ): TroubleshootingItem[] {
   if (value == null) return [];
+  if (typeof value === "string") {
+    try {
+      const parsed = JSON.parse(value) as TroubleshootingItem[] | TroubleshootingItem;
+      return toTroubleshootingItemsArray(Array.isArray(parsed) ? parsed : parsed);
+    } catch {
+      return [];
+    }
+  }
   if (Array.isArray(value)) {
     return value
       .filter((x): x is TroubleshootingItem => x != null && typeof x === "object" && "problem" in x && "solution" in x)

@@ -142,5 +142,20 @@ references: []                # 참고 문헌. [{ title: "논문 제목", url: "
 
 ## 타입별 참고
 
-- **books**: `audience`, `stores`(리디/교보/예스24/알라딘 URL), `coverImage` 추가.
-- **guides/concepts/toolkit**: `references`로 참고 문헌 3~5개 권장.
+- **books**: `coverImage`, `purchaseLinks`(선택). 서점 링크는 본문에 직접 작성.
+- **guides/concepts/blog**: `references`로 참고 문헌 3~5개 권장.
+
+---
+
+## MDX 렌더링 점검 (개발자용)
+
+실제 페이지와 MDX 원문이 다르게 보일 때 아래를 순서대로 확인하세요.
+
+| 현상 | 확인할 곳 |
+|------|-----------|
+| **이미지/링크 안내 문구·코드 블록이 원문과 다름** | 배포에 반영된 MDX가 최신인지 확인. 빌드 캐시 제거 후 재배포. |
+| **이미지가 안 뜸** | `.env`에 `NEXT_PUBLIC_IMAGE_BASE_URL`(이미지 호스팅 도메인) 설정. `lib/image-url.ts`의 `toImageUrl` + `lib/remark-transform-img-url.ts`(remark 플러그인) + `lib/mdx-components.tsx`의 `img` 매핑이 모두 적용되는지 확인. |
+| **MDX 컴포넌트가 제목만 보이고 내용이 비어 있음** | `lib/mdx-components.tsx`에 해당 컴포넌트가 등록돼 있는지, `components/mdx/*.tsx`에서 배열/객체 props(`items`, `steps`, `questions` 등)를 실제로 렌더링하는지 확인. `lib/mdx-props.ts`의 `toStringArray`, `toSourceItemsArray`, `toTroubleshootingItemsArray`로 정규화 후 사용. |
+| **본문 중간 RelatedCards와 하단 추천이 둘 다 보임** | 본문의 `<RelatedCards items="..." />`와 페이지의 `relatedContent`(frontmatter `related` + `getRelatedContent`)는 별개입니다. 의도된 동작. |
+
+**이미지 경로 규칙:** MDX에서는 슬래시로 시작하는 경로(예: `/blog/문서명/01.webp`)로 쓰고, remark 플러그인이 `NEXT_PUBLIC_IMAGE_BASE_URL`과 결합해 절대 URL로 변환합니다. 배포 환경에 해당 환경변수를 설정해야 이미지가 로드됩니다.
