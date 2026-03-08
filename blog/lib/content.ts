@@ -150,7 +150,7 @@ function buildContentFromMdx(
 
 /** content/*.mdx 파일만 읽어서 AnyContent[] 생성. draft 제외. */
 function getContentFromMdx(): AnyContent[] {
-  const types: ContentType[] = ["guide", "blog", "concept", "toolkit", "book"];
+  const types: ContentType[] = ["guide", "blog", "concept", "book"];
   const out: AnyContent[] = [];
   for (const type of types) {
     const slugs = getMdxSlugs(type);
