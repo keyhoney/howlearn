@@ -6,6 +6,7 @@ import { ContentDetail } from "@/components/shared/ContentDetail";
 import { MarkdownRenderer } from "@/components/shared/MarkdownRenderer";
 import { extractHeadings } from "@/lib/headings";
 import { mdxComponents } from "@/lib/mdx-components";
+import { sharedMdxOptions } from "@/lib/mdx-options";
 import { constructMetadata } from "@/lib/seo";
 import { generateJsonLd } from "@/lib/schema";
 
@@ -44,7 +45,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
   const references = content.references;
 
   const bodyContent = mdxFile ? (
-    <MDXRemote source={mdxFile.content} components={mdxComponents} />
+    <MDXRemote source={mdxFile.content} components={mdxComponents} options={sharedMdxOptions} />
   ) : (
     <>
       {content.intro && (

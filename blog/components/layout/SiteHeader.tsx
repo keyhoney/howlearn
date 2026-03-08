@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BookOpen, Search } from "lucide-react";
+import { site } from "@/lib/site";
 import { MobileNavDrawer } from "./MobileNavDrawer";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -11,7 +12,7 @@ export function SiteHeader() {
           <Link href="/" className="flex shrink-0 items-center gap-2">
             <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 text-indigo-600 dark:text-indigo-400" />
             <span className="truncate font-bold text-slate-900 dark:text-slate-100 tracking-tight text-sm sm:text-base">
-              Mathesis
+              {site.name}
             </span>
           </Link>
           <nav className="hidden md:flex gap-5 lg:gap-6">

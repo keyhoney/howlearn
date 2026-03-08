@@ -53,6 +53,18 @@ function normalizeRelatedIds(fm: Record<string, unknown>): string[] {
     .filter(Boolean);
 }
 
+/** frontmatter references → { title?, url }[] */
+function normalizeReferences(fm: Record<string, unknown>): { title?: string; url: string }[] {
+  const raw = fm.references;
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .filter((r): r is Record<string, unknown> => typeof r === "object" && r !== null && typeof (r as { url?: string }).url === "string")
+    .map((r) => ({
+      title: typeof (r as { title?: string }).title === "string" ? (r as { title: string }).title : undefined,
+      url: (r as { url: string }).url,
+    }));
+}
+
 /** MDX frontmatter → AnyContent (목록/메타용). body는 상세에서 MDX 파일로 채움. */
 function buildContentFromMdx(
   type: ContentType,
@@ -68,10 +80,14 @@ function buildContentFromMdx(
   const tags = normalizeTags(fm);
   const domains = categoriesToDomains(categories);
   const publishedAt = getDate(fm, "datePublished") ?? getDate(fm, "date");
+  const updatedAt = getDate(fm, "dateModified");
+  const reviewedAt = getDate(fm, "dateReviewed") ?? updatedAt;
   const coverImage = (fm.coverImage as string) || undefined;
   const ogImage = (fm.ogImage as string) || coverImage;
   const relatedIds = normalizeRelatedIds(fm);
+  const refs = normalizeReferences(fm);
   const featured = fm.featured === true;
+  const author = typeof fm.author === "string" ? fm.author : undefined;
   const base = {
     id,
     type,
@@ -88,6 +104,10 @@ function buildContentFromMdx(
     ...(ogImage && { ogImage }),
     ...(relatedIds.length > 0 && { relatedContentIds: relatedIds }),
     ...(featured && { featured: true }),
+    ...(updatedAt && { updatedAt }),
+    ...(reviewedAt && { reviewedAt }),
+    ...(refs.length > 0 && { references: refs }),
+    ...(author && { author }),
   };
 
   if (type === "guide") {

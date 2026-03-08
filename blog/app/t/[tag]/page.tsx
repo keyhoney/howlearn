@@ -16,6 +16,7 @@ export async function generateMetadata({
   return constructMetadata({
     title: `Tag: ${decoded}`,
     description: `Content tagged with "${decoded}".`,
+    noindex: true,
   });
 }
 

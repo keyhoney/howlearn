@@ -1,11 +1,12 @@
 import { AnyContent } from "@/lib/types";
+import { author, site } from "@/lib/site";
 
 export function generateJsonLd(content: AnyContent) {
   const base = {
     "@context": "https://schema.org",
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `${process.env.APP_URL || "http://localhost:3000"}/${content.type}s/${content.slug}`
+      "@id": `${site.url}/${content.type}s/${content.slug}`
     },
     "headline": content.title,
     "description": content.summary,
@@ -13,14 +14,14 @@ export function generateJsonLd(content: AnyContent) {
     "dateModified": content.updatedAt || content.publishedAt,
     "author": {
       "@type": "Organization",
-      "name": "Learning Science Archive"
+      "name": author.name
     },
     "publisher": {
       "@type": "Organization",
-      "name": "Learning Science Archive",
+      "name": author.name,
       "logo": {
         "@type": "ImageObject",
-        "url": `${process.env.APP_URL || "http://localhost:3000"}/logo.png`
+        "url": `${site.url}/logo.png`
       }
     }
   };
@@ -38,7 +39,7 @@ export function generateJsonLd(content: AnyContent) {
       "@type": "DefinedTerm",
       "name": content.title,
       "description": content.shortDefinition,
-      "inDefinedTermSet": `${process.env.APP_URL || "http://localhost:3000"}/concepts`
+      "inDefinedTermSet": `${site.url}/concepts`
     };
   }
 

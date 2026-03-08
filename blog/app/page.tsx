@@ -7,7 +7,6 @@ import { constructMetadata } from "@/lib/seo";
 
 export const metadata = constructMetadata({
   title: "홈",
-  description: "학습과학 기반 부모 교육 가이드와 실천 도구를 제공하는 지식 아카이브입니다.",
 });
 
 export default async function Home() {
@@ -21,11 +20,10 @@ export default async function Home() {
         <div className="absolute inset-0 bg-[url('https://picsum.photos/seed/learning/1920/1080?blur=10')] bg-cover bg-center opacity-10 dark:opacity-5" />
         <div className="container relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 sm:text-5xl lg:text-6xl">
-            학습과학 기반 지식 아카이브
+            Mathesis
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-            인지심리학, 신경과학, 교육심리학 연구를 바탕으로 한 부모 교육 가이드와 실천 도구를 제공합니다. 
-            단편적인 정보가 아닌 연결된 지식망을 탐색하세요.
+            학습과학 기반 부모 교육을 위한 지식 아카이브입니다. 가이드, 개념, 툴킷, 블로그, 도서를 제공합니다.
           </p>
           <div className="mt-10 flex items-center justify-center gap-4">
             <Link

@@ -90,11 +90,17 @@ export function ContentDetail({
 
           <div className="mt-6 sm:mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 dark:border-slate-700 pt-6 sm:pt-8">
             <TagList tags={content.tags} />
-            {content.publishedAt && (
-              <time className="text-sm text-slate-500 dark:text-slate-400 font-mono shrink-0">
-                {format(new Date(content.publishedAt), "yyyy년 MM월 dd일")}
-              </time>
-            )}
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-500 dark:text-slate-400 font-mono shrink-0">
+              {content.publishedAt && (
+                <span>게시 {format(new Date(content.publishedAt), "yyyy.MM.dd")}</span>
+              )}
+              {content.reviewedAt && content.reviewedAt !== content.publishedAt && (
+                <span>검토 {format(new Date(content.reviewedAt), "yyyy.MM.dd")}</span>
+              )}
+              <Link href="/about#author" className="text-indigo-600 dark:text-indigo-400 hover:underline font-sans">
+                {content.author ?? "Mathesis"}
+              </Link>
+            </div>
           </div>
         </div>
       </header>
@@ -110,7 +116,14 @@ export function ContentDetail({
               )}
             </article>
             {refs && refs.length > 0 && <ReferenceCard items={refs} />}
-            {showDisclaimer && <Disclaimer />}
+            {showDisclaimer && (
+              <>
+                <Disclaimer />
+                <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
+                  전문가 상담이 필요하면 <Link href="/disclaimer" className="text-indigo-600 dark:text-indigo-400 hover:underline">면책 조항</Link>과 <Link href="/contact" className="text-indigo-600 dark:text-indigo-400 hover:underline">문의</Link>를 참고해 주세요.
+                </p>
+              </>
+            )}
           </div>
           {/* TOC: 우측 사이드바에 고정 (데스크톱에서만 표시) */}
           {tocHeadings && tocHeadings.length > 0 && (

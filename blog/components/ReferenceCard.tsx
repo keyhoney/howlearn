@@ -16,11 +16,14 @@ export function ReferenceCard({ items }: ReferenceCardProps) {
       className="mt-14 border-t-2 border-slate-200 dark:border-slate-700 pt-10 scroll-mt-24"
     >
       <p className="mb-1 text-[11px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">
-        Appendix
+        참고 문헌
       </p>
-      <h2 className="mb-4 text-base font-semibold text-slate-900 dark:text-slate-100">
+      <h2 className="mb-2 text-base font-semibold text-slate-900 dark:text-slate-100">
         References
       </h2>
+      <p className="mb-4 text-sm text-slate-500 dark:text-slate-400">
+        본 문서에서 인용·참고한 자료입니다.
+      </p>
       <ul className="mt-4 space-y-2">
         {items.map((item, i) => (
           <li key={i}>

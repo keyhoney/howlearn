@@ -28,6 +28,10 @@ export type BaseContent = {
   coverImage?: string;
   relatedContentIds?: string[];
   references?: { title?: string; url: string }[];
+  /** 문서별 저자(이름 또는 사이트 기본 저자). E-E-A-T용 */
+  author?: string;
+  /** 마지막 검토일(YYYY-MM-DD). dateReviewed 우선, 없으면 dateModified */
+  reviewedAt?: string;
   lang?: string;
 };
 

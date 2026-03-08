@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { site } from "@/lib/site";
 
 export function SiteFooter() {
   return (
@@ -6,9 +7,9 @@ export function SiteFooter() {
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 gap-6 sm:gap-8 md:grid-cols-4">
           <div className="col-span-2 min-w-0 md:col-span-1">
-            <span className="font-bold text-slate-900 dark:text-slate-100 tracking-tight text-base sm:text-lg">Mathesis</span>
+            <span className="font-bold text-slate-900 dark:text-slate-100 tracking-tight text-base sm:text-lg">{site.name}</span>
             <p className="mt-3 sm:mt-4 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-              학습과학 기반 부모 교육을 위한 지식 아카이브입니다. 연구와 실천 사이의 간극을 메웁니다.
+              {site.description}
             </p>
           </div>
           <div>
@@ -43,7 +44,7 @@ export function SiteFooter() {
           </div>
         </div>
         <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-slate-200 dark:border-slate-700 text-center text-sm text-slate-500 dark:text-slate-400">
-          © {new Date().getFullYear()} Mathesis. 저작권 소유.
+          © {new Date().getFullYear()} {site.name}. 저작권 소유.
         </div>
       </div>
     </footer>

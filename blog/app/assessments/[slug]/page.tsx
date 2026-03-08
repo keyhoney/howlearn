@@ -27,12 +27,14 @@ export async function generateMetadata({ params }: AssessmentPageProps) {
     return constructMetadata({
       title: 'Assessment Not Found',
       description: 'The requested assessment could not be found.',
+      noindex: true,
     });
   }
 
   return constructMetadata({
-    title: `${assessment.title} | Learn Insight`,
+    title: assessment.title,
     description: assessment.description,
+    noindex: true,
   });
 }
 
