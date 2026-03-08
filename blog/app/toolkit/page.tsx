@@ -1,19 +1,12 @@
 import { getAllAssessments } from "@/lib/assessments/registry";
-import type { AssessmentTool } from "@/lib/assessments/types";
 import { constructMetadata } from "@/lib/seo";
-import Link from "next/link";
 import { ClipboardList } from "lucide-react";
+import { ToolkitAssessmentGrid } from "@/components/toolkit/ToolkitAssessmentGrid";
 
 export const metadata = constructMetadata({
   title: "툴킷",
   description: "이론을 실제 행동으로 옮길 수 있도록 돕는 체크리스트, 템플릿, 워크시트 및 평가·진단 도구입니다.",
 });
-
-function getAssessmentBadgeLabel(tool: AssessmentTool): string {
-  if (tool.audience === "parent") return "학부모용";
-  if (tool.mode === "likert") return "학생용 테스트";
-  return "학생용 체크리스트";
-}
 
 export default async function ToolkitPage() {
   const assessments = getAllAssessments();
@@ -43,25 +36,7 @@ export default async function ToolkitPage() {
             </p>
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {assessments.map((assessment) => (
-            <Link
-              key={assessment.slug}
-              href={`/assessments/${assessment.slug}`}
-              className="group block p-5 sm:p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md hover:border-indigo-200 dark:hover:border-indigo-600 transition-all"
-            >
-              <span className="inline-flex items-center justify-center px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold uppercase tracking-wider group-hover:bg-indigo-50 dark:group-hover:bg-indigo-900/40 group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors mb-3 block w-fit">
-                {getAssessmentBadgeLabel(assessment)}
-              </span>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                {assessment.title}
-              </h3>
-              <p className="text-slate-600 dark:text-slate-400 text-sm line-clamp-2">
-                {assessment.description}
-              </p>
-            </Link>
-          ))}
-        </div>
+        <ToolkitAssessmentGrid assessments={assessments} />
       </section>
     </div>
   );
