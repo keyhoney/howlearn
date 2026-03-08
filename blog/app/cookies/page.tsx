@@ -28,7 +28,7 @@ export default function CookiesPage() {
           본 사이트에서는 사이트의 기본 기능 유지, 이용 환경 개선(예: 테마 저장), 방문 통계 분석(예: Google Analytics), 그리고 광고·동의 관리를 도입한 경우 해당 목적으로 사용될 수 있습니다.
         </p>
         <p className="text-slate-600 dark:text-slate-300">
-          본 정책에서 "쿠키"에는 문맥상 필요한 경우 localStorage, 픽셀, 태그, SDK 등 이와 유사한 기술이 포함될 수 있습니다.
+          본 정책에서 &quot;쿠키&quot;에는 문맥상 필요한 경우 localStorage, 픽셀, 태그, SDK 등 이와 유사한 기술이 포함될 수 있습니다.
         </p>
 
         <h2 className="text-slate-900 dark:text-slate-100">2. 본 사이트가 사용하는 쿠키의 유형</h2>
