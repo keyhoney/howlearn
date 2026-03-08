@@ -1,7 +1,11 @@
 import { notFound } from "next/navigation";
+import { MDXRemote } from "next-mdx-remote/rsc";
 import { getContentBySlug, getRelatedContent, getAllContent } from "@/lib/content";
+import { getMdxBySlug } from "@/lib/content-files";
 import { ContentDetail } from "@/components/shared/ContentDetail";
 import { MarkdownRenderer } from "@/components/shared/MarkdownRenderer";
+import { extractHeadings } from "@/lib/headings";
+import { mdxComponents } from "@/lib/mdx-components";
 import { constructMetadata } from "@/lib/seo";
 import { generateJsonLd } from "@/lib/schema";
 
@@ -33,6 +37,14 @@ export default async function BookDetailPage({ params }: { params: Promise<{ slu
 
   const relatedContent = await getRelatedContent(content);
   const jsonLd = generateJsonLd(content);
+  const mdxFile = getMdxBySlug("book", slug);
+  const tocHeadings = extractHeadings(mdxFile?.content ?? content.body ?? "");
+
+  const bodyContent = mdxFile ? (
+    <MDXRemote source={mdxFile.content} components={mdxComponents} />
+  ) : (
+    <MarkdownRenderer content={content.body ?? ""} />
+  );
 
   return (
     <>
@@ -40,7 +52,7 @@ export default async function BookDetailPage({ params }: { params: Promise<{ slu
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <ContentDetail content={content} relatedContent={relatedContent}>
+      <ContentDetail content={content} relatedContent={relatedContent} tocHeadings={tocHeadings}>
         {content.subtitle && (
           <h2 className="text-2xl font-medium text-slate-600 mb-8 mt-0 border-b border-slate-200 pb-4">
             {content.subtitle}
@@ -61,7 +73,7 @@ export default async function BookDetailPage({ params }: { params: Promise<{ slu
           </div>
         )}
 
-        <MarkdownRenderer content={content.body || ""} />
+        {bodyContent}
       </ContentDetail>
     </>
   );

@@ -1,7 +1,10 @@
-type WhenToUseProps = { situations: string[] };
+import { toStringArray } from "@/lib/mdx-props";
+
+type WhenToUseProps = { situations?: string[] | string | null };
 
 export function WhenToUse({ situations }: WhenToUseProps) {
-  if (!situations?.length) return null;
+  const list = toStringArray(situations);
+  if (list.length === 0) return null;
   return (
     <aside
       className="my-8 rounded-xl border border-slate-200 dark:border-slate-600 border-l-4 border-l-cyan-500 dark:border-l-cyan-500 bg-slate-50/50 dark:bg-slate-800/50 p-5 md:p-6"
@@ -11,7 +14,7 @@ export function WhenToUse({ situations }: WhenToUseProps) {
         When to use
       </p>
       <ul className="mt-3 space-y-1.5">
-        {situations.map((s, i) => (
+        {list.map((s, i) => (
           <li
             key={i}
             className="flex gap-2 text-[15.5px] leading-7 text-slate-900 dark:text-slate-200 md:text-[17px] md:leading-8"

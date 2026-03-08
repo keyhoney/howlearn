@@ -1,6 +1,6 @@
-type CommonMisconceptionProps = { myth: string; reality: string };
+type CommonMisconceptionProps = { myth?: string; reality?: string };
 
-export function CommonMisconception({ myth, reality }: CommonMisconceptionProps) {
+export function CommonMisconception({ myth = "", reality = "" }: CommonMisconceptionProps) {
   return (
     <aside
       className="my-8 rounded-xl border border-slate-200 dark:border-slate-600 border-l-4 border-l-slate-300 dark:border-l-slate-500 bg-slate-50 dark:bg-slate-800/80 p-5 md:p-6"

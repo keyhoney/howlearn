@@ -1,13 +1,13 @@
 type TeacherNoteProps = {
   context?: string;
-  observation: string;
+  observation?: string;
   interpretation?: string;
   caution?: string;
 };
 
 export function TeacherNote({
   context,
-  observation,
+  observation = "",
   interpretation,
   caution,
 }: TeacherNoteProps) {

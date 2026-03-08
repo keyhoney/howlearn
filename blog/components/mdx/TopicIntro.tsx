@@ -1,6 +1,7 @@
-type TopicIntroProps = { title: string; description: string };
+type TopicIntroProps = { title?: string; description?: string };
 
-export function TopicIntro({ title, description }: TopicIntroProps) {
+export function TopicIntro({ title = "", description = "" }: TopicIntroProps) {
+  if (!title && !description) return null;
   return (
     <aside
       className="my-8 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50/80 dark:bg-slate-800/80 p-5 md:p-6"

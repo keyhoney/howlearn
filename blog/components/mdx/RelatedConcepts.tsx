@@ -1,9 +1,11 @@
 import Link from "next/link";
+import { toStringArray } from "@/lib/mdx-props";
 
-type RelatedConceptsProps = { slugs: string[] };
+type RelatedConceptsProps = { slugs?: string[] | string | null };
 
 export function RelatedConcepts({ slugs }: RelatedConceptsProps) {
-  if (!slugs?.length) return null;
+  const list = toStringArray(slugs);
+  if (list.length === 0) return null;
   return (
     <aside
       className="my-8 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50/50 dark:bg-slate-800/50 p-5 md:p-6"
@@ -13,7 +15,7 @@ export function RelatedConcepts({ slugs }: RelatedConceptsProps) {
         Related concepts
       </p>
       <ul className="mt-3 flex flex-wrap gap-2">
-        {slugs.map((slug) => (
+        {list.map((slug) => (
           <li key={slug}>
             <Link
               href={`/concepts/${slug}`}

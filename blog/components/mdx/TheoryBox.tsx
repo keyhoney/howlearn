@@ -1,16 +1,19 @@
+import { toStringArray } from "@/lib/mdx-props";
+
 type TheoryBoxProps = {
-  title: string;
-  summary: string;
+  title?: string;
+  summary?: string;
   whyItMatters?: string;
-  keywords?: string[];
+  keywords?: string[] | string | null;
 };
 
 export function TheoryBox({
-  title,
-  summary,
+  title = "",
+  summary = "",
   whyItMatters,
-  keywords = [],
+  keywords,
 }: TheoryBoxProps) {
+  const keywordsList = toStringArray(keywords);
   return (
     <aside
       className="my-8 rounded-xl border border-slate-200 dark:border-slate-600 border-l-4 border-l-indigo-600 dark:border-l-indigo-500 bg-slate-50/80 dark:bg-slate-800/80 p-5 shadow-sm md:p-6"
@@ -27,9 +30,9 @@ export function TheoryBox({
           {whyItMatters}
         </p>
       )}
-      {keywords.length > 0 && (
+      {keywordsList.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-2">
-          {keywords.map((k) => (
+          {keywordsList.map((k) => (
             <span
               key={k}
               className="rounded-full bg-amber-100 dark:bg-amber-900/40 px-2.5 py-0.5 text-xs font-medium text-amber-800 dark:text-amber-200"
