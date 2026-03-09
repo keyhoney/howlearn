@@ -37,8 +37,11 @@ export function toSourceItemsArray(
       const parsed = JSON.parse(normalized) as SourceItem[] | SourceItem;
       return toSourceItemsArray(Array.isArray(parsed) ? parsed : parsed);
     } catch {
-      // 폴백: 한 줄당 "author|year|title|source|note|href" (빈 필드는 빈 문자열)
-      const lines = normalized.split(/\n/).map((s) => s.trim()).filter(Boolean);
+      // 폴백: 한 줄당 "author|year|title|source|note|href". 행 구분은 줄바꿈 또는 ";;"
+      const lines = normalized
+        .split(/\n|;;/)
+        .map((s) => s.trim())
+        .filter(Boolean);
       if (lines.length > 0 && lines[0].includes("|")) {
         return lines
           .map((line) => {
@@ -98,8 +101,11 @@ export function toTroubleshootingItemsArray(
       const parsed = JSON.parse(normalized) as TroubleshootingItem[] | TroubleshootingItem;
       return toTroubleshootingItemsArray(Array.isArray(parsed) ? parsed : parsed);
     } catch {
-      // 폴백: 한 줄당 "problem|solution"
-      const lines = normalized.split(/\n/).map((s) => s.trim()).filter(Boolean);
+      // 폴백: 한 줄당 "problem|solution". 행 구분은 줄바꿈 또는 ";;"
+      const lines = normalized
+        .split(/\n|;;/)
+        .map((s) => s.trim())
+        .filter(Boolean);
       if (lines.length > 0 && lines[0].includes("|")) {
         return lines
           .map((line) => {

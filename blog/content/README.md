@@ -395,7 +395,7 @@ lang: "ko"                    # 문서 언어. 메타·JSON-LD inLanguage에 사
 |------|------|------|------|
 | `items` | SourceItem[] \| string | ✓ | 출처 목록. 각 항목: `author`, `year`, `title`, `source`(선택), `note`(선택), `href`(선택) |
 
-`items`는 **객체 배열** 또는 **파이프 구분 문자열**로 넘길 수 있습니다. RSC 환경에서 객체 배열이 비어 나올 경우, **한 줄당 `author|year|title|source|note|href`** 형식 문자열을 사용하세요(빈 필드는 생략 가능).
+`items`는 **객체 배열** 또는 **파이프 구분 문자열**로 넘길 수 있습니다. RSC 환경에서 객체 배열이 비어 나올 경우, **한 줄당 `author|year|title|source|note|href`** 형식 문자열을 사용하세요(빈 필드는 생략 가능). 여러 행은 줄바꿈 또는 **`;;`** 로 구분합니다(한 줄로 쓸 때 권장).
 
 ```mdx
 <Sources items={`Baddeley|1992|Working Memory|Science|대표 논문|
@@ -513,7 +513,7 @@ Ashcraft & Krause|2007|Working memory...|Psychonomic Bulletin & Review||https://
 
 | prop | 타입 | 필수 | 설명 |
 |------|------|------|------|
-| `items` | TroubleshootingItem[] \| string | ✓ | 항목: `{ problem, solution }` 배열 또는 **한 줄당 `problem|solution`** 파이프 구분 문자열. RSC에서 객체가 비어 나오면 문자열 형식 사용. |
+| `items` | TroubleshootingItem[] \| string | ✓ | 항목: `{ problem, solution }` 배열 또는 **한 줄당 `problem|solution`** 파이프 구분 문자열. 행 구분은 줄바꿈 또는 `;;`. RSC에서 객체가 비어 나오면 한 줄 문자열+`;;` 사용. |
 
 ```mdx
 <Troubleshooting items={`체크리스트를 안 따라옴|항목을 3개 이하로 줄이기
@@ -617,7 +617,7 @@ Ashcraft & Krause|2007|Working memory...|Psychonomic Bulletin & Review||https://
 ## props 정규화 규칙
 
 - **문자열 배열** (`items`, `steps`, `slugs`, `questions` 등): MDX에서는 `"a, b, c"`처럼 쉼표 구분 문자열로 넘기거나, `items={["a","b","c"]}`처럼 배열로 넘길 수 있습니다. `lib/mdx-props.ts`의 `toStringArray`가 빈 값·null을 걸러 배열로 맞춥니다.
-- **객체 배열·문자열** (`Sources`의 `items`, `Troubleshooting`의 `items`): JS 객체 배열이 RSC에서 비어 나오면 **파이프 구분 문자열**을 사용하세요. Sources는 한 줄당 `author|year|title|source|note|href`, Troubleshooting은 한 줄당 `problem|solution`. `toSourceItemsArray`, `toTroubleshootingItemsArray`가 정규화합니다.
+- **객체 배열·문자열** (`Sources`의 `items`, `Troubleshooting`의 `items`): JS 객체 배열이 RSC에서 비어 나오면 **파이프 구분 문자열**을 사용하세요. Sources는 한 줄당 `author|year|title|source|note|href`, Troubleshooting은 한 줄당 `problem|solution`. 여러 행은 줄바꿈 또는 `;;`로 구분(한 줄로 쓸 때 `;;` 권장). `toSourceItemsArray`, `toTroubleshootingItemsArray`가 정규화합니다.
 
 ---
 

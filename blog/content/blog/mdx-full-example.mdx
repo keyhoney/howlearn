@@ -154,8 +154,7 @@ function toImageUrl(src) {
 
 참고 문헌 목록. `SourceNote`는 `Sources`의 별칭. RSC에서 객체 배열이 누락될 수 있어, **한 줄당 `author|year|title|source|note|href`** 파이프 구분 문자열도 지원합니다.
 
-<Sources items={`Baddeley|1992|Working Memory|Science|대표 논문|
-Ashcraft & Krause|2007|Working memory, math performance, and math anxiety|Psychonomic Bulletin & Review||https://example.com`} />
+<Sources items="Baddeley|1992|Working Memory|Science|대표 논문;;Ashcraft & Krause|2007|Working memory, math performance, and math anxiety|Psychonomic Bulletin & Review||https://example.com" />
 
 ---
 
@@ -163,9 +162,7 @@ Ashcraft & Krause|2007|Working memory, math performance, and math anxiety|Psycho
 
 핵심 요약을 불릿 리스트로 강조. 인디고 배경. `items`는 쉼표 구분 문자열 또는 배열.
 
-<KeyTakeaways items={`불안은 작업기억을 잠식해 수행을 떨어뜨릴 수 있다.
-인지 부하를 줄이면 안정감이 올라간다.
-작은 성공 경험이 자기효능감을 키운다.`} />
+<KeyTakeaways items="불안은 작업기억을 잠식해 수행을 떨어뜨릴 수 있다., 인지 부하를 줄이면 안정감이 올라간다., 작은 성공 경험이 자기효능감을 키운다." />
 
 ---
 
@@ -233,9 +230,7 @@ Ashcraft & Krause|2007|Working memory, math performance, and math anxiety|Psycho
 
 자주 나오는 문제와 해결을 짝으로. **한 줄당 `problem|solution`** 파이프 구분 문자열을 쓰면 RSC에서도 안정적으로 표시됩니다.
 
-<Troubleshooting items={`체크리스트를 안 따라옴|항목을 3개 이하로 줄이기
-중간 계산 적기가 귀찮다고 함|한 문제만이라도 같이 적어 보기
-아이가 손을 안 댐|한 문장만 읽고 그림만 보기로 낮춤`} />
+<Troubleshooting items="체크리스트를 안 따라옴|항목을 3개 이하로 줄이기;;중간 계산 적기가 귀찮다고 함|한 문제만이라도 같이 적어 보기;;아이가 손을 안 댐|한 문장만 읽고 그림만 보기로 낮춤" />
 
 ---
 
