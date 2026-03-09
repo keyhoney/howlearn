@@ -1,5 +1,6 @@
 import { readdirSync, readFileSync, existsSync } from "fs";
 import { join } from "path";
+import matter from "gray-matter";
 import type { ContentType } from "./types";
 
 const CONTENT_DIR = "content";
@@ -15,47 +16,18 @@ function getContentDir(type: ContentType): string {
   return join(process.cwd(), CONTENT_DIR, TYPE_TO_DIR[type]);
 }
 
-/** YAML에서 문자열을 감싼 따옴표("...", '...')를 제거해 화면에 " 기호가 그대로 나오지 않도록 함 */
-function stripYamlQuotes(s: string): string {
-  if (s.length < 2) return s;
-  if (s.startsWith('"') && s.endsWith('"')) {
-    return s.slice(1, -1).replace(/\\"/g, '"');
-  }
-  if (s.startsWith("'") && s.endsWith("'")) {
-    return s.slice(1, -1).replace(/\\'/g, "'");
-  }
-  return s;
-}
-
+/**
+ * MDX 원문에서 frontmatter(--- ... ---)와 본문을 파싱합니다.
+ * gray-matter로 YAML 중첩·배열(references, keyTakeaways, reflectionPrompt 등)을 올바르게 파싱합니다.
+ * 이전 단순 줄 단위 파서는 들여쓰기된 key(예: reflectionPrompt 아래 title)를 최상위 key로 넣어
+ * 게시글 title이 덮어쓰이는 버그가 있었습니다.
+ */
 function parseMdx(raw: string): { frontmatter: Record<string, unknown>; content: string } {
-  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
-  if (!match) return { frontmatter: {}, content: raw };
-  const [, fm, content] = match;
-  const frontmatter: Record<string, unknown> = {};
-  if (fm) {
-    for (const line of fm.split(/\r?\n/)) {
-      const colon = line.indexOf(":");
-      if (colon > 0) {
-        const key = line.slice(0, colon).trim();
-        let value: unknown = line.slice(colon + 1).trim();
-        if (typeof value === "string") {
-          if (value.startsWith("[") || value.startsWith("{")) {
-            try {
-              value = JSON.parse(value);
-            } catch {
-              // keep as string
-            }
-          } else {
-            // YAML 스타일 따옴표 제거: "..." 또는 '...' → 내부 문자열만 사용
-            const trimmed = stripYamlQuotes(value);
-            if (trimmed !== value) value = trimmed;
-          }
-        }
-        frontmatter[key] = value;
-      }
-    }
-  }
-  return { frontmatter, content: content ?? "" };
+  const { data, content } = matter(raw);
+  return {
+    frontmatter: (data && typeof data === "object" && !Array.isArray(data) ? data : {}) as Record<string, unknown>,
+    content: content ?? "",
+  };
 }
 
 /**

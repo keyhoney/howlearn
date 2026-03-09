@@ -120,7 +120,7 @@ export function ContentDetail({
         <div className="grid grid-cols-1 lg:grid-cols-[1fr,220px] gap-x-12 gap-y-8 lg:gap-y-0">
           {/* 본문: 좌측 컬럼에 고정 */}
           <div className="min-w-0 lg:col-start-1 lg:row-start-1">
-            <article className="prose prose-slate prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-slate-900 dark:prose-headings:text-slate-100 prose-headings:scroll-mt-24 prose-p:text-slate-600 dark:prose-p:text-slate-300 prose-a:text-indigo-600 dark:prose-a:text-indigo-400 hover:prose-a:text-indigo-500 dark:hover:prose-a:text-indigo-300 [&_a[href^='#concept-']]:font-medium [&_a[href^='#concept-']]:text-[#4F39F6] [&_a[href^='#concept-']]:underline [&_a[href^='#concept-']]:decoration-2 [&_a[href^='#concept-']]:decoration-dotted [&_a[href^='#concept-']]:underline-offset-2">
+            <article className="prose prose-slate prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-slate-900 dark:prose-headings:text-slate-100 prose-headings:scroll-mt-24 prose-p:text-slate-600 dark:prose-p:text-slate-300 prose-a:text-indigo-600 dark:prose-a:text-indigo-400 hover:prose-a:text-indigo-500 dark:hover:prose-a:text-indigo-300 [&_a[href^='/concepts/']]:font-medium [&_a[href^='/concepts/']]:text-[#4F39F6] [&_a[href^='/concepts/']]:underline [&_a[href^='/concepts/']]:decoration-2 [&_a[href^='/concepts/']]:decoration-dotted [&_a[href^='/concepts/']]:underline-offset-2">
               {children || (
                 <MarkdownRenderer content={content.body || ""} />
               )}
