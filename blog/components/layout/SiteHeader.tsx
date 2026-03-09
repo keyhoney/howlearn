@@ -1,19 +1,25 @@
 import Link from "next/link";
-import { BookOpen, Search } from "lucide-react";
-import { site } from "@/lib/site";
+import Image from "next/image";
+import { Search } from "lucide-react";
 import { MobileNavDrawer } from "./MobileNavDrawer";
 import { ThemeToggle } from "@/components/ThemeToggle";
+
+const BRAND_LOGO_URL = "https://learninsight.pages.dev/ogprofile/brandlogo.png";
 
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/80 backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/80 transition-colors">
       <div className="container mx-auto flex h-14 sm:h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
         <div className="flex min-w-0 flex-1 items-center gap-4 md:gap-8">
-          <Link href="/" className="flex shrink-0 items-center gap-2">
-            <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 text-indigo-600 dark:text-indigo-400" />
-            <span className="truncate font-bold text-slate-900 dark:text-slate-100 tracking-tight text-sm sm:text-base">
-              {site.name}
-            </span>
+          <Link href="/" className="flex shrink-0 items-center">
+            <Image
+              src={BRAND_LOGO_URL}
+              alt="HowLearn"
+              width={120}
+              height={30}
+              className="h-6 w-auto sm:h-7 object-contain object-left"
+              priority
+            />
           </Link>
           <nav className="hidden md:flex gap-5 lg:gap-6">
             <Link href="/domains" className="text-sm font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors whitespace-nowrap">학문별</Link>

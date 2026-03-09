@@ -15,6 +15,12 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**', // This allows any path under the hostname
       },
+      {
+        protocol: 'https',
+        hostname: 'learninsight.pages.dev',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
   output: 'standalone',
