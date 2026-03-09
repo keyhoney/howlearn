@@ -16,6 +16,16 @@ featured: false
 lang: "ko"
 ---
 
+export const sourcesItems = [
+  { author: "Baddeley", year: "1992", title: "Working Memory", source: "Science", note: "대표 논문" },
+  { author: "Ashcraft & Krause", year: "2007", title: "Working memory, math performance, and math anxiety", source: "Psychonomic Bulletin & Review", href: "https://example.com" }
+]
+
+export const troubleshootingItems = [
+  { problem: "체크리스트를 안 따라옴", solution: "항목을 3개 이하로 줄이기" },
+  { problem: "중간 계산 적기가 귀찮다고 함", solution: "한 문제만이라도 같이 적어 보기" }
+]
+
 # MDX 문법 전체 예시
 
 이 글은 **mdx 문법 정리**에 나온 모든 요소를 한 번에 사용한 예시입니다. *제목·강조·목록·링크·이미지·인용·코드·구분선*과 에디토리얼 컴포넌트, **RelatedCards**까지 포함합니다.
@@ -129,7 +139,7 @@ function toImageUrl(src) {
 
 ## Sources (출처)
 
-<Sources items={'[{"author":"Baddeley","year":"1992","title":"Working Memory","source":"Science","note":"대표 논문"},{"author":"Ashcraft & Krause","year":"2007","title":"Working memory, math performance, and math anxiety","source":"Psychonomic Bulletin & Review","href":"https://example.com"}]'} />
+<Sources items={sourcesItems} />
 
 ---
 
@@ -187,7 +197,7 @@ function toImageUrl(src) {
 
 ## Troubleshooting (자주 막히는 문제)
 
-<Troubleshooting items={'[{"problem":"체크리스트를 안 따라옴","solution":"항목을 3개 이하로 줄이기"},{"problem":"중간 계산 적기가 귀찮다고 함","solution":"한 문제만이라도 같이 적어 보기"}]'} />
+<Troubleshooting items={troubleshootingItems} />
 
 ---
 

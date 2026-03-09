@@ -30,7 +30,8 @@ export function toSourceItemsArray(
   if (value == null) return [];
   if (typeof value === "string") {
     try {
-      const parsed = JSON.parse(value) as SourceItem[] | SourceItem;
+      const normalized = value.trim().replace(/&quot;/g, '"').replace(/&#x27;/g, "'");
+      const parsed = JSON.parse(normalized) as SourceItem[] | SourceItem;
       return toSourceItemsArray(Array.isArray(parsed) ? parsed : parsed);
     } catch {
       return [];
@@ -70,7 +71,8 @@ export function toTroubleshootingItemsArray(
   if (value == null) return [];
   if (typeof value === "string") {
     try {
-      const parsed = JSON.parse(value) as TroubleshootingItem[] | TroubleshootingItem;
+      const normalized = value.trim().replace(/&quot;/g, '"').replace(/&#x27;/g, "'");
+      const parsed = JSON.parse(normalized) as TroubleshootingItem[] | TroubleshootingItem;
       return toTroubleshootingItemsArray(Array.isArray(parsed) ? parsed : parsed);
     } catch {
       return [];
