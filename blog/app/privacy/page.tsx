@@ -3,6 +3,7 @@ import { constructMetadata } from "@/lib/seo";
 export const metadata = constructMetadata({
   title: "개인정보처리방침",
   description: "HowLearn의 개인정보 수집·이용, 보관, 보호 및 이용자 권리에 관한 안내입니다.",
+  path: "/privacy",
   noindex: true,
 });
 

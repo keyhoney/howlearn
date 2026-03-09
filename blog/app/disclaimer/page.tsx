@@ -4,6 +4,7 @@ import { constructMetadata } from "@/lib/seo";
 export const metadata: Metadata = constructMetadata({
   title: "면책 조항",
   description: "본 사이트 콘텐츠의 성격과 한계에 대한 안내입니다.",
+  path: "/disclaimer",
   noindex: true,
 });
 

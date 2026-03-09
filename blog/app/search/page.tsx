@@ -5,6 +5,7 @@ import { constructMetadata } from "@/lib/seo";
 export const metadata = constructMetadata({
   title: "지식 검색",
   description: "가이드, 개념, 블로그, 툴킷, 전자책 등 모든 지식 노드를 검색하세요.",
+  path: "/search",
   noindex: true,
 });
 

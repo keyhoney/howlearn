@@ -32,7 +32,7 @@ export function SiteHeader() {
         </div>
         <div className="flex shrink-0 items-center gap-1 sm:gap-2">
           <Link href="/search" className="flex h-10 w-10 sm:h-auto sm:w-auto min-w-[2.5rem] sm:min-w-0 items-center justify-center gap-1.5 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-indigo-600 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-indigo-400 transition-colors" aria-label="검색">
-            <Search className="h-5 w-5" />
+            <Search className="h-5 w-5" aria-hidden />
             <span className="text-sm font-medium hidden sm:inline">검색</span>
           </Link>
           <ThemeToggle />

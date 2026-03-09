@@ -7,6 +7,7 @@ import { ClipboardList, CheckSquare } from 'lucide-react';
 export const metadata = constructMetadata({
   title: '평가 도구',
   description: '학생과 학부모를 위한 다양한 자가 진단 및 관찰 체크리스트를 제공합니다.',
+  path: '/assessments',
   noindex: true,
 });
 

@@ -4,6 +4,7 @@ import { constructMetadata } from "@/lib/seo";
 export const metadata = constructMetadata({
   title: "학문별 탐색",
   description: "학습과학을 구성하는 5가지 주요 학문 분야를 중심으로 지식을 탐색하세요.",
+  path: "/domains",
 });
 
 export default function DomainsPage() {

@@ -6,6 +6,8 @@ interface SeoProps {
   title?: string;
   description?: string;
   image?: string;
+  /** 현재 페이지 경로 (예: "/", "/guides", "/blog/slug"). canonical URL에 사용됩니다. */
+  path?: string;
   url?: string;
   type?: "website" | "article" | "book";
   lang?: string;
@@ -13,19 +15,32 @@ interface SeoProps {
   noindex?: boolean;
 }
 
+function buildCanonical(path: string | undefined): string | undefined {
+  if (path === undefined) return undefined;
+  const base = site.url.replace(/\/$/, "");
+  const p = path === "" || path === "/" ? "" : path.startsWith("/") ? path : `/${path}`;
+  return p ? `${base}${p}` : base;
+}
+
 export function constructMetadata({
   title,
   description = site.description,
   image = "https://picsum.photos/seed/learning/1200/630",
-  url = process.env.APP_URL || "http://localhost:3000",
+  path,
+  url,
   type = "website",
   lang,
   noindex = false,
 }: SeoProps = {}): Metadata {
   const imageUrl = image ? toImageUrl(image) : undefined;
+  const canonical = buildCanonical(path);
+  const resolvedUrl = url ?? canonical ?? site.url;
   return {
     title: title ? `${title} | ${site.name}` : site.name,
     description,
+    ...(canonical && {
+      alternates: { canonical },
+    }),
     ...(noindex && {
       robots: { index: false, follow: true, googleBot: { index: false, follow: true } },
     }),
@@ -34,7 +49,7 @@ export function constructMetadata({
       title: title ? `${title} | ${site.name}` : site.name,
       description,
       type,
-      url,
+      url: resolvedUrl,
       ...(lang && { locale: lang }),
       images: imageUrl
         ? [
@@ -53,6 +68,6 @@ export function constructMetadata({
       description,
       images: imageUrl ? [imageUrl] : undefined,
     },
-    metadataBase: new URL(process.env.APP_URL || "http://localhost:3000"),
+    metadataBase: new URL(site.url),
   };
 }

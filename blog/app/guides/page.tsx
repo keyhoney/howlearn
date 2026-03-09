@@ -1,6 +1,7 @@
 import { getContentByType, filterContentByQuery, paginateContent, getAvailableTagsForDomain, isAllowedPerPage } from "@/lib/content";
 import { ContentHub } from "@/components/shared/ContentHub";
 import { constructMetadata } from "@/lib/seo";
+import { site } from "@/lib/site";
 
 const PATHNAME = "/guides";
 const TITLE = "가이드";
@@ -32,12 +33,12 @@ export async function generateMetadata({ searchParams }: { searchParams: SearchP
   const full = await getContentByType("guide");
   const filtered = filterContentByQuery(full, { q: params?.q, domain: params?.domain, tag: params?.tag });
   const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
-  const base = process.env.APP_URL || "http://localhost:3000";
+  const base = site.url;
   const links: { rel: string; url: string }[] = [];
   if (page > 1) links.push({ rel: "prev", url: `${base}${PATHNAME}${buildCanonicalQuery(params, page - 1)}` });
   if (page < totalPages) links.push({ rel: "next", url: `${base}${PATHNAME}${buildCanonicalQuery(params, page + 1)}` });
   return {
-    ...constructMetadata({ title: TITLE, description: DESCRIPTION }),
+    ...constructMetadata({ title: TITLE, description: DESCRIPTION, path: `${PATHNAME}${buildCanonicalQuery(params, page)}` }),
     ...(links.length > 0 && { links }),
   };
 }

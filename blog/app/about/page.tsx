@@ -4,6 +4,7 @@ import { constructMetadata } from "@/lib/seo";
 export const metadata = constructMetadata({
   title: "About Us",
   description: "HowLearn 소개. 학습과학 기반 부모 교육을 위한 지식 아카이브입니다.",
+  path: "/about",
 });
 
 export default function AboutPage() {

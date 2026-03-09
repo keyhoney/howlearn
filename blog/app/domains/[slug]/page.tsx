@@ -18,6 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return constructMetadata({
     title: `${info.name} 도메인 탐색`,
     description: info.description,
+    path: `/domains/${slug}`,
   });
 }
 

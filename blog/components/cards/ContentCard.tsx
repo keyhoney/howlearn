@@ -6,11 +6,11 @@ import { ArrowRight, Book, BookOpen, FileText, Lightbulb, Wrench } from "lucide-
 import { format } from "date-fns";
 
 const typeIcons: Record<ContentType, React.ReactNode> = {
-  guide: <BookOpen className="w-4 h-4" />,
-  blog: <FileText className="w-4 h-4" />,
-  concept: <Lightbulb className="w-4 h-4" />,
-  toolkit: <Wrench className="w-4 h-4" />,
-  book: <Book className="w-4 h-4" />
+  guide: <BookOpen className="w-4 h-4" aria-hidden />,
+  blog: <FileText className="w-4 h-4" aria-hidden />,
+  concept: <Lightbulb className="w-4 h-4" aria-hidden />,
+  toolkit: <Wrench className="w-4 h-4" aria-hidden />,
+  book: <Book className="w-4 h-4" aria-hidden />
 };
 
 const typeLabels: Record<ContentType, string> = {
@@ -79,7 +79,7 @@ function CardFooterLink({
 
 export function ContentCard({ content }: { content: AnyContent }) {
   return (
-    <div className="group relative flex flex-col justify-between rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 p-4 sm:p-6 shadow-sm transition-all hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600">
+    <div className="group relative flex flex-col justify-between rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 p-5 sm:p-6 shadow-sm transition-all duration-200 ease-out hover:shadow-lg hover:border-indigo-200 dark:hover:border-indigo-800/60 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md active:scale-[0.99]">
       <div>
         <div className="flex flex-wrap items-center justify-between gap-2 mb-3 sm:mb-4">
           <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium border ${typeColors[content.type]}`}>
@@ -87,20 +87,20 @@ export function ContentCard({ content }: { content: AnyContent }) {
             {typeLabels[content.type]}
           </span>
           {content.publishedAt && (
-            <time className="text-xs text-slate-400 dark:text-slate-500 font-mono shrink-0">
+            <time className="text-xs text-slate-400 dark:text-slate-400 font-mono shrink-0">
               {format(new Date(content.publishedAt), 'yyyy-MM-dd')}
             </time>
           )}
         </div>
 
         <CardLink content={content}>
-          <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2">
+          <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 sm:text-lg lg:text-xl group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-200 line-clamp-2">
             {content.title}
           </h3>
           {content.type === 'concept' && content.englishName && (
             <p className="text-sm font-mono text-slate-500 dark:text-slate-400 mt-1">{content.englishName}</p>
           )}
-          <p className="mt-2 sm:mt-3 text-sm text-slate-600 dark:text-slate-300 line-clamp-3 leading-relaxed">
+          <p className="mt-2 sm:mt-3 text-base text-slate-600 dark:text-slate-300 sm:text-sm line-clamp-3 leading-relaxed">
             {content.type === 'concept' ? content.shortDefinition : content.summary}
           </p>
         </CardLink>
@@ -116,7 +116,7 @@ export function ContentCard({ content }: { content: AnyContent }) {
           <TagList tags={content.tags.slice(0, 3)} />
           <CardFooterLink content={content}>
             <span className="sr-only">Read more about {content.title}</span>
-            <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-200" aria-hidden />
           </CardFooterLink>
         </div>
       </div>

@@ -6,6 +6,7 @@ import { ToolkitAssessmentGrid } from "@/components/toolkit/ToolkitAssessmentGri
 export const metadata = constructMetadata({
   title: "툴킷",
   description: "이론을 실제 행동으로 옮길 수 있도록 돕는 체크리스트, 템플릿, 워크시트 및 평가·진단 도구입니다.",
+  path: "/toolkit",
 });
 
 export default async function ToolkitPage() {

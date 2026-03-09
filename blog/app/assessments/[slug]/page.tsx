@@ -34,6 +34,7 @@ export async function generateMetadata({ params }: AssessmentPageProps) {
   return constructMetadata({
     title: assessment.title,
     description: assessment.description,
+    path: `/assessments/${slug}`,
     noindex: true,
   });
 }

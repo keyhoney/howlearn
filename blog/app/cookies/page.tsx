@@ -4,6 +4,7 @@ import { constructMetadata } from "@/lib/seo";
 export const metadata: Metadata = constructMetadata({
   title: "쿠키 정책",
   description: "본 사이트의 쿠키 및 유사 기술 사용, 동의, 관리 방법에 대한 안내입니다.",
+  path: "/cookies",
   noindex: true,
 });
 

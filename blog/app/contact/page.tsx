@@ -3,6 +3,7 @@ import { constructMetadata } from "@/lib/seo";
 export const metadata = constructMetadata({
   title: "Contact",
   description: "문의하기",
+  path: "/contact",
   noindex: true,
 });
 
