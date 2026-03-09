@@ -116,14 +116,7 @@ export function ContentDetail({
               )}
             </article>
             {refs && refs.length > 0 && <ReferenceCard items={refs} />}
-            {showDisclaimer && (
-              <>
-                <Disclaimer />
-                <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
-                  전문가 상담이 필요하면 <Link href="/disclaimer" className="text-indigo-600 dark:text-indigo-400 hover:underline">면책 조항</Link>과 <Link href="/contact" className="text-indigo-600 dark:text-indigo-400 hover:underline">문의</Link>를 참고해 주세요.
-                </p>
-              </>
-            )}
+            {showDisclaimer && <Disclaimer />}
           </div>
           {/* TOC: 우측 사이드바에 고정 (데스크톱에서만 표시) */}
           {tocHeadings && tocHeadings.length > 0 && (
