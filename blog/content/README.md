@@ -2,7 +2,7 @@
 
 모든 콘텐츠 타입(블로그, 가이드, 개념, 툴킷, 전자책)에서 사용하는 frontmatter 표준입니다. `lib/content.ts`의 `buildContentFromMdx`가 파싱하며, 검색 결과·OG·JSON-LD·RSS·사이트맵·목록 필터에 반영됩니다.
 
-**분류 규칙:** 카테고리는 **카테고리_태그_분류.md**의 **카테고리** 열 값만 사용하고, 태그는 **상위 태그** 열 값만 사용합니다. 허용 목록은 `lib/content-taxonomy.ts`에 정의되어 있습니다.
+**분류 규칙:** 카테고리는 **5대 영역**(인지심리학, 신경과학, 교육심리학, 발달심리학, 동기·정서심리학)만 사용하고, 태그는 **허용 태그**(`lib/content-taxonomy.ts`의 `ALLOWED_TAGS`)만 사용합니다.
 
 **전체 MDX·마크다운 문법**(제목, 강조, 목록, 링크, 이미지, 인용, 코드, 구분선, 컴포넌트 개요)은 **개발 노트/mdx 문법 정리.md**를 참고하세요.
 
@@ -22,11 +22,11 @@ dateModified: "2026-03-06"    # 마지막 실질 수정일. 없으면 datePublis
 dateReviewed: "2026-03-06"    # (선택) 마지막 검토일. 상세 페이지에 "검토 yyyy.MM.dd"로 표시.
 
 # 분류 (아래 허용 카테고리·태그만 사용)
-category: "인지심리학"        # 1개(문자열) 또는 여러 개(배열)
-tags: ["작업기억", "인지부하"]
+category: "인지심리학"        # 학습과학_표준화_태그체계표.md의 학문명에 있는 내용만 사용 가능
+tags: ["교수방법", "주의·통제"]        # 학습과학_표준화_태그체계표.md의 태그명에 있는 내용만 사용 가능
 
 # URL·노출
-slug: "working-memory-cognitive-load"   # 없으면 파일명(확장자 제외)이 슬러그. 영문/숫자/하이픈 권장.
+slug: "working-memory-cognitive-load"        # 학습과학_표준화_태그체계표.md의 슬러그명에 있는 내용만 사용 가능
 status: "published"          # published | draft. draft는 목록·RSS·사이트맵에서 제외.
 
 # 공유/미리보기
@@ -74,7 +74,7 @@ lang: "ko"                    # 문서 언어. 메타·JSON-LD inLanguage에 사
 | 필드 | 설명 |
 |------|------|
 | `category` | 카테고리 1개(문자열) 또는 여러 개(배열). **아래 5대 영역**만 사용. 학문별 페이지·필터에 사용. |
-| `tags` | 태그 배열. **허용 상위 태그**만 사용. `/t/[tag]`, 관련글·필터에 사용. |
+| `tags` | 태그 배열. **허용 태그**(`ALLOWED_TAGS`)만 사용. `/t/[tag]`, 관련글·필터에 사용. |
 | `slug` | URL 슬러그. 영문·숫자·하이픈 권장. 없으면 **파일명**(확장자 제외)이 슬러그. |
 | `status` | `published`(기본) 또는 `draft`. draft는 목록·RSS·사이트맵·빌드에서 제외. |
 | `featured` | `true`면 홈 "추천 지식 노드"에 노출. 기본 false. |
@@ -143,13 +143,13 @@ lang: "ko"                    # 문서 언어. 메타·JSON-LD inLanguage에 사
 
 ---
 
-## 허용 태그 (상위 태그만 사용)
+## 허용 태그
 
-**세부 태그는 사용하지 않고, 아래 상위 태그만 사용합니다.** (`lib/content-taxonomy.ts`와 동기화)
+**아래 허용 태그만 사용합니다.** (`lib/content-taxonomy.ts`의 `ALLOWED_TAGS`와 동기화. 학습과학_표준화_태그체계 기준)
 
-주의집중, 기억과 복습, 작업기억, 메타인지, 인지부하, 이해와 전이, 문제해결, 수면, 스트레스, 실행기능, 뇌가소성, 자기효능감, 자기조절학습, 피드백, 평가, 목표설정, 부모개입, 인지발달, 자율성발달, 사춘기, 또래관계, 학년전환기, 학습동기, 자기결정성, 시험불안, 회복탄력성, 자존감, 무기력, 완벽주의
+교수방법, 설계·평가, 이론·사회학습, 이론·지원, 학습관점, 신념·귀인, 정서·자기조절, 데이터·환경, 이론·행동주의, 동기기초, 목표·노력, 이론·동기, 이론·정서, 놀이·정체성, 발달기능, 발달기초, 사회발달, 청소년·전문성, 이론·발달, 이론·전문성, 가소성, 각성·수면, 감각·운동, 뇌구조, 신경작동, 신경화학, 예측·보상, 이론·가소성, 이론·공고화, 이론·보상, 회로·네트워크, 개념·표상, 난이도·착각, 메타인지, 이론·기억, 이론·멀티미디어, 이론·전이, 인지부하, 전이·자동화, 정보처리, 학습전략, 문제해결, 기억, 주의·통제
 
-예: `tags: ["작업기억", "인지부하", "자기효능감"]`
+예: `tags: ["인지부하", "메타인지", "문제해결", "기억", "주의·통제"]`
 
 ---
 
@@ -395,12 +395,18 @@ lang: "ko"                    # 문서 언어. 메타·JSON-LD inLanguage에 사
 |------|------|------|------|
 | `items` | SourceItem[] \| string | ✓ | 출처 목록. 각 항목: `author`, `year`, `title`, `source`(선택), `note`(선택), `href`(선택) |
 
-`items`는 **객체 배열**로 넘기는 것을 권장합니다. JSON 문자열(`items={'[...]'}`)은 MDX 컴파일 시 속성 이스케이프로 파싱이 실패할 수 있으므로, 상단에 `export const sourcesItems = [...];`로 정의한 뒤 `items={sourcesItems}`처럼 넘기세요.
+`items`는 **객체 배열** 또는 **파이프 구분 문자열**로 넘길 수 있습니다. RSC 환경에서 객체 배열이 비어 나올 경우, **한 줄당 `author|year|title|source|note|href`** 형식 문자열을 사용하세요(빈 필드는 생략 가능).
+
+```mdx
+<Sources items={`Baddeley|1992|Working Memory|Science|대표 논문|
+Ashcraft & Krause|2007|Working memory...|Psychonomic Bulletin & Review||https://example.com`} />
+```
+
+객체 배열 예시(동작 환경이면 사용 가능):
 
 ```mdx
 <Sources items={[
-  { author: "Sweller", year: "1988", title: "Cognitive load during problem solving", source: "Cog. Sci.", href: "https://..." },
-  { author: "Paas", year: "1992", title: "Training strategies for attaining transfer", source: "J. Ed. Psych.", note: "인지부하 측정" }
+  { author: "Sweller", year: "1988", title: "Cognitive load...", source: "Cog. Sci.", href: "https://..." }
 ]} />
 ```
 
@@ -507,13 +513,11 @@ lang: "ko"                    # 문서 언어. 메타·JSON-LD inLanguage에 사
 
 | prop | 타입 | 필수 | 설명 |
 |------|------|------|------|
-| `items` | TroubleshootingItem[] \| string | ✓ | 항목: `{ problem: string, solution: string }`. **객체 배열** 권장. JSON 문자열은 파싱 실패할 수 있어 상단 `export const` 후 변수로 넘기세요. |
+| `items` | TroubleshootingItem[] \| string | ✓ | 항목: `{ problem, solution }` 배열 또는 **한 줄당 `problem|solution`** 파이프 구분 문자열. RSC에서 객체가 비어 나오면 문자열 형식 사용. |
 
 ```mdx
-<Troubleshooting items={[
-  { problem: "아이가 손을 안 댐", solution: "한 문장만 읽고 그림만 보기로 낮춤" },
-  { problem: "시간만 끌다 끝남", solution: "타이머 10분으로 짧게 설정 후 성공 경험 주기" }
-]} />
+<Troubleshooting items={`체크리스트를 안 따라옴|항목을 3개 이하로 줄이기
+아이가 손을 안 댐|한 문장만 읽고 그림만 보기로 낮춤`} />
 ```
 
 ---
@@ -613,7 +617,7 @@ lang: "ko"                    # 문서 언어. 메타·JSON-LD inLanguage에 사
 ## props 정규화 규칙
 
 - **문자열 배열** (`items`, `steps`, `slugs`, `questions` 등): MDX에서는 `"a, b, c"`처럼 쉼표 구분 문자열로 넘기거나, `items={["a","b","c"]}`처럼 배열로 넘길 수 있습니다. `lib/mdx-props.ts`의 `toStringArray`가 빈 값·null을 걸러 배열로 맞춥니다.
-- **객체 배열** (`Sources`의 `items`, `Troubleshooting`의 `items`): JS 객체 배열로 넘기는 것을 권장합니다. JSON 문자열(`items={'[...]'}`)은 MDX 컴파일 시 속성 이스케이프로 파싱이 실패할 수 있으므로, **파일 상단에 `export const sourcesItems = [...];` 등으로 정의한 뒤 `items={sourcesItems}`** 처럼 변수로 넘기세요. `toSourceItemsArray`, `toTroubleshootingItemsArray`가 정규화합니다.
+- **객체 배열·문자열** (`Sources`의 `items`, `Troubleshooting`의 `items`): JS 객체 배열이 RSC에서 비어 나오면 **파이프 구분 문자열**을 사용하세요. Sources는 한 줄당 `author|year|title|source|note|href`, Troubleshooting은 한 줄당 `problem|solution`. `toSourceItemsArray`, `toTroubleshootingItemsArray`가 정규화합니다.
 
 ---
 

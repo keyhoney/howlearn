@@ -8,13 +8,12 @@ import { Menu, X } from "lucide-react";
 
 const navLinks = [
   { href: "/", label: "홈" },
-  { href: "/domains", label: "도메인" },
+  { href: "/domains", label: "개념별" },
   { href: "/guides", label: "가이드" },
   { href: "/concepts", label: "개념" },
-  { href: "/toolkit", label: "툴킷" },
   { href: "/blog", label: "블로그" },
+  { href: "/toolkit", label: "툴킷" },
   { href: "/books", label: "도서" },
-  { href: "/assessments", label: "자가진단" },
   { href: "/search", label: "검색" },
   { href: "/about", label: "소개" },
 ];

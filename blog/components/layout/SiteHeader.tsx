@@ -15,17 +15,19 @@ export function SiteHeader() {
             <Image
               src={BRAND_LOGO_URL}
               alt="HowLearn"
-              width={120}
-              height={30}
-              className="h-6 w-auto sm:h-7 object-contain object-left"
+              width={144}
+              height={36}
+              className="h-[29px] w-auto sm:h-[34px] object-contain object-left"
               priority
             />
           </Link>
-          <nav className="hidden md:flex gap-5 lg:gap-6">
+          <nav className="hidden md:flex items-center gap-5 lg:gap-6" aria-label="주 메뉴">
             <Link href="/domains" className="text-sm font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors whitespace-nowrap">학문별</Link>
+            <span className="h-4 w-px bg-slate-300 dark:bg-slate-600 shrink-0" aria-hidden />
             <Link href="/guides" className="text-sm font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors whitespace-nowrap">가이드</Link>
             <Link href="/concepts" className="text-sm font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors whitespace-nowrap">개념</Link>
             <Link href="/blog" className="text-sm font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors whitespace-nowrap">블로그</Link>
+            <span className="h-4 w-px bg-slate-300 dark:bg-slate-600 shrink-0" aria-hidden />
             <Link href="/toolkit" className="text-sm font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors whitespace-nowrap">툴킷</Link>
             <Link href="/books" className="text-sm font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors whitespace-nowrap">도서</Link>
           </nav>
