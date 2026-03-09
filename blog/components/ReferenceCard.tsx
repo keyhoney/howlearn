@@ -25,18 +25,29 @@ export function ReferenceCard({ items }: ReferenceCardProps) {
         본 문서에서 인용·참고한 자료입니다.
       </p>
       <ul className="mt-4 space-y-2">
-        {items.map((item, i) => (
-          <li key={i}>
-            <a
-              href={item.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/50 px-4 py-3 text-sm text-slate-900 dark:text-slate-100 no-underline transition hover:border-slate-300 dark:hover:border-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"
-            >
-              {item.title || item.url}
-            </a>
-          </li>
-        ))}
+        {items.map((item, i) => {
+          const label = item.title || item.url || "";
+          const hasUrl = typeof item.url === "string" && item.url.trim() !== "";
+
+          return (
+            <li key={i}>
+              {hasUrl ? (
+                <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/50 px-4 py-3 text-sm text-slate-900 dark:text-slate-100 no-underline transition hover:border-slate-300 dark:hover:border-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"
+                >
+                  {label}
+                </a>
+              ) : (
+                <span className="block rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/50 px-4 py-3 text-sm text-slate-700 dark:text-slate-300">
+                  {label}
+                </span>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </aside>
   );
