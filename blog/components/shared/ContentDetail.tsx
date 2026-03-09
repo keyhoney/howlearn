@@ -10,6 +10,7 @@ import { Disclaimer } from "@/components/Disclaimer";
 import { KeyTakeaways } from "@/components/mdx/KeyTakeaways";
 import { ReflectionPrompt } from "@/components/mdx/ReflectionPrompt";
 import type { HeadingItem } from "@/lib/headings";
+import { author } from "@/lib/site";
 
 export type ReferringItem = { type: ContentType; slug: string; title: string; path: string };
 
@@ -108,7 +109,7 @@ export function ContentDetail({
                 <span>검토 {format(new Date(content.reviewedAt), "yyyy.MM.dd")}</span>
               )}
               <Link href="/about#author" className="text-indigo-600 dark:text-indigo-400 hover:underline font-sans">
-                {content.author ?? "HowLearn"}
+                {content.author ?? author.name}
               </Link>
             </div>
           </div>

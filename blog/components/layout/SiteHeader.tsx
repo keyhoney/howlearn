@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Search } from "lucide-react";
 import { MobileNavDrawer } from "./MobileNavDrawer";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { site } from "@/lib/site";
 
 const BRAND_LOGO_URL = "https://learninsight.pages.dev/ogprofile/brandlogo.png";
 
@@ -14,7 +15,7 @@ export function SiteHeader() {
           <Link href="/" className="flex shrink-0 items-center">
             <Image
               src={BRAND_LOGO_URL}
-              alt="HowLearn"
+              alt={site.name}
               width={144}
               height={36}
               className="h-[29px] w-auto sm:h-[34px] object-contain object-left"

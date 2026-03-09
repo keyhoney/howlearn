@@ -155,7 +155,7 @@ function buildContentFromMdx(
   const rp = fm.reflectionPrompt as { title?: string; questions?: string[] } | undefined;
   const reflectionPrompt =
     rp && Array.isArray(rp.questions) && rp.questions.length > 0
-      ? { title: typeof rp.title === "string" ? rp.title : "생각해볼 것", questions: rp.questions.filter((q): q is string => typeof q === "string") }
+      ? { title: typeof rp.title === "string" ? rp.title : undefined, questions: rp.questions.filter((q): q is string => typeof q === "string") }
       : undefined;
   return {
     ...base,

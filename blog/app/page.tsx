@@ -1,11 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, BookOpen, Search } from "lucide-react";
+import { ArrowRight, Search } from "lucide-react";
 import { getFeaturedContent, getLatestContent } from "@/lib/content";
 import { ContentCard } from "@/components/cards/ContentCard";
 import { DomainGrid } from "@/components/shared/DomainGrid";
 import { CtaLink } from "@/components/ui/CtaLink";
 import { constructMetadata } from "@/lib/seo";
+import { site } from "@/lib/site";
 
 export const metadata = constructMetadata({
   title: "홈",
@@ -34,8 +35,19 @@ export default async function Home() {
         </div>
         <div className="container relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 sm:text-5xl lg:text-6xl">
-            <span className="text-[#FD9A32]">How</span>
-            <span className="text-[#97D5D4]">Learn</span>
+            {(() => {
+              const idx = site.name.indexOf("Learn");
+              const part1 = idx >= 0 ? site.name.slice(0, idx) : site.name;
+              const part2 = idx >= 0 ? site.name.slice(idx) : null;
+              return part2 ? (
+                <>
+                  <span className="text-[#FD9A32]">{part1}</span>
+                  <span className="text-[#97D5D4]">{part2}</span>
+                </>
+              ) : (
+                <span>{site.name}</span>
+              );
+            })()}
           </h1>
           <p className="mx-auto mt-5 sm:mt-6 max-w-2xl text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
             학습과학 기반 부모 교육을 위한 지식 아카이브입니다. 가이드, 개념, 툴킷, 블로그, 도서를 제공합니다.
