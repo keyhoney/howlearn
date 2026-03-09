@@ -98,7 +98,7 @@ export function ContentDetail({
                 <span>검토 {format(new Date(content.reviewedAt), "yyyy.MM.dd")}</span>
               )}
               <Link href="/about#author" className="text-indigo-600 dark:text-indigo-400 hover:underline font-sans">
-                {content.author ?? "Mathesis"}
+                {content.author ?? "HowLearn"}
               </Link>
             </div>
           </div>

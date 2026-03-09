@@ -2,7 +2,7 @@ import { constructMetadata } from "@/lib/seo";
 
 export const metadata = constructMetadata({
   title: "이용약관",
-  description: "Mathesis 서비스 이용 조건, 권리, 의무 및 책임에 관한 안내입니다.",
+  description: "HowLearn 서비스 이용 조건, 권리, 의무 및 책임에 관한 안내입니다.",
   noindex: true,
 });
 
@@ -17,7 +17,7 @@ export default function TermsPage() {
         <p className="text-slate-600 dark:text-slate-400">최종 수정: 2026년 3월</p>
 
         <p className="text-slate-600 dark:text-slate-300">
-          본 이용약관은 Mathesis(이하 &quot;본 사이트&quot;)가 제공하는 콘텐츠 및 관련 서비스의 이용과 관련하여,
+          본 이용약관은 HowLearn(이하 &quot;본 사이트&quot;)가 제공하는 콘텐츠 및 관련 서비스의 이용과 관련하여,
           본 사이트와 이용자 간의 권리, 의무 및 책임사항을 규정합니다.
           이용자는 본 사이트를 이용함으로써 본 약관에 동의한 것으로 봅니다.
         </p>

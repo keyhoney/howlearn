@@ -20,7 +20,7 @@ export default async function Home() {
         <div className="absolute inset-0 bg-[url('https://picsum.photos/seed/learning/1920/1080?blur=10')] bg-cover bg-center opacity-10 dark:opacity-5" />
         <div className="container relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 sm:text-5xl lg:text-6xl">
-            Mathesis
+            HowLearn
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
             학습과학 기반 부모 교육을 위한 지식 아카이브입니다. 가이드, 개념, 툴킷, 블로그, 도서를 제공합니다.

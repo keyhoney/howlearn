@@ -3,18 +3,18 @@ import { constructMetadata } from "@/lib/seo";
 
 export const metadata = constructMetadata({
   title: "About Us",
-  description: "Mathesis 소개. 학습과학 기반 부모 교육을 위한 지식 아카이브입니다.",
+  description: "HowLearn 소개. 학습과학 기반 부모 교육을 위한 지식 아카이브입니다.",
 });
 
 export default function AboutPage() {
   return (
     <div className="container mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
       <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 mb-8">
-        About Mathesis
+        About HowLearn
       </h1>
       <div className="prose prose-slate prose-lg max-w-none dark:prose-invert">
         <p className="lead text-slate-600 dark:text-slate-300">
-          Mathesis는 인지심리학, 신경과학, 교육심리학, 발달심리학, 동기·정서심리학 연구를 바탕으로 한 부모 교육 가이드와 실천 도구를 제공합니다.
+          HowLearn은 인지심리학, 신경과학, 교육심리학, 발달심리학, 동기·정서심리학 연구를 바탕으로 한 부모 교육 가이드와 실천 도구를 제공합니다.
           단편적인 정보가 아닌 연결된 지식망을 통해, 부모와 교육자가 학습의 본질을 이해하고 실제 교육 현장에 적용할 수 있도록 돕습니다.
         </p>
 
@@ -34,7 +34,7 @@ export default function AboutPage() {
             운영자·저자
           </h2>
           <p className="mt-4 text-slate-600 dark:text-slate-300">
-            Mathesis 콘텐츠는 학습과학·수학교육 분야에서 현장 경험과 연구를 연결해 온 현직 수학 교사가 집필합니다.
+            HowLearn 콘텐츠는 학습과학·수학교육 분야에서 현장 경험과 연구를 연결해 온 현직 수학 교사가 집필합니다.
           </p>
 
           <h3 className="mt-6 text-lg font-semibold text-slate-800 dark:text-slate-200">학력·자격</h3>
@@ -53,17 +53,17 @@ export default function AboutPage() {
 
           <h3 className="mt-6 text-lg font-semibold text-slate-800 dark:text-slate-200">집필·유통</h3>
           <p className="mt-2 text-slate-600 dark:text-slate-300">
-            Mathesis에서 정리한 내용을 바탕으로 집필한 전자책이 리디, 알라딘, Yes24, 교보문고 등에 출간되어 있습니다.
+            HowLearn에서 정리한 내용을 바탕으로 집필한 전자책이 리디, 알라딘, Yes24, 교보문고 등에 출간되어 있습니다.
           </p>
 
-          <h3 className="mt-6 text-lg font-semibold text-slate-800 dark:text-slate-200">Mathesis를 시작하게 된 이유</h3>
+          <h3 className="mt-6 text-lg font-semibold text-slate-800 dark:text-slate-200">HowLearn을 시작하게 된 이유</h3>
           <p className="mt-2 text-slate-600 dark:text-slate-300">
             학생들이 수학을 왜 어려워하는지 고민하다 보니, 아이들의 생각과 불안에 대해 많이 알게 되었습니다.
             그걸 도와줄 방법을 찾다가 여러 논문을 읽었고, 학부모 상담에서도 도움을 주고자 관련 논문을 찾아 읽었습니다.
           </p>
           <p className="mt-3 text-slate-600 dark:text-slate-300">
             그동안 읽었던 논문들을 하나둘 정리하기 시작한 것은, 두 아이가 태어나 키우면서 “내 아이를 어떻게 잘 키울 수 있을까”를 진지하게 고민하게 되었기 때문입니다.
-            그 정리의 결과가 Mathesis의 출발점입니다.
+            그 정리의 결과가 HowLearn의 출발점입니다.
           </p>
 
           <p className="mt-6 text-sm text-slate-500 dark:text-slate-400">

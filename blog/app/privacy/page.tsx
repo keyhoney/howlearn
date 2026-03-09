@@ -2,7 +2,7 @@ import { constructMetadata } from "@/lib/seo";
 
 export const metadata = constructMetadata({
   title: "개인정보처리방침",
-  description: "Mathesis의 개인정보 수집·이용, 보관, 보호 및 이용자 권리에 관한 안내입니다.",
+  description: "HowLearn의 개인정보 수집·이용, 보관, 보호 및 이용자 권리에 관한 안내입니다.",
   noindex: true,
 });
 
@@ -17,7 +17,7 @@ export default function PrivacyPage() {
         <p className="text-slate-600 dark:text-slate-400">최종 수정: 2026년 3월</p>
 
         <p className="text-slate-600 dark:text-slate-300">
-          Mathesis(이하 &quot;본 사이트&quot;)는 이용자의 개인정보를 중요하게 생각하며,
+          HowLearn(이하 &quot;본 사이트&quot;)는 이용자의 개인정보를 중요하게 생각하며,
           관련 법령에 따라 개인정보를 적법하고 투명하게 처리하기 위해 본 개인정보처리방침을 마련합니다.
           본 방침은 본 사이트가 어떤 정보를 수집하고, 어떠한 목적으로 이용하며, 어떻게 보관·보호하고, 이용자가 어떤 권리를 가지는지 설명합니다.
         </p>
