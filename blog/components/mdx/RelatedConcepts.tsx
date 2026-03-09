@@ -16,7 +16,7 @@ export function RelatedConcepts({ slugs }: RelatedConceptsProps) {
       </p>
       <ul className="mt-3 flex flex-wrap gap-2">
         {list.map((slug) => (
-          <li key={slug}>
+          <li key={slug} id={`concept-${slug}`} className="scroll-mt-24">
             <Link
               href={`/concepts/${slug}`}
               className="rounded-full border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-1.5 text-sm font-medium text-slate-900 dark:text-slate-100 no-underline transition hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400"

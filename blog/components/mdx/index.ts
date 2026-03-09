@@ -7,6 +7,7 @@ export { KeyTakeaways } from "./KeyTakeaways";
 export { CommonMisconception } from "./CommonMisconception";
 export { ActionChecklist } from "./ActionChecklist";
 export { RelatedConcepts } from "./RelatedConcepts";
+export { ConceptAnchorLink } from "./ConceptAnchorLink";
 export { ReflectionPrompt } from "./ReflectionPrompt";
 export { WhyItMatters } from "./WhyItMatters";
 export { RelatedGuides } from "./RelatedGuides";
