@@ -8,9 +8,9 @@ export function Sources({ items }: SourcesProps) {
   return (
     <aside
       className="my-8 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50/50 dark:bg-slate-800/50 p-5 md:p-6"
-      aria-label="References"
+      aria-label="출처"
     >
-      <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Sources</p>
+      <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">출처</p>
       <ul className="mt-3 space-y-3">
         {list.map((item, i) => (
           <li key={i} className="text-sm leading-relaxed text-slate-900 dark:text-slate-200">
@@ -21,12 +21,12 @@ export function Sources({ items }: SourcesProps) {
                 rel="noopener noreferrer"
                 className="font-medium text-indigo-600 dark:text-indigo-400 underline underline-offset-2 hover:text-indigo-700 dark:hover:text-indigo-300"
               >
-                {item.author} ({item.year}). {item.title}.
+                {item.author}{item.year ? ` (${item.year}). ` : ". "}{item.title}.
                 {item.source ? ` ${item.source}.` : ""}
               </a>
             ) : (
               <span>
-                {item.author} ({item.year}). {item.title}.
+                {item.author}{item.year ? ` (${item.year}). ` : ". "}{item.title}.
                 {item.source ? ` ${item.source}.` : ""}
               </span>
             )}

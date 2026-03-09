@@ -3,7 +3,7 @@ import { toStringArray } from "@/lib/mdx-props";
 type ActionChecklistProps = { title?: string; items?: string[] | string | null };
 
 export function ActionChecklist({
-  title = "Things to try today",
+  title = "오늘 적용해 볼 것",
   items,
 }: ActionChecklistProps) {
   const list = toStringArray(items);
@@ -11,10 +11,10 @@ export function ActionChecklist({
   return (
     <aside
       className="my-8 rounded-xl border border-slate-200 dark:border-slate-600 border-l-4 border-l-cyan-500 dark:border-l-cyan-500 bg-slate-50/80 dark:bg-slate-800/80 p-5 shadow-sm md:p-6"
-      aria-label="Action checklist"
+      aria-label="실천 체크리스트"
     >
       <p className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
-        Action checklist
+        실천 체크리스트
       </p>
       {title && (
         <h3 className="mt-1 text-base font-semibold text-slate-900 dark:text-slate-100 md:text-lg">{title}</h3>

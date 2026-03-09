@@ -1,87 +1,130 @@
-# SEO 최적화 MDX frontmatter 템플릿
+# SEO 최적화 MDX frontmatter 가이드
 
-모든 콘텐츠 타입(블로그, 가이드, 개념, 툴킷, 전자책)에서 사용할 수 있는 frontmatter 표준입니다. 검색 결과·OG·JSON-LD·RSS·사이트맵에 반영됩니다.
+모든 콘텐츠 타입(블로그, 가이드, 개념, 툴킷, 전자책)에서 사용하는 frontmatter 표준입니다. `lib/content.ts`의 `buildContentFromMdx`가 파싱하며, 검색 결과·OG·JSON-LD·RSS·사이트맵·목록 필터에 반영됩니다.
 
 **분류 규칙:** 카테고리는 **카테고리_태그_분류.md**의 **카테고리** 열 값만 사용하고, 태그는 **상위 태그** 열 값만 사용합니다. 허용 목록은 `lib/content-taxonomy.ts`에 정의되어 있습니다.
 
 ---
 
-## 템플릿
+## 공통 템플릿 (모든 타입)
 
 ```yaml
 ---
 # 필수
 title: "글 제목"
-description: "1~2문장 요약. 검색 결과/OG/JSON-LD/RSS에 그대로 쓰일 문장으로."
-date: "2026-03-06"          # 최초 공개일(=발행일) 권장
-updated: "2026-03-06"       # 마지막 실질 수정일(내용 변경 시만 갱신 권장)
-category: "인지심리학"      # 아래 허용 카테고리만 사용. 또는 ["인지심리학","교육심리학"]
+description: "1~2문장 요약. 검색 결과·OG·JSON-LD·RSS에 그대로 사용됩니다. summary와 동일하게 인식됩니다."
 
-# 권장(SEO/탐색/내비게이션)
-tags: ["작업기억","인지부하"]   # 아래 허용 상위 태그만 사용 (세부 태그 사용 안 함)
-slug: "working-memory-cognitive-load"   # 영문/숫자/하이픈 권장(퍼머링크 안정화). 없으면 파일명이 슬러그.
-canonical: "https://example.com/blog/working-memory-cognitive-load"  # 가능하면 명시
-lang: "ko-KR"                 # 다국어/검색엔진 언어 힌트
-status: "published"           # draft | published (draft는 빌드/피드/사이트맵에서 제외)
+# 날짜 (권장: ISO 8601 YYYY-MM-DD)
+datePublished: "2026-03-06"   # 최초 공개일. date로 써도 인식됩니다.
+dateModified: "2026-03-06"    # 마지막 실질 수정일. 없으면 datePublished 사용.
+dateReviewed: "2026-03-06"    # (선택) 마지막 검토일. 상세 페이지에 "검토 yyyy.MM.dd"로 표시.
+
+# 분류 (아래 허용 카테고리·태그만 사용)
+category: "인지심리학"        # 1개(문자열) 또는 여러 개(배열)
+tags: ["작업기억", "인지부하"]
+
+# URL·노출
+slug: "working-memory-cognitive-load"   # 없으면 파일명(확장자 제외)이 슬러그. 영문/숫자/하이픈 권장.
+status: "published"          # published | draft. draft는 목록·RSS·사이트맵에서 제외.
 
 # 공유/미리보기
-ogImage: "/og/working-memory.png"       # 사이트 기준 경로 OK (절대 URL이면 더 좋음)
-ogImageAlt: "작업기억과 인지부하를 설명하는 도식"
-ogType: "article"             # 보통 article
-twitterCard: "summary_large_image"
+coverImage: "/blog/문서명/cover.webp"    # 표지·대표 이미지. ogImage 없으면 이 값 사용.
+ogImage: "/og/working-memory.png"       # OG 전용 이미지. coverImage보다 우선.
 
-# 구조화 데이터 품질(선택이지만 강력 추천)
-author: "홍길동"              # 또는 ["홍길동","김철수"]. 없으면 사이트 기본 저자 사용
-readingTime: 7                # 분 단위. 없으면 본문 기준으로 빌드에서 계산
-keywords: ["학습","인지","교육"]         # tags와 별개로, 메타 키워드용(선택)
-series: "인지과학으로 보는 공부"        # 시리즈가 있으면 내부링킹에 도움
-references: []                # 참고 문헌. [{ title: "논문 제목", url: "https://..." }]
+# 관련·참고
+related:                      # 또는 relatedContentIds. 수동 관련 콘텐츠.
+  - "guide:math-anxiety"
+  - "concept:working-memory"
+  - "blog:welcome"
+references:                   # 참고 문헌. 상세 페이지 하단·JSON-LD에 사용.
+  - title: "논문 제목"
+    url: "https://..."
+
+# 선택
+featured: false               # true면 홈 "추천 지식 노드"에 노출.
+author: "howlearn"              # 없으면 사이트 기본 저자. JSON-LD·상세 페이지에 표시.
+lang: "ko"                    # 문서 언어. 메타·JSON-LD inLanguage에 사용.
 ---
 ```
 
+**날짜 필드 별칭:** `date` → datePublished, `updated` → dateModified로 인식됩니다. 새로 쓸 때는 `datePublished` / `dateModified` 사용을 권장합니다.
+
+**Canonical URL:** 페이지별 canonical은 앱에서 `constructMetadata({ path: "/blog/slug" })`로 자동 설정되므로, frontmatter에 `canonical`을 넣지 않아도 됩니다.
+
 ---
 
-## 필드 설명
+## 필드 설명 (공통)
 
 ### 필수
 
 | 필드 | 설명 |
 |------|------|
-| `title` | 글 제목. 검색 결과·OG·JSON-LD·RSS에 사용. 한글 가능. |
-| `description` | 1~2문장 요약. meta description·OG description·JSON-LD·RSS에 그대로 사용. |
-| `date` | 최초 공개일. ISO 8601 권장(`YYYY-MM-DD`). `datePublished`로도 인식. |
-| `updated` | 마지막 실질 수정일. 없으면 `date` 사용. `dateModified`로도 인식. |
-| `category` | 카테고리 1개(문자열) 또는 여러 개(배열). 아카이브 `/c/[category]`에 사용. **권장:** 아래 학습과학 5대 영역 중 하나 이상 지정 시 주제별·홈·필터에서 일관 노출. |
+| `title` | 글 제목. 검색 결과·OG·JSON-LD·RSS·목록에 사용. 한글 가능. |
+| `description` | 1~2문장 요약. `summary`로 써도 동일 인식. meta description·OG·JSON-LD·RSS에 사용. |
 
-### 권장(SEO/탐색)
+### 날짜
 
 | 필드 | 설명 |
 |------|------|
-| `tags` | 태그 배열. 아카이브 `/t/[tag]`, 관련글·필터에 사용. |
-| `slug` | URL 슬러그. **영문·숫자·하이픈** 권장(퍼머링크 안정). 미설정 시 **파일명**이 슬러그가 됨. |
-| `canonical` | 정규 URL. 있으면 메타 canonical·JSON-LD에 사용. |
-| `lang` | 문서 언어(예: `ko-KR`). 메타·JSON-LD `inLanguage`에 사용. |
-| `status` | `published`(기본) 또는 `draft`. `draft`인 글은 목록·RSS·사이트맵·빌드 노출에서 제외. |
+| `datePublished` | 최초 공개일. `date`로 써도 인식됨. |
+| `dateModified` | 마지막 실질 수정일. 없으면 datePublished 사용. |
+| `dateReviewed` | (선택) 마지막 검토일. 상세 페이지에 "검토 yyyy.MM.dd" 표시. |
 
-### 공유/미리보기
+### 분류·노출
 
 | 필드 | 설명 |
 |------|------|
-| `ogImage` | OG 이미지. 사이트 기준 경로(`/og/xxx.png`) 또는 절대 URL. |
-| `ogImageAlt` | OG 이미지 대체 텍스트(접근성·SEO). |
-| `ogType` | Open Graph type. 보통 `article`. |
-| `twitterCard` | Twitter 카드 타입. 예: `summary_large_image`. |
+| `category` | 카테고리 1개(문자열) 또는 여러 개(배열). **아래 5대 영역**만 사용. 학문별 페이지·필터에 사용. |
+| `tags` | 태그 배열. **허용 상위 태그**만 사용. `/t/[tag]`, 관련글·필터에 사용. |
+| `slug` | URL 슬러그. 영문·숫자·하이픈 권장. 없으면 **파일명**(확장자 제외)이 슬러그. |
+| `status` | `published`(기본) 또는 `draft`. draft는 목록·RSS·사이트맵·빌드에서 제외. |
+| `featured` | `true`면 홈 "추천 지식 노드"에 노출. 기본 false. |
 
-### 구조화 데이터/기타
+### 이미지
 
 | 필드 | 설명 |
 |------|------|
-| `author` | 저자명(문자열 또는 배열). 없으면 `lib/site.ts`의 기본 저자 사용. JSON-LD에 반영. |
-| `readingTime` | 예상 읽는 시간(분). 없으면 본문 글자 수로 자동 계산. |
-| `keywords` | 메타 키워드·JSON-LD keywords용. `tags`와 별도로 지정 가능. |
-| `series` | 시리즈명. 내부 링킹·구조화 데이터 확장용. |
-| `references` | 참고 문헌 배열. `[{ title: "제목", url: "https://..." }]`. 상세 페이지 하단에 표시. |
-| `ogImage` | 전자책·가이드 등은 `coverImage`도 사용 가능(표지 이미지). |
+| `coverImage` | 표지·대표 이미지. 사이트 기준 경로(`/blog/문서명/01.webp`) 또는 절대 URL. |
+| `ogImage` | OG·미리보기용 이미지. 없으면 coverImage 사용. 전자책·가이드에서 표지와 다르게 둘 때 사용. |
+
+### 관련·참고
+
+| 필드 | 설명 |
+|------|------|
+| `related` / `relatedContentIds` | 수동 관련 콘텐츠. `"타입:슬러그"` 형식 배열(예: `guide:math-anxiety`, `concept:working-memory`). 있으면 관련글 추천 시 우선 사용, 부족분은 태그·도메인으로 자동 보강. |
+| `references` | 참고 문헌. `[{ title?: "제목", url: "https://..." }]`. 상세 페이지 하단·JSON-LD에 표시. |
+
+### 기타
+
+| 필드 | 설명 |
+|------|------|
+| `author` | 저자명(문자열). 없으면 `lib/site.ts` 기본 저자. JSON-LD·상세 페이지에 표시. |
+| `lang` | 문서 언어(예: `ko`, `ko-KR`). `constructMetadata`에 전달되어 메타·OG locale에 사용. |
+
+---
+
+## 타입별 frontmatter (추가 필드)
+
+| 타입 | 추가 필드 | 설명 |
+|------|-----------|------|
+| **guide** | `intro` | 가이드 서두 문단(목록·상단 요약에 사용). |
+| **guide** | `keyTakeaways` | 핵심 요약 문자열 배열. `KeyTakeaways` 컴포넌트와 연동 가능. |
+| **concept** | `shortDefinition` | 한 줄 정의. 없으면 description 사용. JSON-LD DefinedTerm에 사용. |
+| **concept** | `englishName` | 개념 영문명(선택). |
+| **toolkit** | `format` | `checklist` \| `template` \| `worksheet`. |
+| **toolkit** | `estimatedTime` | 예상 소요 시간(문자열, 예: "10분"). |
+| **book** | `subtitle` | 부제. |
+| **book** | `coverImage` | 표지 이미지. ogImage 없으면 OG에도 사용. |
+| **book** | `purchaseLinks` | `[{ label: "리디북스", href: "https://..." }]` 구매 링크 배열. |
+
+---
+
+## 메타데이터가 SEO에 쓰이는 방식
+
+- **Canonical:** 앱에서 `path`(예: `/blog/slug`, `/guides/slug`)로 자동 생성. frontmatter에 `canonical` 불필요.
+- **OG / Twitter:** `constructMetadata`에 `title`, `description`, `image`(ogImage → coverImage 순), `type`(article/book 등), `lang` 전달.
+- **JSON-LD:** `lib/schema.ts`가 `title`, `summary`, `publishedAt`, `updatedAt`, 저자·URL 등으로 Article / DefinedTerm / Book 스키마 생성. 개념은 `shortDefinition` 사용.
+- **RSS·사이트맵:** `publishedAt`, `status`(draft 제외) 기준. 목록·필터는 `category`→domains, `tags` 사용.
 
 ---
 
@@ -118,25 +161,398 @@ references: []                # 참고 문헌. [{ title: "논문 제목", url: "
 
 ---
 
-## 가이드 본문: Callout 사용
+## 가이드 본문: 강조 블록
 
-가이드·블로그 MDX에서 **핵심 요약**, **오해 방지**, **적용 포인트**를 강조할 때 `<Callout>` 컴포넌트를 쓰면 출판물 편집감이 높아집니다.
+가이드·블로그 MDX에서 **핵심 요약**, **오해 방지**, **적용 포인트**를 강조할 때는 아래 MDX 컴포넌트를 조합해 사용하세요.
+
+- **핵심 요약** → `<KeyTakeaways>`, `<WhyItMatters>`, `<TheoryBox>`
+- **오해 방지** → `<CommonMisconception>`
+- **적용 포인트** → `<ActionChecklist>`, `<ForParents>`
+
+---
+
+## MDX 컴포넌트 레퍼런스
+
+아래 컴포넌트는 `lib/mdx-components.tsx`에 등록되어 있어 MDX 본문에서 바로 사용할 수 있습니다. 배열·객체 props는 **쉼표 구분 문자열** 또는 **JSON**으로 넘길 수 있으며, `lib/mdx-props.ts`에서 배열/객체로 정규화됩니다.
+
+### 기본 요소 (자동 적용)
+
+| 요소 | 설명 |
+|------|------|
+| `h2`, `h3` | 제목에 자동으로 `id`가 부여되어 앵커·목차에 사용됩니다. |
+| `img` | `src`가 `/`로 시작하면 `NEXT_PUBLIC_IMAGE_BASE_URL`과 결합해 절대 URL로 변환됩니다. `alt`가 비면 장식 이미지로 처리됩니다. |
+
+---
+
+### TheoryBox
+
+이론·개념을 한 블록으로 정리할 때 사용합니다. 인디고 왼쪽 테두리.
+
+| prop | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `title` | string | | 이론 제목 |
+| `summary` | string | | 요약 설명 |
+| `whyItMatters` | string | | "Why it matters" 한 줄 |
+| `keywords` | string[] \| string | | 키워드(쉼표 구분 문자열 또는 배열). 뱃지로 표시 |
 
 ```mdx
-<Callout title="핵심">
-이론 소개에 그치지 않고, 가정에서 바로 적용할 수 있는 방식으로 설명합니다.
-</Callout>
-
-<Callout title="오해 방지">
-수학 포기는 능력 부족이 아니라, 반복된 실패 경험과 자기효능감이 겹친 결과일 수 있습니다.
-</Callout>
-
-<Callout title="적용 포인트">
-부모는 아이가 작은 성공을 경험하도록 난이도를 나눠 주는 것이 도움이 됩니다.
-</Callout>
+<TheoryBox
+  title="작업기억"
+  summary="동시에 머릿속에 유지하고 조작하는 정보의 양입니다."
+  whyItMatters="수학 문제 해결과 직결됩니다."
+  keywords={["인지부하", "청킹"]}
+/>
 ```
 
-`title`을 생략하면 기본값 "핵심"이 사용됩니다.
+---
+
+### TeacherNote
+
+교사·전문가 관점의 관찰·해석·주의사항을 적을 때 사용합니다. 앰버 왼쪽 테두리.
+
+| prop | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `context` | string | | 맥락 설명 |
+| `observation` | string | ✓ | 관찰 내용 |
+| `interpretation` | string | | 해석 |
+| `caution` | string | | 주의사항(⚠ 표시) |
+
+```mdx
+<TeacherNote
+  context="초등 고학년 수학 수업"
+  observation="문제를 읽자마자 손을 떼는 아이가 많았습니다."
+  interpretation="작업기억 부담이 크면 시도 자체를 포기할 수 있습니다."
+  caution="능력 부족으로 단정하지 마세요."
+/>
+```
+
+---
+
+### KeyTakeaways
+
+핵심 요약을 불릿 리스트로 강조합니다. 인디고 배경.
+
+| prop | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `items` | string[] \| string | ✓ | 요약 문장. 쉼표 구분 문자열 또는 배열 |
+
+```mdx
+<KeyTakeaways items={[
+  "작업기억은 동시에 유지·조작하는 정보량과 관련된다.",
+  "인지부하를 줄이면 학습 전이가 잘 일어날 수 있다."
+]} />
+```
+
+---
+
+### CommonMisconception
+
+흔한 오해와 실제를 대비해 적을 때 사용합니다. 오해 문장은 취소선.
+
+| prop | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `myth` | string | | 흔한 오해 문장 |
+| `reality` | string | | 실제("Actually: ..."로 표시) |
+
+```mdx
+<CommonMisconception
+  myth="수학을 못하는 건 머리가 나빠서다."
+  reality="반복된 실패 경험과 자기효능감, 인지부하 등이 복합적으로 작용할 수 있다."
+/>
+```
+
+---
+
+### WhyItMatters
+
+"왜 중요한지"를 자유 문단으로 강조합니다. **자식(children)**으로 내용을 넣습니다. 인디고 왼쪽 테두리.
+
+| prop | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| (children) | ReactNode | ✓ | 본문. MDX 문단·리스트 등 |
+
+```mdx
+<WhyItMatters>
+
+이론만 소개하지 않고, **가정에서 바로 적용**할 수 있는 방식으로 설명합니다.
+부모가 아이와 대화할 때 참고할 수 있는 말투와 예시를 함께 둡니다.
+
+</WhyItMatters>
+```
+
+---
+
+### ForStudents
+
+학생 대상 안내(목표·단계·예시·오늘 시도할 것)를 한 블록으로 넣을 때 사용합니다.
+
+| prop | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `goal` | string | | 목표 한 줄 |
+| `steps` | string[] \| string | | 단계(숫자 목록). 쉼표 구분 가능 |
+| `example` | string | | 예시("e.g. ...") |
+| `tryThisToday` | string | | "Try today: ..." 강조 문장 |
+
+```mdx
+<ForStudents
+  goal="한 번에 한 단계만 바꿔 보기"
+  steps={["오늘 할 일을 3개만 정한다", "가장 쉬운 것부터 한다"]}
+  example="수학 문제 1개만 풀고 쉬기"
+  tryThisToday="30분만 타이머 맞추고 공부해 보기"
+/>
+```
+
+---
+
+### ForParents
+
+부모 대상 안내(상황·말하기·행동·피할 것)를 한 블록으로 넣을 때 사용합니다. 시안 왼쪽 테두리.
+
+| prop | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `situation` | string | | 상황 설명 |
+| `whatToSay` | string | | 시도해 볼 말("Try saying: ...") |
+| `whatToDo` | string[] \| string | | 할 일 목록(불릿). 쉼표 구분 가능 |
+| `avoid` | string[] \| string | | 피할 것. 쉼표 구분 시 " · "로 표시 |
+
+```mdx
+<ForParents
+  situation="아이가 문제를 읽다가 포기할 때"
+  whatToSay="한 문장만 읽어 보자. 나머지는 엄마가 읽어 줄게."
+  whatToDo={["한 문장씩 나눠 읽기", "그림만 먼저 보기"]}
+  avoid="재촉하기, 왜 못 하냐고 묻기"
+/>
+```
+
+---
+
+### Sources / SourceNote
+
+참고 문헌 목록을 표시합니다. `SourceNote`는 `Sources`의 별칭입니다.
+
+| prop | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `items` | SourceItem[] \| string | ✓ | 출처 목록. 각 항목: `author`, `year`, `title`, `source`(선택), `note`(선택), `href`(선택) |
+
+`items`는 JSON 문자열 또는 객체/배열로 넘깁니다.
+
+```mdx
+<Sources items={[
+  { author: "Sweller", year: "1988", title: "Cognitive load during problem solving", source: "Cog. Sci.", href: "https://..." },
+  { author: "Paas", year: "1992", title: "Training strategies for attaining transfer", source: "J. Ed. Psych.", note: "인지부하 측정" }
+]} />
+```
+
+---
+
+### ActionChecklist
+
+"오늘 해볼 것" 같은 실행 목록을 번호로 표시합니다. 시안 왼쪽 테두리.
+
+| prop | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `title` | string | | 블록 제목. 기본값 "Things to try today" |
+| `items` | string[] \| string | ✓ | 항목. 쉼표 구분 문자열 또는 배열 |
+
+```mdx
+<ActionChecklist
+  title="이번 주에 해볼 것"
+  items={["아이와 함께 30분 타이머 맞추기", "한 문제만 풀고 피드백 주기"]}
+/>
+```
+
+---
+
+### RelatedConcepts
+
+관련 **개념** 문서로 가는 링크를 슬러그로 나열합니다. `/concepts/{slug}`로 연결됩니다.
+
+| prop | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `slugs` | string[] \| string | ✓ | 개념 슬러그. 쉼표 구분 가능 |
+
+```mdx
+<RelatedConcepts slugs={["working-memory", "cognitive-load"]} />
+```
+
+---
+
+### RelatedGuides
+
+관련 **가이드** 문서로 가는 링크를 슬러그로 나열합니다. `/guides/{slug}`로 연결됩니다.
+
+| prop | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `slugs` | string[] \| string | ✓ | 가이드 슬러그. 쉼표 구분 가능 |
+
+```mdx
+<RelatedGuides slugs="math-anxiety-guide, parent-talk" />
+```
+
+---
+
+### RelatedCards
+
+본문 중간에 **관련 지식 카드**(가이드·블로그·개념·툴킷·전자책)를 삽입할 때 사용합니다. `getContentByRefs`로 콘텐츠를 가져와 카드 그리드로 렌더링합니다.
+
+| prop | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `items` | string[] \| string | ✓ | 콘텐츠 참조. `"타입:슬러그"` 또는 `"타입-슬러그"`. 쉼표 구분 문자열 또는 배열 |
+
+```mdx
+<RelatedCards items="guide:math-anxiety, concept:working-memory, blog:welcome" />
+```
+
+---
+
+### ReflectionPrompt
+
+생각해 볼 질문 목록을 표시합니다. 인디고 왼쪽 테두리.
+
+| prop | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `title` | string | | 블록 제목. 기본값 "Reflect" |
+| `questions` | string[] \| string | ✓ | 질문 문장. 쉼표 구분 가능 |
+
+```mdx
+<ReflectionPrompt
+  title="읽고 나서"
+  questions={["우리 아이에게 어떤 부분이 가장 맞을까?", "한 가지만 바꾼다면 무엇부터 할까?"]}
+/>
+```
+
+---
+
+### WhenToUse
+
+"언제 사용하면 좋은지" 상황 목록을 체크 리스트처럼 표시합니다. 시안 왼쪽 테두리.
+
+| prop | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `situations` | string[] \| string | ✓ | 상황 설명. 쉼표 구분 가능 |
+
+```mdx
+<WhenToUse situations={[
+  "아이가 문제를 읽다가 포기할 때",
+  "시험 전 불안을 말할 때"
+]} />
+```
+
+---
+
+### Troubleshooting
+
+자주 나오는 문제와 해결을 짝으로 나열합니다. `problem` / `solution` 쌍.
+
+| prop | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `items` | TroubleshootingItem[] \| string | ✓ | 항목: `{ problem: string, solution: string }`. JSON 문자열 또는 배열 |
+
+```mdx
+<Troubleshooting items={[
+  { problem: "아이가 손을 안 댐", solution: "한 문장만 읽고 그림만 보기로 낮춤" },
+  { problem: "시간만 끌다 끝남", solution: "타이머 10분으로 짧게 설정 후 성공 경험 주기" }
+]} />
+```
+
+---
+
+### PrintableBlock
+
+인쇄 시 함께 출력하고 싶은 블록(체크리스트·워크시트 등)에 사용합니다. 점선 테두리, 인쇄 시 테두리 유지.
+
+| prop | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `title` | string | | 블록 제목. 기본값 "Printable" |
+| (children) | ReactNode | ✓ | 본문 |
+
+```mdx
+<PrintableBlock title="이번 주 체크리스트">
+
+- [ ] 30분 타이머로 공부해 보기
+- [ ] 한 문제만 풀고 피드백 주기
+
+</PrintableBlock>
+```
+
+---
+
+### BookOverview
+
+전자책·가이드북 소개 블록입니다. "About this book" 스타일.
+
+| prop | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `title` | string | | 소제목. 기본값 "About this book" |
+| (children) | ReactNode | ✓ | 본문 |
+
+```mdx
+<BookOverview title="이 책에 대하여">
+
+이 전자책은 학습과학 연구를 바탕으로, 부모가 아이와 수학을 대할 때
+실제로 쓸 수 있는 말과 행동을 정리한 것입니다.
+
+</BookOverview>
+```
+
+---
+
+### WhoThisIsFor
+
+"이 글/책이 필요한 독자" 목록을 불릿으로 표시합니다.
+
+| prop | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `items` | string[] \| string | ✓ | 대상 설명. 쉼표 구분 가능 |
+
+```mdx
+<WhoThisIsFor items={[
+  "수학 불안을 줄이고 싶은 학부모",
+  "아이의 학습 동기를 살리고 싶은 교사"
+]} />
+```
+
+---
+
+### WhatYouWillLearn
+
+"이 글에서 배울 것" 목록을 번호로 표시합니다. 인디고 왼쪽 테두리.
+
+| prop | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `items` | string[] \| string | ✓ | 학습 목표 문장. 쉼표 구분 가능 |
+
+```mdx
+<WhatYouWillLearn items={[
+  "수학 불안이 생기는 심리·인지 원리",
+  "부모가 할 수 있는 말과 행동"
+]} />
+```
+
+---
+
+### TopicIntro
+
+주제 소개 한 블록(제목 + 설명). 목차 앞이나 섹션 시작에 둘 때 유용합니다.
+
+| prop | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `title` | string | | 소제목 |
+| `description` | string | | 설명 문단 |
+
+```mdx
+<TopicIntro
+  title="수학 불안이란"
+  description="수학 상황에서 불안을 느끼고, 그 결과 수행이 떨어지는 현상을 말합니다. 능력 부족이 아니라 반복된 경험이 쌓인 결과일 수 있습니다."
+/>
+```
+
+---
+
+## props 정규화 규칙
+
+- **문자열 배열** (`items`, `steps`, `slugs`, `questions` 등): MDX에서는 `"a, b, c"`처럼 쉼표 구분 문자열로 넘기거나, `items={["a","b","c"]}`처럼 배열로 넘길 수 있습니다. `lib/mdx-props.ts`의 `toStringArray`가 빈 값·null을 걸러 배열로 맞춥니다.
+- **객체 배열** (`Sources`의 `items`, `Troubleshooting`의 `items`): JSON 문자열 `items="[{...},{...}]"` 또는 JS 객체 배열로 넘깁니다. `toSourceItemsArray`, `toTroubleshootingItemsArray`가 정규화합니다.
 
 ---
 

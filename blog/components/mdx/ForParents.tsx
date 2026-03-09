@@ -18,16 +18,16 @@ export function ForParents({
   return (
     <aside
       className="my-8 rounded-xl border border-slate-200 dark:border-slate-600 border-l-4 border-l-cyan-500 dark:border-l-cyan-500 bg-slate-50/80 dark:bg-slate-800/80 p-5 shadow-sm md:p-6"
-      aria-label="For parents"
+      aria-label="부모용"
     >
-      <p className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">For parents</p>
+      <p className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">부모용</p>
       <p className="mt-2 text-[15.5px] leading-7 text-slate-900 dark:text-slate-200 md:text-[17px] md:leading-8">
-        <span className="font-medium text-slate-900 dark:text-slate-100">Situation: </span>
+        <span className="font-medium text-slate-900 dark:text-slate-100">상황: </span>
         {situation}
       </p>
       {whatToSay && (
         <p className="mt-3 text-sm font-medium text-slate-900 dark:text-slate-100">
-          Try saying: &ldquo;{whatToSay}&rdquo;
+          이렇게 말해보기: &ldquo;{whatToSay}&rdquo;
         </p>
       )}
       {whatToDoList.length > 0 && (
@@ -39,7 +39,7 @@ export function ForParents({
       )}
       {avoidList.length > 0 && (
         <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
-          <span className="font-medium text-slate-900 dark:text-slate-100">Avoid: </span>
+          <span className="font-medium text-slate-900 dark:text-slate-100">피하기: </span>
           {avoidList.join(" · ")}
         </p>
       )}

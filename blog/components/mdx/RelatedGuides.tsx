@@ -9,10 +9,10 @@ export function RelatedGuides({ slugs }: RelatedGuidesProps) {
   return (
     <aside
       className="my-8 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50/80 dark:bg-slate-800/80 p-5 md:p-6"
-      aria-label="Related guides"
+      aria-label="관련 가이드"
     >
       <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-        Related guides
+        관련 가이드
       </p>
       <ul className="mt-3 space-y-1.5">
         {list.map((slug) => (

@@ -89,6 +89,7 @@ function buildContentFromMdx(
   const refs = normalizeReferences(fm);
   const featured = fm.featured === true;
   const author = typeof fm.author === "string" ? fm.author : undefined;
+  const lang = typeof fm.lang === "string" ? fm.lang : undefined;
   const base = {
     id,
     type,
@@ -109,6 +110,7 @@ function buildContentFromMdx(
     ...(reviewedAt && { reviewedAt }),
     ...(refs.length > 0 && { references: refs }),
     ...(author && { author }),
+    ...(lang && { lang }),
   };
 
   if (type === "guide") {

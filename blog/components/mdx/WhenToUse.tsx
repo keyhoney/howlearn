@@ -8,10 +8,10 @@ export function WhenToUse({ situations }: WhenToUseProps) {
   return (
     <aside
       className="my-8 rounded-xl border border-slate-200 dark:border-slate-600 border-l-4 border-l-cyan-500 dark:border-l-cyan-500 bg-slate-50/50 dark:bg-slate-800/50 p-5 md:p-6"
-      aria-label="When to use"
+      aria-label="언제 쓰나요"
     >
       <p className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
-        When to use
+        언제 쓰나요
       </p>
       <ul className="mt-3 space-y-1.5">
         {list.map((s, i) => (

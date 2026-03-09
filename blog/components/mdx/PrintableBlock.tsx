@@ -1,7 +1,7 @@
 type PrintableBlockProps = { title?: string; children: React.ReactNode };
 
 export function PrintableBlock({
-  title = "Printable",
+  title = "인쇄용",
   children,
 }: PrintableBlockProps) {
   return (

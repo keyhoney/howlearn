@@ -8,9 +8,9 @@ export function KeyTakeaways({ items }: KeyTakeawaysProps) {
   return (
     <aside
       className="my-8 rounded-xl border-2 border-indigo-200 dark:border-indigo-800 bg-indigo-50/50 dark:bg-indigo-950/50 p-5 md:p-6"
-      aria-label="Key takeaways"
+      aria-label="핵심 요약"
     >
-      <p className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Key takeaways</p>
+      <p className="text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">핵심 요약</p>
       <ul className="mt-3 space-y-2">
         {list.map((item, i) => (
           <li

@@ -17,7 +17,7 @@ export function toStringArray(
 
 export type SourceItem = {
   author: string;
-  year: string;
+  year?: string;
   title: string;
   source?: string;
   note?: string;
@@ -41,22 +41,23 @@ export function toSourceItemsArray(
       .filter((x): x is SourceItem => x != null && typeof x === "object" && "author" in x && "title" in x)
       .map((x) => ({
         author: String(x.author ?? ""),
-        year: String(x.year ?? ""),
+        ...(x.year != null && x.year !== "" && { year: String(x.year) }),
         title: String(x.title ?? ""),
         ...(x.source != null && { source: String(x.source) }),
         ...(x.note != null && { note: String(x.note) }),
         ...(x.href != null && { href: String(x.href) }),
       }));
   }
-  if (typeof value === "object" && "author" in value && "title" in value) {
-    return [value as SourceItem].map((x) => ({
+  if (typeof value === "object" && value !== null && !Array.isArray(value) && "author" in value && "title" in value) {
+    const x = value as SourceItem;
+    return [{
       author: String(x.author ?? ""),
-      year: String(x.year ?? ""),
+      ...(x.year != null && x.year !== "" && { year: String(x.year) }),
       title: String(x.title ?? ""),
       ...(x.source != null && { source: String(x.source) }),
       ...(x.note != null && { note: String(x.note) }),
       ...(x.href != null && { href: String(x.href) }),
-    }));
+    }];
   }
   return [];
 }
@@ -80,8 +81,9 @@ export function toTroubleshootingItemsArray(
       .filter((x): x is TroubleshootingItem => x != null && typeof x === "object" && "problem" in x && "solution" in x)
       .map((x) => ({ problem: String(x.problem), solution: String(x.solution) }));
   }
-  if (typeof value === "object" && "problem" in value && "solution" in value) {
-    return [{ problem: String((value as TroubleshootingItem).problem), solution: String((value as TroubleshootingItem).solution) }];
+  if (typeof value === "object" && value !== null && !Array.isArray(value) && "problem" in value && "solution" in value) {
+    const v = value as TroubleshootingItem;
+    return [{ problem: String(v.problem), solution: String(v.solution) }];
   }
   return [];
 }

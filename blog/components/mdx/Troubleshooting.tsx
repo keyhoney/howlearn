@@ -8,10 +8,10 @@ export function Troubleshooting({ items }: TroubleshootingProps) {
   return (
     <aside
       className="my-8 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/80 p-5 md:p-6"
-      aria-label="Troubleshooting"
+      aria-label="자주 막히는 문제"
     >
       <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-        Common issues
+        자주 막히는 문제
       </p>
       <ul className="mt-3 space-y-4">
         {list.map((item, i) => (
