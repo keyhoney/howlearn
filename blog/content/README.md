@@ -4,6 +4,8 @@
 
 **분류 규칙:** 카테고리는 **카테고리_태그_분류.md**의 **카테고리** 열 값만 사용하고, 태그는 **상위 태그** 열 값만 사용합니다. 허용 목록은 `lib/content-taxonomy.ts`에 정의되어 있습니다.
 
+**전체 MDX·마크다운 문법**(제목, 강조, 목록, 링크, 이미지, 인용, 코드, 구분선, 컴포넌트 개요)은 **개발 노트/mdx 문법 정리.md**를 참고하세요.
+
 ---
 
 ## 공통 템플릿 (모든 타입)
@@ -155,6 +157,44 @@ lang: "ko"                    # 문서 언어. 메타·JSON-LD inLanguage에 사
 
 - **URL 슬러그** = frontmatter `slug`가 있으면 해당 값, 없으면 **파일명**(확장자 제외).
 - 예: `working-memory.mdx` → `/concepts/working-memory`. 한글 파일명 가능하지만 URL 인코딩·공유를 위해 **영문 슬러그** 권장.
+- **콘텐츠 타입**은 **파일 경로**로 정해집니다. 예: `content/guides/math-anxiety.mdx` → 타입 `guide`, slug `math-anxiety`. 파싱은 `lib/content.ts`의 `buildContentFromMdx`에서 수행됩니다.
+
+---
+
+## 마크다운·MDX 문법 요약
+
+본문에서 쓸 수 있는 기본 문법입니다. `##`·`###`에는 자동으로 `id`가 부여되어 목차·앵커에 사용됩니다.
+
+| 구분 | 문법 예시 | 비고 |
+|------|-----------|------|
+| 제목 | `#`, `##`, `###` ~ `######` | `##`, `###` → id 자동 부여(앵커 링크 가능) |
+| 문단 | 빈 줄로 구분된 텍스트 | `<p>` 단락 |
+| 강조 | `**굵게**`, `*기울임*` | `<strong>`, `<em>` |
+| 목록 | `- 항목`, `1. 항목` | 중첩은 들여쓰기 |
+| 링크 | `[텍스트](url)` | 내부 `/guides/slug`, 외부 `https://...` |
+| 이미지 | `![대체 텍스트](경로)` | 상대 경로는 `NEXT_PUBLIC_IMAGE_BASE_URL`과 결합. `alt` 없으면 장식 처리 |
+| 인용 | `> 인용 문장` | `<blockquote>` |
+| 코드 | `` `인라인` ``, ` ``` ` 블록 | 언어 지정 시 문법 강조 가능 |
+| 구분선 | `---`, `***` (단독 줄) | `<hr>` |
+
+---
+
+## 관련 지식 탐색 (하단·본문)
+
+- **글 하단 블록 (자동):** 가이드·블로그·개념·툴킷 상세 페이지 하단에 **「관련 지식 탐색」** 카드가 자동으로 붙습니다. 전자책(book) 상세에서는 노출되지 않습니다.
+  - Frontmatter **related** / **relatedContentIds**가 있으면 해당 목록을 **순서대로** 채움.
+  - **6개 미만**이면 같은 글의 **태그 일치** → **도메인 일치** 순으로 보강.
+- **면책 및 이용 안내:** 가이드·블로그 상세에는 본문 하단에 **「면책 및 이용 안내」** 블록이 자동으로 붙습니다. 문구 수정: `components/Disclaimer.tsx`.
+- **본문 중간 카드:** 본문 중간에 같은 스타일 카드를 넣을 때는 **RelatedCards** 컴포넌트를 사용합니다.
+
+---
+
+## 표현 제한·주의사항
+
+- **메타데이터:** frontmatter(YAML)로만 파싱됩니다. 레이아웃은 frontmatter 결과를 사용하므로 메타는 반드시 frontmatter에 두세요.
+- **export:** MDX에서 `export const 변수 = [...]` 로 정의한 값은 같은 파일 내 JSX에서 사용할 수 있습니다. **Sources**, **Troubleshooting**처럼 `items`에 객체 배열을 넘길 때 이 방식을 쓰면 JSON 문자열 파싱 실패를 피할 수 있습니다.
+- **컴포넌트:** `lib/mdx-components.tsx`에 등록된 컴포넌트만 MDX 본문에서 사용할 수 있습니다.
+- **HTML 직접 사용:** 가능하나 prose 스타일과 어긋날 수 있으므로, 마크다운과 제공 컴포넌트 우선 사용을 권장합니다.
 
 ---
 
@@ -170,7 +210,31 @@ lang: "ko"                    # 문서 언어. 메타·JSON-LD inLanguage에 사
 
 ## MDX 컴포넌트 레퍼런스
 
-아래 컴포넌트는 `lib/mdx-components.tsx`에 등록되어 있어 MDX 본문에서 바로 사용할 수 있습니다. 배열·객체 props는 **쉼표 구분 문자열** 또는 **JSON**으로 넘길 수 있으며, `lib/mdx-props.ts`에서 배열/객체로 정규화됩니다.
+아래 컴포넌트는 `lib/mdx-components.tsx`에 등록되어 있어 MDX 본문에서 바로 사용할 수 있습니다. 배열·객체 props는 **쉼표 구분 문자열** 또는 **배열/객체**로 넘길 수 있으며, `lib/mdx-props.ts`에서 정규화됩니다. 컴포넌트 내부 라벨(관련 개념, 핵심 요약, 출처 등)은 한글로 통일되어 있습니다.
+
+### 에디토리얼 컴포넌트 한눈에
+
+| 컴포넌트 | 표시 라벨 | 용도 | 추천 타입 |
+|----------|-----------|------|-----------|
+| TopicIntro | 주제 소개 | 주제 한 줄 소개 | 전 타입 |
+| TheoryBox | 이론 | 학습 과학 이론 소개 | Guide, Concept |
+| TeacherNote | 교사 노트 | 교사 현장 관찰·해석 | Blog, Guide |
+| ForStudents | 학생용 | 학생 적용 안내 | Guide, Toolkit |
+| ForParents | 부모용 | 학부모 적용 안내 | Guide, Blog, Book |
+| Sources / SourceNote | 출처 | 참고 문헌 목록 | Concept, Guide |
+| KeyTakeaways | 핵심 요약 | 핵심 문장 나열 | 전 타입 |
+| CommonMisconception | 흔한 오해 | 오해 vs 실제 | Guide |
+| ActionChecklist | 실천 체크리스트 | 번호 목록 실천 항목 | Guide, Toolkit |
+| RelatedConcepts | 관련 개념 | 개념 문서 링크 | Guide |
+| ReflectionPrompt | 성찰 | 성찰 질문 목록 | Blog |
+| WhyItMatters | 왜 중요한가 | 중요성 설명(children) | Concept |
+| RelatedGuides | 관련 가이드 | 가이드 문서 링크 | Concept |
+| WhenToUse | 언제 쓰나요 | 사용 시기 목록 | Toolkit |
+| Troubleshooting | 자주 막히는 문제 | 문제·해결 쌍 | Toolkit |
+| PrintableBlock | 인쇄용 | 인쇄 시 함께 출력할 블록 | Toolkit |
+| BookOverview | (책 개요) | 책 개요 | Book |
+| WhoThisIsFor | (대상) | 이 책이 필요한 분 | Book |
+| WhatYouWillLearn | (배울 것) | 이 책에서 배울 것 | Book |
 
 ### 기본 요소 (자동 적용)
 
@@ -348,7 +412,7 @@ lang: "ko"                    # 문서 언어. 메타·JSON-LD inLanguage에 사
 
 | prop | 타입 | 필수 | 설명 |
 |------|------|------|------|
-| `title` | string | | 블록 제목. 기본값 "Things to try today" |
+| `title` | string | | 블록 제목. 기본값 "오늘 적용해 볼 것" |
 | `items` | string[] \| string | ✓ | 항목. 쉼표 구분 문자열 또는 배열 |
 
 ```mdx
@@ -408,7 +472,7 @@ lang: "ko"                    # 문서 언어. 메타·JSON-LD inLanguage에 사
 
 | prop | 타입 | 필수 | 설명 |
 |------|------|------|------|
-| `title` | string | | 블록 제목. 기본값 "Reflect" |
+| `title` | string | | 블록 제목. 기본값 "돌아보기" |
 | `questions` | string[] \| string | ✓ | 질문 문장. 쉼표 구분 가능 |
 
 ```mdx
@@ -460,7 +524,7 @@ lang: "ko"                    # 문서 언어. 메타·JSON-LD inLanguage에 사
 
 | prop | 타입 | 필수 | 설명 |
 |------|------|------|------|
-| `title` | string | | 블록 제목. 기본값 "Printable" |
+| `title` | string | | 블록 제목. 기본값 "인쇄용" |
 | (children) | ReactNode | ✓ | 본문 |
 
 ```mdx
@@ -549,7 +613,7 @@ lang: "ko"                    # 문서 언어. 메타·JSON-LD inLanguage에 사
 ## props 정규화 규칙
 
 - **문자열 배열** (`items`, `steps`, `slugs`, `questions` 등): MDX에서는 `"a, b, c"`처럼 쉼표 구분 문자열로 넘기거나, `items={["a","b","c"]}`처럼 배열로 넘길 수 있습니다. `lib/mdx-props.ts`의 `toStringArray`가 빈 값·null을 걸러 배열로 맞춥니다.
-- **객체 배열** (`Sources`의 `items`, `Troubleshooting`의 `items`): JSON 문자열 `items="[{...},{...}]"` 또는 JS 객체 배열로 넘깁니다. `toSourceItemsArray`, `toTroubleshootingItemsArray`가 정규화합니다.
+- **객체 배열** (`Sources`의 `items`, `Troubleshooting`의 `items`): JS 객체 배열로 넘기는 것을 권장합니다. JSON 문자열(`items={'[...]'}`)은 MDX 컴파일 시 속성 이스케이프로 파싱이 실패할 수 있으므로, **파일 상단에 `export const sourcesItems = [...];` 등으로 정의한 뒤 `items={sourcesItems}`** 처럼 변수로 넘기세요. `toSourceItemsArray`, `toTroubleshootingItemsArray`가 정규화합니다.
 
 ---
 
