@@ -10,7 +10,10 @@ export function toStringArray(
   if (Array.isArray(value)) return value.filter((s): s is string => typeof s === "string");
   if (typeof value === "string") {
     const t = value.trim();
-    return t ? t.split(",").map((s) => s.trim()).filter(Boolean) : [];
+    if (!t) return [];
+    // 쉼표 또는 줄바꿈으로 구분 (RSC에서 배열이 문자열로 오는 경우 대비)
+    const parts = t.includes("\n") ? t.split(/\n+/) : t.split(",");
+    return parts.map((s) => s.trim()).filter(Boolean);
   }
   return [];
 }

@@ -22,6 +22,9 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: site.name,
   description: site.description,
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 const themeScript = `
