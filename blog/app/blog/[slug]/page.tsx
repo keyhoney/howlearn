@@ -42,6 +42,8 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
   const mdxFile = getMdxBySlug("blog", slug);
   const tocHeadings = extractHeadings(mdxFile?.content ?? content.body ?? "");
   const references = content.references;
+  const keyTakeaways = content.type === "blog" ? content.keyTakeaways : undefined;
+  const reflectionPrompt = content.type === "blog" ? content.reflectionPrompt : undefined;
 
   const bodyContent = mdxFile ? (
     <MDXRemote source={mdxFile.content} components={mdxComponents} options={sharedMdxOptions} />
@@ -61,6 +63,8 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
         tocHeadings={tocHeadings}
         references={references}
         showDisclaimer
+        keyTakeaways={keyTakeaways}
+        reflectionPrompt={reflectionPrompt}
       >
         {bodyContent}
       </ContentDetail>

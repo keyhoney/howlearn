@@ -45,6 +45,10 @@ export type Guide = BaseContent & {
 export type BlogPost = BaseContent & {
   type: "blog";
   body: string;
+  /** RSC에서 MDX props가 누락될 수 있어, 페이지에서 직접 렌더 시 사용. */
+  keyTakeaways?: string[];
+  /** RSC에서 MDX props가 누락될 수 있어, 페이지에서 직접 렌더 시 사용. */
+  reflectionPrompt?: { title?: string; questions: string[] };
 };
 
 export type Concept = BaseContent & {

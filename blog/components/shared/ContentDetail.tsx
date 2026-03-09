@@ -7,6 +7,8 @@ import { MarkdownRenderer } from "@/components/shared/MarkdownRenderer";
 import { TableOfContents } from "@/components/TableOfContents";
 import { ReferenceCard } from "@/components/ReferenceCard";
 import { Disclaimer } from "@/components/Disclaimer";
+import { KeyTakeaways } from "@/components/mdx/KeyTakeaways";
+import { ReflectionPrompt } from "@/components/mdx/ReflectionPrompt";
 import type { HeadingItem } from "@/lib/headings";
 
 export type ReferringItem = { type: ContentType; slug: string; title: string; path: string };
@@ -19,6 +21,10 @@ interface ContentDetailProps {
   references?: { title?: string; url: string }[];
   showDisclaimer?: boolean;
   referringContent?: ReferringItem[];
+  /** 블로그: frontmatter에서 읽어 본문 상단에 렌더 (RSC에서 MDX props 누락 대비) */
+  keyTakeaways?: string[];
+  /** 블로그: frontmatter에서 읽어 본문 하단에 렌더 (RSC에서 MDX props 누락 대비) */
+  reflectionPrompt?: { title?: string; questions: string[] };
 }
 
 const typeLabels: Record<ContentType, string> = {
@@ -45,10 +51,14 @@ export function ContentDetail({
   references,
   showDisclaimer,
   referringContent,
+  keyTakeaways,
+  reflectionPrompt,
 }: ContentDetailProps) {
   const hubHref = typeLinks[content.type];
   const hubLabel = typeLabels[content.type];
   const refs = references ?? content.references;
+  const showKeyTakeaways = keyTakeaways && keyTakeaways.length > 0;
+  const showReflectionPrompt = reflectionPrompt && reflectionPrompt.questions.length > 0;
 
   return (
     <div className="bg-white dark:bg-slate-900 transition-colors">
@@ -110,9 +120,13 @@ export function ContentDetail({
         <div className="grid grid-cols-1 lg:grid-cols-[1fr,220px] gap-x-12 gap-y-8 lg:gap-y-0">
           {/* 본문: 좌측 컬럼에 고정 */}
           <div className="min-w-0 lg:col-start-1 lg:row-start-1">
-            <article className="prose prose-slate prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-slate-900 dark:prose-headings:text-slate-100 prose-headings:scroll-mt-24 prose-p:text-slate-600 dark:prose-p:text-slate-300 prose-a:text-indigo-600 dark:prose-a:text-indigo-400 hover:prose-a:text-indigo-500 dark:hover:prose-a:text-indigo-300">
+            <article className="prose prose-slate prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-slate-900 dark:prose-headings:text-slate-100 prose-headings:scroll-mt-24 prose-p:text-slate-600 dark:prose-p:text-slate-300 prose-a:text-indigo-600 dark:prose-a:text-indigo-400 hover:prose-a:text-indigo-500 dark:hover:prose-a:text-indigo-300 [&_a[href^='#concept-']]:font-medium [&_a[href^='#concept-']]:text-[#4F39F6] [&_a[href^='#concept-']]:underline [&_a[href^='#concept-']]:decoration-2 [&_a[href^='#concept-']]:decoration-dotted [&_a[href^='#concept-']]:underline-offset-2">
               {children || (
                 <MarkdownRenderer content={content.body || ""} />
+              )}
+              {showKeyTakeaways && <KeyTakeaways items={keyTakeaways} />}
+              {showReflectionPrompt && (
+                <ReflectionPrompt title={reflectionPrompt.title} questions={reflectionPrompt.questions} />
               )}
             </article>
             {refs && refs.length > 0 && <ReferenceCard items={refs} />}

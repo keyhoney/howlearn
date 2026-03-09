@@ -148,7 +148,21 @@ function buildContentFromMdx(
         : undefined,
     };
   }
-  return { ...base, type: "blog" as const };
+  // blog
+  const keyTakeaways = Array.isArray(fm.keyTakeaways)
+    ? (fm.keyTakeaways as string[]).filter((s): s is string => typeof s === "string")
+    : undefined;
+  const rp = fm.reflectionPrompt as { title?: string; questions?: string[] } | undefined;
+  const reflectionPrompt =
+    rp && Array.isArray(rp.questions) && rp.questions.length > 0
+      ? { title: typeof rp.title === "string" ? rp.title : "생각해볼 것", questions: rp.questions.filter((q): q is string => typeof q === "string") }
+      : undefined;
+  return {
+    ...base,
+    type: "blog" as const,
+    ...(keyTakeaways?.length ? { keyTakeaways } : {}),
+    ...(reflectionPrompt ? { reflectionPrompt } : {}),
+  };
 }
 
 /** content/*.mdx 파일만 읽어서 AnyContent[] 생성. draft 제외. */
