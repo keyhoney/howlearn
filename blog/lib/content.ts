@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { AnyContent, ContentType, DomainSlug } from "./types";
 import { domainInfo } from "./domains";
 import { getMdxSlugs, getMdxBySlug } from "./content-files";
@@ -148,26 +149,13 @@ function buildContentFromMdx(
         : undefined,
     };
   }
-  // blog
-  const keyTakeaways = Array.isArray(fm.keyTakeaways)
-    ? (fm.keyTakeaways as string[]).filter((s): s is string => typeof s === "string")
-    : undefined;
-  const rp = fm.reflectionPrompt as { title?: string; questions?: string[] } | undefined;
-  const reflectionPrompt =
-    rp && Array.isArray(rp.questions) && rp.questions.length > 0
-      ? { title: typeof rp.title === "string" ? rp.title : undefined, questions: rp.questions.filter((q): q is string => typeof q === "string") }
-      : undefined;
-  return {
-    ...base,
-    type: "blog" as const,
-    ...(keyTakeaways?.length ? { keyTakeaways } : {}),
-    ...(reflectionPrompt ? { reflectionPrompt } : {}),
-  };
+  // 알 수 없는 타입 (content 타입 목록과 frontmatter 불일치 시)
+  throw new Error(`buildContentFromMdx: unsupported type ${type} for slug ${slug}`);
 }
 
 /** content/*.mdx 파일만 읽어서 AnyContent[] 생성. draft 제외. */
 function getContentFromMdx(): AnyContent[] {
-  const types: ContentType[] = ["guide", "blog", "concept", "book"];
+  const types: ContentType[] = ["guide", "concept", "toolkit", "book"];
   const out: AnyContent[] = [];
   for (const type of types) {
     const slugs = getMdxSlugs(type);
@@ -182,9 +170,15 @@ function getContentFromMdx(): AnyContent[] {
   return out;
 }
 
+/**
+ * 동기 FS 전체 스캔을 요청당 1회로 메모이제이션.
+ * getAllContent 및 내부 호출이 같은 렌더 패스에서 반복되어도 디스크는 한 번만 읽습니다.
+ */
+const getContentFromMdxCached = cache(getContentFromMdx);
+
 /** content/*.mdx에서만 목록 로드. published만 반환. */
 export async function getAllContent(): Promise<AnyContent[]> {
-  return getContentFromMdx().filter((c) => c.status === "published");
+  return getContentFromMdxCached().filter((c) => c.status === "published");
 }
 
 export async function getContentByType(type: ContentType): Promise<AnyContent[]> {
@@ -262,7 +256,7 @@ export async function getContentBySlug(type: ContentType, slug: string): Promise
   return content.find(c => c.type === type && c.slug === slug) || null;
 }
 
-/** "type:slug" 또는 "type-slug" 문자열로 콘텐츠 목록 조회 (MDX 본문 RelatedCards 등에서 사용) */
+/** "type:slug" 또는 "type-slug" 문자열로 콘텐츠 목록 조회 (프로그램matic 연결용) */
 export async function getContentByRefs(refs: string[]): Promise<AnyContent[]> {
   const out: AnyContent[] = [];
   for (const ref of refs) {
@@ -278,7 +272,7 @@ export async function getContentByRefs(refs: string[]): Promise<AnyContent[]> {
 function parseContentId(id: string): { type: ContentType; slug: string } | null {
   const parts = id.split("-");
   const type = parts[0] as ContentType;
-  const validTypes: ContentType[] = ["guide", "blog", "concept", "toolkit", "book"];
+  const validTypes: ContentType[] = ["guide", "concept", "toolkit", "book"];
   if (!validTypes.includes(type) || parts.length < 2) return null;
   return { type, slug: parts.slice(1).join("-") };
 }
@@ -361,7 +355,7 @@ export async function getContentByTag(tag: string): Promise<AnyContent[]> {
     .sort((a, b) => new Date(b.publishedAt || "").getTime() - new Date(a.publishedAt || "").getTime());
 }
 
-/** Content (guides, blog, toolkit; not concepts) that references this concept by slug or title in tags */
+/** Content (guides, toolkit; not concepts) that references this concept by slug or title in tags */
 export async function getContentReferringToConcept(
   conceptSlug: string,
   conceptTitle: string,
@@ -370,7 +364,6 @@ export async function getContentReferringToConcept(
   const all = await getAllContent();
   const typeToPath: Record<ContentType, string> = {
     guide: "/guides",
-    blog: "/blog",
     concept: "/concepts",
     toolkit: "/toolkit",
     book: "/books",

@@ -17,22 +17,52 @@ export function extractTextFromNode(node: ReactNode): string {
   return "";
 }
 
-/** Extract ## and ### headings from markdown string; return id and text */
+type HeadingCandidate = { pos: number; level: 2 | 3; text: string };
+
+/** MdxH2 내부 텍스트에서 TOC용 한 줄 제목 (마크다운 굵게 등 제거) */
+function mdxH2InnerToTocText(inner: string): string {
+  const oneLine = inner.trim().replace(/\s+/g, " ");
+  return oneLine
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/\*([^*]+)\*/g, "$1")
+    .trim();
+}
+
+/**
+ * ## / ### 줄과 `<MdxH2>...</MdxH2>` 블록을 모두 TOC 후보로 수집합니다.
+ * MdxH2만 쓰면 ## 가 없어 TOC가 비던 문제를 막기 위함입니다. (id는 MdxH2의 slugify와 동일)
+ */
 export function extractHeadings(content: string): HeadingItem[] {
+  const items: HeadingCandidate[] = [];
+  let pos = 0;
   const lines = content.split("\n");
-  const out: HeadingItem[] = [];
   for (const line of lines) {
     const h2 = line.match(/^##\s+(.+)$/);
     const h3 = line.match(/^###\s+(.+)$/);
     if (h2) {
       const text = h2[1].replace(/#+$/, "").trim();
-      out.push({ id: slugify(text), text, level: 2 });
+      items.push({ pos, level: 2, text });
     } else if (h3) {
       const text = h3[1].replace(/#+$/, "").trim();
-      out.push({ id: slugify(text), text, level: 3 });
+      items.push({ pos, level: 3, text });
     }
+    pos += line.length + 1;
   }
-  return out;
+
+  const mdxH2Re = /<MdxH2[^>]*>([\s\S]*?)<\/MdxH2>/g;
+  let m: RegExpExecArray | null;
+  while ((m = mdxH2Re.exec(content)) !== null) {
+    const text = mdxH2InnerToTocText(m[1]);
+    if (text) items.push({ pos: m.index, level: 2, text });
+  }
+
+  items.sort((a, b) => a.pos - b.pos);
+
+  return items.map(({ level, text }) => ({
+    id: slugify(text),
+    text,
+    level,
+  }));
 }
 
 export function slugify(s: string): string {

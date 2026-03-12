@@ -11,7 +11,6 @@ const navLinks = [
   { href: "/domains", label: "개념별" },
   { href: "/guides", label: "가이드" },
   { href: "/concepts", label: "개념" },
-  { href: "/blog", label: "블로그" },
   { href: "/toolkit", label: "툴킷" },
   { href: "/books", label: "도서" },
   { href: "/search", label: "검색" },

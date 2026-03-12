@@ -2,12 +2,13 @@
 
 import { useState, useMemo, useEffect, useRef } from "react";
 import Fuse from "fuse.js";
-import { AnyContent, ContentType } from "@/lib/types";
+import type { SearchableContent } from "@/lib/search";
+import type { ContentType } from "@/lib/types";
 import { ContentCard } from "@/components/cards/ContentCard";
 import { trackSearch } from "@/lib/analytics";
 import { Search as SearchIcon, X } from "lucide-react";
 
-export function SearchClient({ initialData }: { initialData: AnyContent[] }) {
+export function SearchClient({ initialData }: { initialData: SearchableContent[] }) {
   const [query, setQuery] = useState("");
   const [activeType, setActiveType] = useState<ContentType | "all">("all");
   const trackedQueryRef = useRef<string | null>(null);
@@ -22,11 +23,23 @@ export function SearchClient({ initialData }: { initialData: AnyContent[] }) {
     return () => clearTimeout(t);
   }, [query]);
 
-  const fuse = useMemo(() => new Fuse(initialData, {
-    keys: ["title", "summary", "tags", "domains", "body", "englishName", "shortDefinition"],
-    threshold: 0.3,
-    ignoreLocation: true,
-  }), [initialData]);
+  // body는 목록용 AnyContent에서 비어 있어 인덱싱 제외; summary 등으로 충분
+  const fuse = useMemo(
+    () =>
+      new Fuse(initialData, {
+        keys: [
+          { name: "title", weight: 2 },
+          { name: "summary", weight: 1.5 },
+          "tags",
+          "domains",
+          "englishName",
+          "shortDefinition",
+        ],
+        threshold: 0.3,
+        ignoreLocation: true,
+      }),
+    [initialData]
+  );
 
   const results = useMemo(() => {
     let filtered = initialData;
@@ -47,7 +60,6 @@ export function SearchClient({ initialData }: { initialData: AnyContent[] }) {
     { value: "guide", label: "가이드" },
     { value: "concept", label: "개념" },
     { value: "toolkit", label: "툴킷" },
-    { value: "blog", label: "블로그" },
     { value: "book", label: "전자책" },
   ];
 

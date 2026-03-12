@@ -50,7 +50,7 @@ export default async function Home() {
             })()}
           </h1>
           <p className="mx-auto mt-5 sm:mt-6 max-w-2xl text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-            학습과학 기반 부모 교육을 위한 지식 아카이브입니다. 가이드, 개념, 툴킷, 블로그, 도서를 제공합니다.
+            학습과학 기반 부모 교육을 위한 지식 아카이브입니다. 가이드, 개념, 툴킷, 도서를 제공합니다.
           </p>
           <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
             <CtaLink href="/guides" variant="primary">
@@ -98,9 +98,9 @@ export default async function Home() {
           <div className="flex items-center justify-between mb-10 sm:mb-12">
             <div>
               <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-3xl">최신 업데이트</h2>
-              <p className="mt-2 text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed">새롭게 추가된 블로그 칼럼과 실천 자료입니다.</p>
+              <p className="mt-2 text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed">새롭게 추가된 가이드와 실천 자료입니다.</p>
             </div>
-            <Link href="/blog" className="hidden sm:flex items-center text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300">
+            <Link href="/guides" className="hidden sm:flex items-center text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300">
               전체 보기 <ArrowRight className="ml-1 w-4 h-4" aria-hidden />
             </Link>
           </div>
@@ -110,7 +110,7 @@ export default async function Home() {
             ))}
           </div>
           <div className="mt-10 sm:hidden flex justify-center">
-            <Link href="/blog" className="inline-flex items-center text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300">
+            <Link href="/guides" className="inline-flex items-center text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300">
               전체 보기 <ArrowRight className="ml-1 w-4 h-4" aria-hidden />
             </Link>
           </div>

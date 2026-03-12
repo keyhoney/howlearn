@@ -4,7 +4,6 @@ import { site } from "@/lib/site";
 
 const typeToPath: Record<string, string> = {
   guide: "/guides",
-  blog: "/blog",
   concept: "/concepts",
   toolkit: "/toolkit",
   book: "/books",
@@ -18,7 +17,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${site.url}/guides`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.95 },
     { url: `${site.url}/concepts`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
     { url: `${site.url}/toolkit`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
-    { url: `${site.url}/blog`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
     { url: `${site.url}/books`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
     { url: `${site.url}/domains`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.85 },
     { url: `${site.url}/about`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },

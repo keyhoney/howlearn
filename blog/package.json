@@ -1,5 +1,5 @@
 {
-  "name": "ai-studio-applet",
+  "name": "howlearn",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -28,9 +28,11 @@
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.1",
     "slugify": "^1.6.6",
-    "tailwind-merge": "^3.5.0"
+    "tailwind-merge": "^3.5.0",
+    "unist-util-visit": "^5.1.0"
   },
   "devDependencies": {
+    "@rushstack/eslint-patch": "^1.16.1",
     "@tailwindcss/postcss": "4.2.1",
     "@tailwindcss/typography": "^0.5.19",
     "@types/node": "^22",

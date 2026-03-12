@@ -5,7 +5,7 @@ export type DomainSlug =
   | "developmental-psychology"
   | "motivation-emotion";
 
-export type ContentType = "guide" | "blog" | "concept" | "toolkit" | "book";
+export type ContentType = "guide" | "concept" | "toolkit" | "book";
 
 export type BaseContent = {
   id: string;
@@ -24,7 +24,7 @@ export type BaseContent = {
   seoTitle?: string;
   seoDescription?: string;
   ogImage?: string;
-  /** MDX frontmatter coverImage 예: /blog/my-first-post/01.webp */
+  /** MDX frontmatter coverImage 예: /guides/my-post/01.webp */
   coverImage?: string;
   relatedContentIds?: string[];
   references?: { title?: string; url: string }[];
@@ -40,15 +40,6 @@ export type Guide = BaseContent & {
   intro?: string;
   keyTakeaways?: string[];
   body: string;
-};
-
-export type BlogPost = BaseContent & {
-  type: "blog";
-  body: string;
-  /** RSC에서 MDX props가 누락될 수 있어, 페이지에서 직접 렌더 시 사용. */
-  keyTakeaways?: string[];
-  /** RSC에서 MDX props가 누락될 수 있어, 페이지에서 직접 렌더 시 사용. */
-  reflectionPrompt?: { title?: string; questions: string[] };
 };
 
 export type Concept = BaseContent & {
@@ -73,4 +64,4 @@ export type Book = BaseContent & {
   body?: string;
 };
 
-export type AnyContent = Guide | BlogPost | Concept | Toolkit | Book;
+export type AnyContent = Guide | Concept | Toolkit | Book;

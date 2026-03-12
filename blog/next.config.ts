@@ -2,11 +2,15 @@ import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  turbopack: {},
+  // turbopack 비활성: dev 중 Flight chunk.reason.enqueueModel 등 RSC 디코딩 이슈 완화
+  // 필요 시 next dev --turbo 로만 터보팩 사용
   // URL 변경 시 영구 이동은 301(permanent: true)로 설정하세요. 302는 임시 이동입니다.
   async redirects() {
     return [
       { source: "/feed.xml", destination: "/rss.xml", permanent: true },
+      // 예전 /blog URL 북마크·검색 유입 대응 (콘텐츠는 가이드 등으로 통합됨)
+      { source: "/blog", destination: "/guides", permanent: true },
+      { source: "/blog/:slug*", destination: "/guides", permanent: true },
       // { source: '/old-path', destination: '/new-path', permanent: true },
     ];
   },
@@ -26,6 +30,15 @@ const nextConfig: NextConfig = {
         source: '/:path*.ico',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=86400' },
+        ],
+      },
+      // 보안 헤더 (CSP는 GA/인라인 스크립트와 충돌 가능해 별도 단계에서 도입)
+      {
+        source: '/:path*',
+        headers: [
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
         ],
       },
     ];
@@ -51,7 +64,7 @@ const nextConfig: NextConfig = {
   transpilePackages: ['motion'],
   webpack: (config, {dev}) => {
     // HMR is disabled in AI Studio via DISABLE_HMR env var.
-    // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
+    // Do not modify -- file watching is disabled to prevent flickering during agent edits.
     if (dev && process.env.DISABLE_HMR === 'true') {
       config.watchOptions = {
         ignored: /.*/,

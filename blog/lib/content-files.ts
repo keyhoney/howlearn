@@ -6,7 +6,6 @@ import type { ContentType } from "./types";
 const CONTENT_DIR = "content";
 const TYPE_TO_DIR: Record<ContentType, string> = {
   guide: "guides",
-  blog: "blog",
   concept: "concepts",
   toolkit: "toolkit",
   book: "books",

@@ -1,47 +1,47 @@
 import Link from "next/link";
+import type { SearchableContent } from "@/lib/search";
 import { AnyContent, ContentType } from "@/lib/types";
 import { DomainBadge, TagList } from "@/components/ui/badges";
 import { ConceptLink } from "@/components/ConceptLink";
-import { ArrowRight, Book, BookOpen, FileText, Lightbulb, Wrench } from "lucide-react";
+import { ArrowRight, Book, BookOpen, Lightbulb, Wrench } from "lucide-react";
 import { format } from "date-fns";
+
+/** 카드에 필요한 최소 콘텐츠 형태 (전체 AnyContent 또는 검색용 슬림 타입) */
+export type ContentCardContent = AnyContent | SearchableContent;
 
 const typeIcons: Record<ContentType, React.ReactNode> = {
   guide: <BookOpen className="w-4 h-4" aria-hidden />,
-  blog: <FileText className="w-4 h-4" aria-hidden />,
   concept: <Lightbulb className="w-4 h-4" aria-hidden />,
   toolkit: <Wrench className="w-4 h-4" aria-hidden />,
-  book: <Book className="w-4 h-4" aria-hidden />
+  book: <Book className="w-4 h-4" aria-hidden />,
 };
 
 const typeLabels: Record<ContentType, string> = {
   guide: "가이드",
-  blog: "블로그",
   concept: "개념",
   toolkit: "툴킷",
-  book: "전자책"
+  book: "전자책",
 };
 
 const typeColors: Record<ContentType, string> = {
   guide: "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-700",
-  blog: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-700",
   concept: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-700",
   toolkit: "bg-cyan-50 text-cyan-700 border-cyan-200 dark:bg-cyan-900/30 dark:text-cyan-300 dark:border-cyan-700",
-  book: "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-700"
+  book: "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-700",
 };
 
 const typeLinks: Record<ContentType, string> = {
   guide: "/guides",
-  blog: "/blog",
   concept: "/concepts",
   toolkit: "/toolkit",
-  book: "/books"
+  book: "/books",
 };
 
 function CardLink({
   content,
   children,
 }: {
-  content: AnyContent;
+  content: ContentCardContent;
   children: React.ReactNode;
 }) {
   const href = `${typeLinks[content.type]}/${content.slug}`;
@@ -59,7 +59,7 @@ function CardFooterLink({
   content,
   children,
 }: {
-  content: AnyContent;
+  content: ContentCardContent;
   children: React.ReactNode;
 }) {
   const href = `${typeLinks[content.type]}/${content.slug}`;
@@ -77,7 +77,7 @@ function CardFooterLink({
   );
 }
 
-export function ContentCard({ content }: { content: AnyContent }) {
+export function ContentCard({ content }: { content: ContentCardContent }) {
   return (
     <div className="group relative flex flex-col justify-between rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 p-5 sm:p-6 shadow-sm transition-all duration-200 ease-out hover:shadow-lg hover:border-indigo-200 dark:hover:border-indigo-800/60 hover:-translate-y-0.5 active:translate-y-0 active:shadow-md active:scale-[0.99]">
       <div>
@@ -88,7 +88,7 @@ export function ContentCard({ content }: { content: AnyContent }) {
           </span>
           {content.publishedAt && (
             <time className="text-xs text-slate-400 dark:text-slate-400 font-mono shrink-0">
-              {format(new Date(content.publishedAt), 'yyyy-MM-dd')}
+              {format(new Date(content.publishedAt), "yyyy-MM-dd")}
             </time>
           )}
         </div>
@@ -97,18 +97,20 @@ export function ContentCard({ content }: { content: AnyContent }) {
           <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 sm:text-lg lg:text-xl group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-200 line-clamp-2">
             {content.title}
           </h3>
-          {content.type === 'concept' && content.englishName && (
+          {content.type === "concept" && "englishName" in content && content.englishName && (
             <p className="text-sm font-mono text-slate-500 dark:text-slate-400 mt-1">{content.englishName}</p>
           )}
           <p className="mt-2 sm:mt-3 text-base text-slate-600 dark:text-slate-300 sm:text-sm line-clamp-3 leading-relaxed">
-            {content.type === 'concept' ? content.shortDefinition : content.summary}
+            {content.type === "concept" && "shortDefinition" in content && content.shortDefinition
+              ? content.shortDefinition
+              : content.summary}
           </p>
         </CardLink>
       </div>
 
       <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-slate-100 dark:border-slate-700">
         <div className="flex flex-wrap gap-2 mb-3 sm:mb-4">
-          {content.domains.slice(0, 2).map(domain => (
+          {content.domains.slice(0, 2).map((domain) => (
             <DomainBadge key={domain} domain={domain} />
           ))}
         </div>

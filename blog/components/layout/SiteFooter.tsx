@@ -18,8 +18,6 @@ export function SiteFooter() {
               <li><Link href="/domains" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">학문별</Link></li>
               <li><Link href="/guides" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">가이드</Link></li>
               <li><Link href="/concepts" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">개념</Link></li>
-              <li><Link href="/blog" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">블로그</Link></li>
-
             </ul>
           </div>
           <div>

@@ -36,7 +36,6 @@ export default async function DomainDetailPage({ params }: { params: Promise<{ s
   // Group content by type
   const guides = content.filter(c => c.type === "guide");
   const concepts = content.filter(c => c.type === "concept");
-  const blogs = content.filter(c => c.type === "blog");
   const toolkits = content.filter(c => c.type === "toolkit");
   const books = content.filter(c => c.type === "book");
 
@@ -88,15 +87,6 @@ export default async function DomainDetailPage({ params }: { params: Promise<{ s
               <h2 className="text-2xl font-bold tracking-tight text-slate-900 mb-8 border-b border-slate-200 pb-4">실천 툴킷</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {toolkits.map(item => <ContentCard key={item.id} content={item} />)}
-              </div>
-            </section>
-          )}
-
-          {blogs.length > 0 && (
-            <section>
-              <h2 className="text-2xl font-bold tracking-tight text-slate-900 mb-8 border-b border-slate-200 pb-4">관련 블로그</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {blogs.map(item => <ContentCard key={item.id} content={item} />)}
               </div>
             </section>
           )}

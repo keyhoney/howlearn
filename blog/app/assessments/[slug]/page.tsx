@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { getAssessmentBySlug, getAllAssessments } from '@/lib/assessments/registry';
-import { AssessmentRenderer } from '@/components/assessments/AssessmentRenderer';
+import { AssessmentRendererLazy } from '@/components/assessments/AssessmentRendererLazy';
 import { constructMetadata } from '@/lib/seo';
 import { PageTransition } from '@/components/layout/PageTransition';
 import Link from 'next/link';
@@ -73,7 +73,7 @@ export default async function AssessmentPage({ params }: AssessmentPageProps) {
             </p>
           </div>
 
-          <AssessmentRenderer assessment={assessment} />
+          <AssessmentRendererLazy assessment={assessment} />
         </div>
       </div>
     </PageTransition>

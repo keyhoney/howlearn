@@ -1,35 +1,63 @@
-import { AnyContent } from "@/lib/types";
+import type { AnyContent, ContentType } from "@/lib/types";
 import { author, site } from "@/lib/site";
+import { toImageUrl } from "@/lib/image-url";
+
+/** 실제 App Router 경로와 동일한 canonical 경로 접두사 */
+function contentPathPrefix(type: ContentType): string {
+  const map: Record<ContentType, string> = {
+    guide: "guides",
+    concept: "concepts",
+    toolkit: "toolkit",
+    book: "books",
+  };
+  return map[type];
+}
+
+function pageUrl(content: AnyContent): string {
+  const prefix = contentPathPrefix(content.type);
+  return `${site.url}/${prefix}/${content.slug}`;
+}
 
 export function generateJsonLd(content: AnyContent) {
-  const base = {
+  const pageId = pageUrl(content);
+  const imageUrl =
+    content.ogImage || content.coverImage
+      ? toImageUrl(content.ogImage ?? content.coverImage ?? "")
+      : undefined;
+
+  const base: Record<string, unknown> = {
     "@context": "https://schema.org",
-    "mainEntityOfPage": {
+    mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `${site.url}/${content.type}s/${content.slug}`
+      "@id": pageId,
     },
-    "headline": content.title,
-    "description": content.summary,
-    "datePublished": content.publishedAt,
-    "dateModified": content.updatedAt || content.publishedAt,
-    "author": {
+    headline: content.title,
+    description: content.summary,
+    datePublished: content.publishedAt,
+    dateModified: content.updatedAt || content.publishedAt,
+    author: {
       "@type": "Organization",
-      "name": author.name
+      name: author.name,
     },
-    "publisher": {
+    publisher: {
       "@type": "Organization",
-      "name": author.name,
-      "logo": {
+      name: author.name,
+      logo: {
         "@type": "ImageObject",
-        "url": `${site.url}/logo.png`
-      }
-    }
+        url: `${site.url}/favicon.png`,
+      },
+    },
   };
 
-  if (content.type === "guide" || content.type === "blog") {
+  if (imageUrl) {
+    base.image = [imageUrl];
+  }
+
+  if (content.type === "guide") {
     return {
       ...base,
       "@type": "Article",
+      url: pageId,
     };
   }
 
@@ -37,9 +65,9 @@ export function generateJsonLd(content: AnyContent) {
     return {
       ...base,
       "@type": "DefinedTerm",
-      "name": content.title,
-      "description": content.shortDefinition,
-      "inDefinedTermSet": `${site.url}/concepts`
+      name: content.title,
+      description: content.shortDefinition,
+      inDefinedTermSet: `${site.url}/concepts`,
     };
   }
 
@@ -47,14 +75,14 @@ export function generateJsonLd(content: AnyContent) {
     return {
       ...base,
       "@type": "Book",
-      "name": content.title,
-      "description": content.summary,
-      "isbn": "N/A"
+      name: content.title,
+      description: content.summary,
     };
   }
 
   return {
     ...base,
-    "@type": "WebPage"
+    "@type": "WebPage",
+    url: pageId,
   };
 }

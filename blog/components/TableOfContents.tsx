@@ -36,7 +36,8 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
 
   return (
     <nav aria-label="Table of contents">
-      <div className="sticky top-24">
+      {/* sticky는 ContentDetail aside에서 처리 — 이중 sticky 방지 */}
+      <div className="min-w-0">
         <h2 className="mb-3 border-b border-slate-200 dark:border-slate-700 pb-2 text-[11px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">
           Contents
         </h2>

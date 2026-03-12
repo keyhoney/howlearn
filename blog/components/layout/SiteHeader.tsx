@@ -27,7 +27,6 @@ export function SiteHeader() {
             <span className="h-4 w-px bg-slate-300 dark:bg-slate-600 shrink-0" aria-hidden />
             <Link href="/guides" className="text-sm font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors whitespace-nowrap">가이드</Link>
             <Link href="/concepts" className="text-sm font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors whitespace-nowrap">개념</Link>
-            <Link href="/blog" className="text-sm font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors whitespace-nowrap">블로그</Link>
             <span className="h-4 w-px bg-slate-300 dark:bg-slate-600 shrink-0" aria-hidden />
             <Link href="/toolkit" className="text-sm font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors whitespace-nowrap">툴킷</Link>
             <Link href="/books" className="text-sm font-medium text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors whitespace-nowrap">도서</Link>

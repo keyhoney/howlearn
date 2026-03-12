@@ -3,16 +3,36 @@
  * 안전하게 배열·문자열로 정규화합니다.
  */
 
+/**
+ * MDX/RSC에서 items·situations·steps 등이
+ * - string[] 그대로 오거나
+ * - 줄바꿈/쉼표 구분 문자열로 오거나
+ * - JSON 배열 문자열 '["a","b"]' 로 오는 경우를 모두 처리합니다.
+ */
 export function toStringArray(
-  value: string[] | string | null | undefined
+  value: string[] | string | null | undefined | unknown
 ): string[] {
   if (value == null) return [];
-  if (Array.isArray(value)) return value.filter((s): s is string => typeof s === "string");
+  if (Array.isArray(value)) {
+    return value.filter((s): s is string => typeof s === "string");
+  }
   if (typeof value === "string") {
-    const t = value.trim();
-    if (!t) return [];
-    // 쉼표 또는 줄바꿈으로 구분 (RSC에서 배열이 문자열로 오는 경우 대비)
-    const parts = t.includes("\n") ? t.split(/\n+/) : t.split(",");
+    const normalized = value.trim().replace(/&quot;/g, '"').replace(/&#x27;/g, "'");
+    if (!normalized) return [];
+    // RSC 직렬화 등으로 배열이 JSON 문자열로 온 경우
+    if (normalized.startsWith("[")) {
+      try {
+        const parsed = JSON.parse(normalized) as unknown;
+        if (Array.isArray(parsed)) {
+          return parsed.filter((s): s is string => typeof s === "string");
+        }
+      } catch {
+        // fall through to line/comma split
+      }
+    }
+    const parts = normalized.includes("\n")
+      ? normalized.split(/\n+/)
+      : normalized.split(",");
     return parts.map((s) => s.trim()).filter(Boolean);
   }
   return [];
@@ -25,6 +45,8 @@ export type SourceItem = {
   source?: string;
   note?: string;
   href?: string;
+  /** DOI만 넣으면 https://doi.org/{doi} 링크로 렌더 (href 없을 때) */
+  doi?: string;
 };
 
 export function toSourceItemsArray(
@@ -37,7 +59,7 @@ export function toSourceItemsArray(
       const parsed = JSON.parse(normalized) as SourceItem[] | SourceItem;
       return toSourceItemsArray(Array.isArray(parsed) ? parsed : parsed);
     } catch {
-      // 폴백: 한 줄당 "author|year|title|source|note|href". 행 구분은 줄바꿈 또는 ";;"
+      // 폴백: 한 줄당 "author|year|title|source|note|href|doi". 행 구분은 줄바꿈 또는 ";;"
       const lines = normalized
         .split(/\n|;;/)
         .map((s) => s.trim())
@@ -54,6 +76,7 @@ export function toSourceItemsArray(
                 ...(parts[3] && { source: parts[3] }),
                 ...(parts[4] && { note: parts[4] }),
                 ...(parts[5] && { href: parts[5] }),
+                ...(parts[6] && { doi: parts[6] }),
               } as SourceItem;
             }
             return null;
@@ -73,6 +96,7 @@ export function toSourceItemsArray(
         ...(x.source != null && { source: String(x.source) }),
         ...(x.note != null && { note: String(x.note) }),
         ...(x.href != null && { href: String(x.href) }),
+        ...(x.doi != null && x.doi !== "" && { doi: String(x.doi) }),
       }));
   }
   if (typeof value === "object" && value !== null && !Array.isArray(value) && "author" in value && "title" in value) {
@@ -84,6 +108,7 @@ export function toSourceItemsArray(
       ...(x.source != null && { source: String(x.source) }),
       ...(x.note != null && { note: String(x.note) }),
       ...(x.href != null && { href: String(x.href) }),
+      ...(x.doi != null && x.doi !== "" && { doi: String(x.doi) }),
     }];
   }
   return [];

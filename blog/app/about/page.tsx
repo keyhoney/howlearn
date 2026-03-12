@@ -89,7 +89,7 @@ export default function AboutPage() {
             참고 문헌 기준
           </h2>
           <p className="mt-4 text-slate-600 dark:text-slate-300">
-            가이드·블로그·개념 문서에서는 인용한 연구, 공식 가이드, 정책 자료를 <strong className="text-slate-800 dark:text-slate-200">참고 문헌(References)</strong>으로 문서 하단에 나열합니다.
+            가이드·개념 문서에서는 인용한 연구, 공식 가이드, 정책 자료를 <strong className="text-slate-800 dark:text-slate-200">참고 문헌(References)</strong>으로 문서 하단에 나열합니다.
             가능한 경우 저자·연도·제목·출처(학술지·기관명 등)·링크를 함께 적어, 독자가 원문을 확인할 수 있도록 합니다.
             학술 논문은 피인용이 많은 원논문·메타분석·공식 가이드라인을 우선 참고합니다.
           </p>

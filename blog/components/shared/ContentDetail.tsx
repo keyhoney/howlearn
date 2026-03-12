@@ -7,8 +7,6 @@ import { MarkdownRenderer } from "@/components/shared/MarkdownRenderer";
 import { TableOfContents } from "@/components/TableOfContents";
 import { ReferenceCard } from "@/components/ReferenceCard";
 import { Disclaimer } from "@/components/Disclaimer";
-import { KeyTakeaways } from "@/components/mdx/KeyTakeaways";
-import { ReflectionPrompt } from "@/components/mdx/ReflectionPrompt";
 import type { HeadingItem } from "@/lib/headings";
 import { author } from "@/lib/site";
 
@@ -22,26 +20,20 @@ interface ContentDetailProps {
   references?: { title?: string; url: string }[];
   showDisclaimer?: boolean;
   referringContent?: ReferringItem[];
-  /** 블로그: frontmatter에서 읽어 본문 상단에 렌더 (RSC에서 MDX props 누락 대비) */
-  keyTakeaways?: string[];
-  /** 블로그: frontmatter에서 읽어 본문 하단에 렌더 (RSC에서 MDX props 누락 대비) */
-  reflectionPrompt?: { title?: string; questions: string[] };
 }
 
 const typeLabels: Record<ContentType, string> = {
   guide: "가이드",
-  blog: "블로그",
   concept: "개념",
   toolkit: "툴킷",
-  book: "전자책"
+  book: "전자책",
 };
 
 const typeLinks: Record<ContentType, string> = {
   guide: "/guides",
-  blog: "/blog",
   concept: "/concepts",
   toolkit: "/toolkit",
-  book: "/books"
+  book: "/books",
 };
 
 export function ContentDetail({
@@ -52,14 +44,10 @@ export function ContentDetail({
   references,
   showDisclaimer,
   referringContent,
-  keyTakeaways,
-  reflectionPrompt,
 }: ContentDetailProps) {
   const hubHref = typeLinks[content.type];
   const hubLabel = typeLabels[content.type];
   const refs = references ?? content.references;
-  const showKeyTakeaways = keyTakeaways && keyTakeaways.length > 0;
-  const showReflectionPrompt = reflectionPrompt && reflectionPrompt.questions.length > 0;
 
   return (
     <div className="bg-white dark:bg-slate-900 transition-colors">
@@ -125,17 +113,16 @@ export function ContentDetail({
               {children || (
                 <MarkdownRenderer content={content.body || ""} />
               )}
-              {showKeyTakeaways && <KeyTakeaways items={keyTakeaways} />}
-              {showReflectionPrompt && (
-                <ReflectionPrompt title={reflectionPrompt.title} questions={reflectionPrompt.questions} />
-              )}
             </article>
             {refs && refs.length > 0 && <ReferenceCard items={refs} />}
             {showDisclaimer && <Disclaimer />}
           </div>
-          {/* TOC: 우측 사이드바에 고정 (데스크톱에서만 표시) */}
+          {/* TOC: 데스크톱에서 sticky — 스크롤해도 뷰포트 상단에 붙어 따라옴 (self-start로 그리드 셀 전체 높이에 묶이지 않음) */}
           {tocHeadings && tocHeadings.length > 0 && (
-            <aside className="lg:col-start-2 lg:row-start-1 hidden lg:block" aria-label="목차">
+            <aside
+              className="lg:col-start-2 lg:row-start-1 hidden lg:block lg:sticky lg:top-24 lg:z-10 lg:self-start lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:overflow-x-hidden lg:rounded-xl lg:border lg:border-slate-200 lg:bg-white/95 lg:px-3 lg:py-4 lg:shadow-sm lg:backdrop-blur-sm dark:lg:border-slate-700 dark:lg:bg-slate-900/95"
+              aria-label="목차"
+            >
               <TableOfContents headings={tocHeadings} />
             </aside>
           )}

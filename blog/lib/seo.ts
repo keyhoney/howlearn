@@ -6,7 +6,7 @@ interface SeoProps {
   title?: string;
   description?: string;
   image?: string;
-  /** 현재 페이지 경로 (예: "/", "/guides", "/blog/slug"). canonical URL에 사용됩니다. */
+  /** 현재 페이지 경로 (예: "/", "/guides", "/guides/slug"). canonical URL에 사용됩니다. */
   path?: string;
   url?: string;
   type?: "website" | "article" | "book";

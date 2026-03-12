@@ -1,39 +1,33 @@
 import React from "react";
 import type { MDXComponents } from "mdx/types";
 import {
-  TheoryBox,
-  TeacherNote,
-  ForStudents,
-  ForParents,
   Sources,
-  KeyTakeaways,
-  CommonMisconception,
-  ActionChecklist,
   RelatedConcepts,
-  ConceptAnchorLink,
-  ReflectionPrompt,
-  WhyItMatters,
-  RelatedGuides,
-  WhenToUse,
   Troubleshooting,
-  PrintableBlock,
-  BookOverview,
-  WhoThisIsFor,
-  WhatYouWillLearn,
   TopicIntro,
-  RelatedCards,
+  ConclusionHero,
+  OxQuiz,
+  CheckboxChecklist,
+  Callout,
+  VsBox,
+  AnalogyBlock,
+  CaseModule,
+  TrustModule,
+  MidSummaryBox,
+  BottomSummary,
 } from "@/components/mdx";
 import { toImageUrl } from "@/lib/image-url";
 import { slugify, extractTextFromNode } from "@/lib/headings";
+import { MdxH2 } from "@/components/mdx/MdxH2";
 
-function createHeading(level: 2 | 3) {
-  const Tag = `h${level}` as "h2" | "h3";
-  const MdxHeading = ({ children, ...props }: React.ComponentProps<"h2">) => {
+function createHeading(level: 3) {
+  const Tag = "h3" as const;
+  const MdxHeading = ({ children, ...props }: React.ComponentProps<"h3">) => {
     const text = extractTextFromNode(children);
     const id = text ? slugify(text) : undefined;
     return <Tag {...props} id={id}>{children}</Tag>;
   };
-  MdxHeading.displayName = level === 2 ? "MdxH2" : "MdxH3";
+  MdxHeading.displayName = "MdxH3";
   return MdxHeading;
 }
 
@@ -49,28 +43,22 @@ MdxImage.displayName = "MdxImage";
 
 export const mdxComponents: MDXComponents = {
   img: MdxImage,
-  h2: createHeading(2),
+  h2: MdxH2,
+  MdxH2,
   h3: createHeading(3),
-  RelatedCards,
-  TheoryBox,
-  TeacherNote,
-  ForStudents,
-  ForParents,
+  ConclusionHero,
   Sources,
   SourceNote: Sources,
-  KeyTakeaways,
-  CommonMisconception,
-  ActionChecklist,
   RelatedConcepts,
-  ConceptAnchorLink,
-  ReflectionPrompt,
-  WhyItMatters,
-  RelatedGuides,
-  WhenToUse,
   Troubleshooting,
-  PrintableBlock,
-  BookOverview,
-  WhoThisIsFor,
-  WhatYouWillLearn,
   TopicIntro,
+  OxQuiz,
+  CheckboxChecklist,
+  Callout,
+  VsBox,
+  AnalogyBlock,
+  CaseModule,
+  TrustModule,
+  MidSummaryBox,
+  BottomSummary,
 };

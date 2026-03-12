@@ -5,7 +5,7 @@
 const IMG_BASE_URL = process.env.NEXT_PUBLIC_IMAGE_BASE_URL ?? "";
 
 /**
- * 상대 경로(/blog/...)를 베이스 URL과 합쳐 절대 URL로 반환.
+ * 상대 경로(예: /guides/...)를 베이스 URL과 합쳐 절대 URL로 반환.
  * 이미 http(s)로 시작하면 그대로 반환.
  * 베이스가 없고 상대 경로면 APP_URL과 붙여서 반환(OG 등 절대 URL 필요 시).
  */

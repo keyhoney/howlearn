@@ -21,7 +21,7 @@ function getSiteUrl(): string {
 export const site = {
   name: "HowLearn",
   description:
-    "학습과학 기반 부모 교육을 위한 지식 아카이브입니다. 가이드, 개념, 툴킷, 블로그, 도서를 제공합니다.",
+    "학습과학 기반 부모 교육을 위한 지식 아카이브입니다. 가이드, 개념, 툴킷, 도서를 제공합니다.",
   get url() {
     return getSiteUrl();
   },

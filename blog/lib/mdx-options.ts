@@ -1,11 +1,14 @@
+import remarkGfm from "remark-gfm";
 import { remarkTransformImgUrl } from "@/lib/remark-transform-img-url";
 
 /**
  * next-mdx-remote/rsc용 공통 mdxOptions.
- * 이미지 URL을 NEXT_PUBLIC_IMAGE_BASE_URL과 결합하기 위해 remark 플러그인을 사용합니다.
+ * - remark-gfm: 표·취소선 등 GFM (MarkdownRenderer와 정합)
+ * - remarkTransformImgUrl: CDN/베이스 URL 결합
+ * h2/h3 id는 mdx-components의 createHeading에서 부여하므로 rehype-slug와 중복하지 않음.
  */
 export const sharedMdxOptions = {
   mdxOptions: {
-    remarkPlugins: [remarkTransformImgUrl],
+    remarkPlugins: [remarkGfm, remarkTransformImgUrl],
   },
 };

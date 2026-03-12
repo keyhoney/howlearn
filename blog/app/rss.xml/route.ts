@@ -10,7 +10,6 @@ function escapeXml(s: string): string {
     .replace(/'/g, "&apos;");
 }
 
-/** RSS 내 모든 링크에 사용할 기준 URL. 요청 Host 기준으로 하면 배포 도메인이 항상 맞음. */
 function getBaseUrl(request: Request): string {
   try {
     const origin = new URL(request.url).origin;
@@ -23,10 +22,10 @@ function getBaseUrl(request: Request): string {
   return site.url;
 }
 
-/** 요청 시점의 블로그 목록으로 생성되므로, 새 게시물은 별도 빌드 없이 RSS에 반영됩니다. */
+/** RSS: 최신 가이드 목록 기준 */
 export async function GET(request: Request) {
   const baseUrl = getBaseUrl(request);
-  const posts = await getContentByType("blog");
+  const posts = await getContentByType("guide");
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
@@ -39,7 +38,7 @@ export async function GET(request: Request) {
         const title = p.title || p.slug;
         const description = p.summary || "";
         const date = p.publishedAt || "";
-        const url = `${baseUrl}/blog/${encodeURIComponent(p.slug)}`;
+        const url = `${baseUrl}/guides/${encodeURIComponent(p.slug)}`;
         return `    <item>
       <title>${escapeXml(title)}</title>
       <description>${escapeXml(description)}</description>
