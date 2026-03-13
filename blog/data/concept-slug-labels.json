@@ -1,0 +1,1650 @@
+{
+  "concept-based-instruction": {
+    "tagName": "개념 기반 교수",
+    "english": "Concept-based Instruction"
+  },
+  "experiential-learning": {
+    "tagName": "경험 학습",
+    "english": "Experiential Learning"
+  },
+  "zone-of-proximal-development": {
+    "tagName": "근접 발달 영역",
+    "english": "Zone of Proximal Development, ZPD"
+  },
+  "explicit-instruction": {
+    "tagName": "명시적 교수",
+    "english": "Explicit Instruction"
+  },
+  "problem-based-learning": {
+    "tagName": "문제 기반 학습",
+    "english": "Problem-based Learning"
+  },
+  "discovery-learning": {
+    "tagName": "발견 학습",
+    "english": "Discovery Learning"
+  },
+  "advance-organizer": {
+    "tagName": "선행 조직자",
+    "english": "Advance Organizer"
+  },
+  "reflective-learning": {
+    "tagName": "성찰 학습",
+    "english": "Reflective Learning"
+  },
+  "scaffolding": {
+    "tagName": "스캐폴딩",
+    "english": "Scaffolding"
+  },
+  "example-based-learning": {
+    "tagName": "예시 기반 학습",
+    "english": "Example-based Learning"
+  },
+  "meaningful-learning": {
+    "tagName": "유의미 학습",
+    "english": "Meaningful Learning"
+  },
+  "cognitive-apprenticeship": {
+    "tagName": "인지적 도제",
+    "english": "Cognitive Apprenticeship"
+  },
+  "gradual-release-of-responsibility": {
+    "tagName": "점진적 책임 이양",
+    "english": "Gradual Release of Responsibility"
+  },
+  "inquiry-learning": {
+    "tagName": "탐구 학습",
+    "english": "Inquiry Learning"
+  },
+  "project-based-learning": {
+    "tagName": "프로젝트 기반 학습",
+    "english": "Project-based Learning"
+  },
+  "learning-community": {
+    "tagName": "학습 공동체",
+    "english": "Learning Community"
+  },
+  "collaborative-learning": {
+    "tagName": "협력 학습",
+    "english": "Collaborative Learning"
+  },
+  "addie-model": {
+    "tagName": "ADDIE 모델",
+    "english": "ADDIE Model"
+  },
+  "instructional-design": {
+    "tagName": "교수 설계",
+    "english": "Instructional Design"
+  },
+  "curriculum-alignment": {
+    "tagName": "교육과정 정렬",
+    "english": "Curriculum Alignment"
+  },
+  "peer-assessment": {
+    "tagName": "동료 평가",
+    "english": "Peer Assessment"
+  },
+  "rubric": {
+    "tagName": "루브릭",
+    "english": "Rubric"
+  },
+  "multimedia-learning-design": {
+    "tagName": "멀티미디어 학습 설계",
+    "english": "Multimedia Learning Design"
+  },
+  "understanding-by-design": {
+    "tagName": "이해 중심 설계",
+    "english": "Understanding by Design, UbD"
+  },
+  "self-assessment": {
+    "tagName": "자기 평가",
+    "english": "Self-assessment"
+  },
+  "summative-assessment": {
+    "tagName": "총괄 평가",
+    "english": "Summative Assessment"
+  },
+  "assessment-literacy": {
+    "tagName": "평가 문해력",
+    "english": "Assessment Literacy"
+  },
+  "assessment-design": {
+    "tagName": "평가 설계",
+    "english": "Assessment Design"
+  },
+  "feedback": {
+    "tagName": "피드백",
+    "english": "Feedback"
+  },
+  "feedforward": {
+    "tagName": "피드포워드",
+    "english": "Feedforward"
+  },
+  "learning-path-design": {
+    "tagName": "학습 경로 설계",
+    "english": "Learning Path Design"
+  },
+  "learning-experience-design": {
+    "tagName": "학습 경험 설계",
+    "english": "Learning Experience Design, LXD"
+  },
+  "learning-diagnosis": {
+    "tagName": "학습 진단",
+    "english": "Learning Diagnosis"
+  },
+  "formative-assessment": {
+    "tagName": "형성 평가",
+    "english": "Formative Assessment"
+  },
+  "social-facilitation-effect": {
+    "tagName": "사회 촉진 효과",
+    "english": "Social Facilitation Effect"
+  },
+  "social-loafing-effect": {
+    "tagName": "사회적 태만 효과",
+    "english": "Social Loafing Effect"
+  },
+  "reinforcement": {
+    "tagName": "강화",
+    "english": "Reinforcement"
+  },
+  "reinforcement-schedule": {
+    "tagName": "강화 스케줄",
+    "english": "Reinforcement Schedule"
+  },
+  "classical-conditioning": {
+    "tagName": "고전적 조건 형성",
+    "english": "Classical Conditioning"
+  },
+  "observational-learning": {
+    "tagName": "관찰 학습",
+    "english": "Observational Learning"
+  },
+  "constructivism": {
+    "tagName": "구성주의",
+    "english": "Constructivism"
+  },
+  "vicarious-reinforcement": {
+    "tagName": "대리 강화",
+    "english": "Vicarious Reinforcement"
+  },
+  "modeling": {
+    "tagName": "모델링",
+    "english": "Modeling"
+  },
+  "discrimination": {
+    "tagName": "변별",
+    "english": "Discrimination"
+  },
+  "social-cognitive-theory": {
+    "tagName": "사회인지 이론",
+    "english": "Social Cognitive Theory"
+  },
+  "social-constructivism": {
+    "tagName": "사회적 구성주의",
+    "english": "Social Constructivism"
+  },
+  "extinction": {
+    "tagName": "소거",
+    "english": "Extinction"
+  },
+  "cognitive-constructivism": {
+    "tagName": "인지적 구성주의",
+    "english": "Cognitive Constructivism"
+  },
+  "generalization": {
+    "tagName": "일반화",
+    "english": "Generalization"
+  },
+  "operant-conditioning": {
+    "tagName": "조작적 조건 형성",
+    "english": "Operant Conditioning"
+  },
+  "punishment": {
+    "tagName": "처벌",
+    "english": "Punishment"
+  },
+  "behaviorism": {
+    "tagName": "행동주의",
+    "english": "Behaviorism"
+  },
+  "attribution": {
+    "tagName": "귀인",
+    "english": "Attribution"
+  },
+  "attribution-for-success": {
+    "tagName": "성공 귀인",
+    "english": "Attribution for Success"
+  },
+  "attribution-for-failure": {
+    "tagName": "실패 귀인",
+    "english": "Attribution for Failure"
+  },
+  "self-efficacy": {
+    "tagName": "자기 효능감",
+    "english": "Self-efficacy"
+  },
+  "control-belief": {
+    "tagName": "통제 신념",
+    "english": "Control Belief"
+  },
+  "meaning-making-in-learning": {
+    "tagName": "학습 의미 구성",
+    "english": "Meaning-making in Learning"
+  },
+  "curiosity": {
+    "tagName": "호기심",
+    "english": "Curiosity"
+  },
+  "interest": {
+    "tagName": "흥미",
+    "english": "Interest"
+  },
+  "fixed-mindset": {
+    "tagName": "고정 마인드셋",
+    "english": "Fixed Mindset"
+  },
+  "motivation-regulation": {
+    "tagName": "동기 조절",
+    "english": "Motivation Regulation"
+  },
+  "flow": {
+    "tagName": "몰입",
+    "english": "Flow"
+  },
+  "growth-mindset": {
+    "tagName": "성장 마인드셋",
+    "english": "Growth Mindset"
+  },
+  "achievement-emotion": {
+    "tagName": "성취 정서",
+    "english": "Achievement Emotion"
+  },
+  "test-anxiety": {
+    "tagName": "시험 불안",
+    "english": "Test Anxiety"
+  },
+  "cognitive-reappraisal": {
+    "tagName": "인지 재평가",
+    "english": "Cognitive Reappraisal"
+  },
+  "self-regulated-learning": {
+    "tagName": "자기 조절 학습",
+    "english": "Self-regulated Learning"
+  },
+  "emotion-regulation": {
+    "tagName": "정서 조절",
+    "english": "Emotion Regulation"
+  },
+  "boredom": {
+    "tagName": "지루함",
+    "english": "Boredom"
+  },
+  "learning-planning": {
+    "tagName": "학습 계획",
+    "english": "Learning Planning"
+  },
+  "learning-satisfaction": {
+    "tagName": "학습 만족",
+    "english": "Learning Satisfaction"
+  },
+  "learning-monitoring": {
+    "tagName": "학습 모니터링",
+    "english": "Learning Monitoring"
+  },
+  "learning-anxiety": {
+    "tagName": "학습 불안",
+    "english": "Learning Anxiety"
+  },
+  "learning-burnout": {
+    "tagName": "학습 소진",
+    "english": "Learning Burnout"
+  },
+  "study-habit": {
+    "tagName": "학습 습관",
+    "english": "Study Habit"
+  },
+  "learning-strategy-regulation": {
+    "tagName": "학습 전략 조절",
+    "english": "Learning Strategy Regulation"
+  },
+  "learner-identity": {
+    "tagName": "학습 정체성",
+    "english": "Learner Identity"
+  },
+  "learning-persistence": {
+    "tagName": "학습 지속성",
+    "english": "Learning Persistence"
+  },
+  "learning-engagement": {
+    "tagName": "학습 참여",
+    "english": "Learning Engagement"
+  },
+  "learning-attitude": {
+    "tagName": "학습 태도",
+    "english": "Learning Attitude"
+  },
+  "resilience": {
+    "tagName": "회복 탄력성",
+    "english": "Resilience"
+  },
+  "brain-based-learning": {
+    "tagName": "뇌 기반 학습",
+    "english": "Brain-based Learning"
+  },
+  "digital-learning-environment": {
+    "tagName": "디지털 학습 환경",
+    "english": "Digital Learning Environment"
+  },
+  "mastery-learning": {
+    "tagName": "마스터리 학습",
+    "english": "Mastery Learning"
+  },
+  "microlearning": {
+    "tagName": "마이크로러닝",
+    "english": "Microlearning"
+  },
+  "adaptive-learning": {
+    "tagName": "적응형 학습",
+    "english": "Adaptive Learning"
+  },
+  "intelligent-tutoring-system": {
+    "tagName": "지능형 튜터 시스템",
+    "english": "Intelligent Tutoring System, ITS"
+  },
+  "flipped-learning": {
+    "tagName": "플립 러닝",
+    "english": "Flipped Learning"
+  },
+  "learning-analytics": {
+    "tagName": "학습 분석",
+    "english": "Learning Analytics"
+  },
+  "learning-progress-tracking": {
+    "tagName": "학습 진도 추적",
+    "english": "Learning Progress Tracking"
+  },
+  "learning-engagement-analytics": {
+    "tagName": "학습 참여 분석",
+    "english": "Learning Engagement Analytics"
+  },
+  "blended-learning": {
+    "tagName": "혼합 학습",
+    "english": "Blended Learning"
+  },
+  "law-of-exercise": {
+    "tagName": "연습의 법칙",
+    "english": "Law of Exercise"
+  },
+  "shaping-principle": {
+    "tagName": "조성 원리",
+    "english": "Shaping Principle"
+  },
+  "law-of-readiness": {
+    "tagName": "준비성의 법칙",
+    "english": "Law of Readiness"
+  },
+  "behaviorist-learning-theory": {
+    "tagName": "행동주의 학습 이론",
+    "english": "Behaviorist Learning Theory"
+  },
+  "law-of-effect": {
+    "tagName": "효과의 법칙",
+    "english": "Law of Effect"
+  },
+  "relatedness": {
+    "tagName": "관계성",
+    "english": "Relatedness"
+  },
+  "intrinsic-motivation": {
+    "tagName": "내재적 동기",
+    "english": "Intrinsic Motivation"
+  },
+  "motivational-beliefs": {
+    "tagName": "동기 신념",
+    "english": "Motivational Beliefs"
+  },
+  "extrinsic-motivation": {
+    "tagName": "외재적 동기",
+    "english": "Extrinsic Motivation"
+  },
+  "competence": {
+    "tagName": "유능감",
+    "english": "Competence"
+  },
+  "self-determination": {
+    "tagName": "자기 결정성",
+    "english": "Self-determination"
+  },
+  "autonomy": {
+    "tagName": "자율성",
+    "english": "Autonomy"
+  },
+  "perceived-value-of-learning": {
+    "tagName": "학습 가치 인식",
+    "english": "Perceived Value of Learning"
+  },
+  "learning-expectancy": {
+    "tagName": "학습 기대",
+    "english": "Learning Expectancy"
+  },
+  "grit": {
+    "tagName": "그릿",
+    "english": "Grit"
+  },
+  "goal-difficulty": {
+    "tagName": "목표 난이도",
+    "english": "Goal Difficulty"
+  },
+  "goal-setting": {
+    "tagName": "목표 설정",
+    "english": "Goal Setting"
+  },
+  "goal-orientation": {
+    "tagName": "목표 지향성",
+    "english": "Goal Orientation"
+  },
+  "goal-commitment": {
+    "tagName": "목표 헌신",
+    "english": "Goal Commitment"
+  },
+  "achievement-motivation": {
+    "tagName": "성취 동기",
+    "english": "Achievement Motivation"
+  },
+  "performance-goal": {
+    "tagName": "수행 목표",
+    "english": "Performance Goal"
+  },
+  "mastery-goal": {
+    "tagName": "숙달 목표",
+    "english": "Mastery Goal"
+  },
+  "willpower": {
+    "tagName": "의지력",
+    "english": "Willpower"
+  },
+  "approach-goal": {
+    "tagName": "접근 목표",
+    "english": "Approach Goal"
+  },
+  "delayed-gratification": {
+    "tagName": "지연 만족",
+    "english": "Delayed Gratification"
+  },
+  "avoidance-goal": {
+    "tagName": "회피 목표",
+    "english": "Avoidance Goal"
+  },
+  "value-effect": {
+    "tagName": "가치 효과",
+    "english": "Value Effect"
+  },
+  "expectancy-value-theory": {
+    "tagName": "기대 가치 이론",
+    "english": "Expectancy-Value Theory"
+  },
+  "expectancy-effect": {
+    "tagName": "기대 효과",
+    "english": "Expectancy Effect"
+  },
+  "goal-gradient-effect": {
+    "tagName": "목표 구배 효과",
+    "english": "Goal Gradient Effect"
+  },
+  "control-value-theory": {
+    "tagName": "통제 가치 이론",
+    "english": "Control-Value Theory"
+  },
+  "control-value-effect": {
+    "tagName": "통제-가치 효과",
+    "english": "Control-Value Effect"
+  },
+  "curiosity-gap-effect": {
+    "tagName": "호기심 격차 효과",
+    "english": "Curiosity Gap Effect"
+  },
+  "play-based-learning": {
+    "tagName": "놀이 기반 학습",
+    "english": "Play-based Learning"
+  },
+  "moral-development": {
+    "tagName": "도덕 발달",
+    "english": "Moral Development"
+  },
+  "moral-reasoning": {
+    "tagName": "도덕 추론",
+    "english": "Moral Reasoning"
+  },
+  "anxious-attachment": {
+    "tagName": "불안 애착",
+    "english": "Anxious Attachment"
+  },
+  "social-play": {
+    "tagName": "사회적 놀이",
+    "english": "Social Play"
+  },
+  "symbolic-play": {
+    "tagName": "상징적 놀이",
+    "english": "Symbolic Play"
+  },
+  "secure-attachment": {
+    "tagName": "안정 애착",
+    "english": "Secure Attachment"
+  },
+  "self-concept": {
+    "tagName": "자기 개념",
+    "english": "Self-concept"
+  },
+  "self-concept-development": {
+    "tagName": "자기 개념 발달",
+    "english": "Self-concept Development"
+  },
+  "identity-development": {
+    "tagName": "정체성 발달",
+    "english": "Identity Development"
+  },
+  "adolescent-identity": {
+    "tagName": "청소년 정체성",
+    "english": "Adolescent Identity"
+  },
+  "avoidant-attachment": {
+    "tagName": "회피 애착",
+    "english": "Avoidant Attachment"
+  },
+  "concept-development": {
+    "tagName": "개념 발달",
+    "english": "Concept Development"
+  },
+  "memory-development": {
+    "tagName": "기억 발달",
+    "english": "Memory Development"
+  },
+  "metacognitive-development": {
+    "tagName": "메타인지 발달",
+    "english": "Metacognitive Development"
+  },
+  "grammar-development": {
+    "tagName": "문법 발달",
+    "english": "Grammar Development"
+  },
+  "literacy-development": {
+    "tagName": "문해 발달",
+    "english": "Literacy Development"
+  },
+  "categorization-development": {
+    "tagName": "범주화 발달",
+    "english": "Categorization Development"
+  },
+  "mathematical-cognitive-development": {
+    "tagName": "수학 인지 발달",
+    "english": "Mathematical Cognitive Development"
+  },
+  "executive-function-development": {
+    "tagName": "실행 기능 발달",
+    "english": "Executive Function Development"
+  },
+  "writing-development": {
+    "tagName": "쓰기 발달",
+    "english": "Writing Development"
+  },
+  "vocabulary-development": {
+    "tagName": "어휘 발달",
+    "english": "Vocabulary Development"
+  },
+  "language-development": {
+    "tagName": "언어 발달",
+    "english": "Language Development"
+  },
+  "reading-development": {
+    "tagName": "읽기 발달",
+    "english": "Reading Development"
+  },
+  "working-memory-development": {
+    "tagName": "작업 기억 발달",
+    "english": "Working Memory Development"
+  },
+  "attention-development": {
+    "tagName": "주의 발달",
+    "english": "Attention Development"
+  },
+  "reasoning-development": {
+    "tagName": "추론 발달",
+    "english": "Reasoning Development"
+  },
+  "sensorimotor-stage": {
+    "tagName": "감각운동기",
+    "english": "Sensorimotor Stage"
+  },
+  "concrete-operational-stage": {
+    "tagName": "구체적 조작기",
+    "english": "Concrete Operational Stage"
+  },
+  "assimilation": {
+    "tagName": "동화",
+    "english": "Assimilation"
+  },
+  "developmental-psychology": {
+    "tagName": "발달 심리학",
+    "english": "Developmental Psychology"
+  },
+  "cognitive-development": {
+    "tagName": "인지 발달",
+    "english": "Cognitive Development"
+  },
+  "preoperational-stage": {
+    "tagName": "전조작기",
+    "english": "Preoperational Stage"
+  },
+  "accommodation": {
+    "tagName": "조절",
+    "english": "Accommodation"
+  },
+  "lifespan-development": {
+    "tagName": "평생 발달",
+    "english": "Lifespan Development"
+  },
+  "equilibration": {
+    "tagName": "평형화",
+    "english": "Equilibration"
+  },
+  "formal-operational-stage": {
+    "tagName": "형식적 조작기",
+    "english": "Formal Operational Stage"
+  },
+  "collaborative-problem-solving": {
+    "tagName": "공동 문제 해결",
+    "english": "Collaborative Problem Solving"
+  },
+  "joint-attention": {
+    "tagName": "공동 주의",
+    "english": "Joint Attention"
+  },
+  "internalization": {
+    "tagName": "내면화",
+    "english": "Internalization"
+  },
+  "peer-interaction": {
+    "tagName": "또래 상호작용",
+    "english": "Peer Interaction"
+  },
+  "peer-learning": {
+    "tagName": "또래 학습",
+    "english": "Peer Learning"
+  },
+  "private-speech": {
+    "tagName": "사적 언어",
+    "english": "Private Speech"
+  },
+  "sociocultural-theory": {
+    "tagName": "사회문화 이론",
+    "english": "Sociocultural Theory"
+  },
+  "social-interaction": {
+    "tagName": "사회적 상호작용",
+    "english": "Social Interaction"
+  },
+  "interaction-development": {
+    "tagName": "상호작용 발달",
+    "english": "Interaction Development"
+  },
+  "language-and-thought": {
+    "tagName": "언어와 사고",
+    "english": "Language and Thought"
+  },
+  "skill-acquisition": {
+    "tagName": "기술 습득",
+    "english": "Skill Acquisition"
+  },
+  "adult-learning": {
+    "tagName": "성인 학습",
+    "english": "Adult Learning"
+  },
+  "deliberate-practice": {
+    "tagName": "의도적 연습",
+    "english": "Deliberate Practice"
+  },
+  "expert-performance": {
+    "tagName": "전문가 수행",
+    "english": "Expert Performance"
+  },
+  "expertise-development": {
+    "tagName": "전문성 발달",
+    "english": "Expertise Development"
+  },
+  "knowledge-accumulation": {
+    "tagName": "지식 축적",
+    "english": "Knowledge Accumulation"
+  },
+  "adolescent-development": {
+    "tagName": "청소년 발달",
+    "english": "Adolescent Development"
+  },
+  "adolescent-risk-perception": {
+    "tagName": "청소년 위험 인지",
+    "english": "Adolescent Risk Perception"
+  },
+  "adolescent-cognitive-development": {
+    "tagName": "청소년 인지 발달",
+    "english": "Adolescent Cognitive Development"
+  },
+  "attachment-theory": {
+    "tagName": "애착 이론",
+    "english": "Attachment Theory"
+  },
+  "stage-theory-of-cognitive-development": {
+    "tagName": "인지 발달 단계 이론",
+    "english": "Stage Theory of Cognitive Development"
+  },
+  "information-processing-development-theory": {
+    "tagName": "정보 처리 발달 이론",
+    "english": "Information-processing Development Theory"
+  },
+  "10000-hour-rule": {
+    "tagName": "10,000시간 법칙",
+    "english": "10,000 Hour Rule"
+  },
+  "matthew-effect-in-education": {
+    "tagName": "교육에서의 매튜 효과",
+    "english": "Matthew Effect in Education"
+  },
+  "cumulative-knowledge-effect": {
+    "tagName": "누적 지식 효과",
+    "english": "Cumulative Knowledge Effect"
+  },
+  "power-law-of-practice": {
+    "tagName": "연습의 거듭제곱 법칙",
+    "english": "Power Law of Practice"
+  },
+  "expertise-reversal-effect": {
+    "tagName": "전문성 역전 효과",
+    "english": "Expertise Reversal Effect"
+  },
+  "expertise-theory": {
+    "tagName": "전문성 이론",
+    "english": "Expertise Theory"
+  },
+  "expertise-effect": {
+    "tagName": "전문성 효과",
+    "english": "Expertise Effect"
+  },
+  "experience-expectant-plasticity": {
+    "tagName": "경험 기대 가소성",
+    "english": "Experience-expectant Plasticity"
+  },
+  "experience-dependent-plasticity": {
+    "tagName": "경험 의존 가소성",
+    "english": "Experience-dependent Plasticity"
+  },
+  "window-of-plasticity": {
+    "tagName": "뇌 가소성 창",
+    "english": "Window of Plasticity"
+  },
+  "brain-development": {
+    "tagName": "뇌 발달",
+    "english": "Brain Development"
+  },
+  "sensitive-period": {
+    "tagName": "민감기",
+    "english": "Sensitive Period"
+  },
+  "synaptic-plasticity": {
+    "tagName": "시냅스 가소성",
+    "english": "Synaptic Plasticity"
+  },
+  "synaptic-pruning": {
+    "tagName": "시냅스 가지치기",
+    "english": "Synaptic Pruning"
+  },
+  "neuroplasticity": {
+    "tagName": "신경 가소성",
+    "english": "Neuroplasticity"
+  },
+  "neurogenesis": {
+    "tagName": "신경 생성",
+    "english": "Neurogenesis"
+  },
+  "critical-period": {
+    "tagName": "임계기",
+    "english": "Critical Period"
+  },
+  "long-term-potentiation": {
+    "tagName": "장기 강화",
+    "english": "Long-term Potentiation, LTP"
+  },
+  "long-term-depression": {
+    "tagName": "장기 억제",
+    "english": "Long-term Depression, LTD"
+  },
+  "rem-sleep": {
+    "tagName": "REM 수면",
+    "english": "REM Sleep"
+  },
+  "arousal-level": {
+    "tagName": "각성 수준",
+    "english": "Arousal Level"
+  },
+  "non-rem-sleep": {
+    "tagName": "비 REM 수면",
+    "english": "Non-REM Sleep"
+  },
+  "sleep": {
+    "tagName": "수면",
+    "english": "Sleep"
+  },
+  "sleep-consolidation": {
+    "tagName": "수면 공고화",
+    "english": "Sleep Consolidation"
+  },
+  "sleep-and-memory": {
+    "tagName": "수면과 기억",
+    "english": "Sleep and Memory"
+  },
+  "stress-response": {
+    "tagName": "스트레스 반응",
+    "english": "Stress Response"
+  },
+  "stress-and-learning": {
+    "tagName": "스트레스와 학습",
+    "english": "Stress and Learning"
+  },
+  "sensory-processing": {
+    "tagName": "감각 처리",
+    "english": "Sensory Processing"
+  },
+  "sensory-integration": {
+    "tagName": "감각 통합",
+    "english": "Sensory Integration"
+  },
+  "emotional-processing": {
+    "tagName": "감정 처리",
+    "english": "Emotional Processing"
+  },
+  "visual-processing": {
+    "tagName": "시각 처리",
+    "english": "Visual Processing"
+  },
+  "motor-memory": {
+    "tagName": "운동 기억",
+    "english": "Motor Memory"
+  },
+  "motor-learning": {
+    "tagName": "운동 학습",
+    "english": "Motor Learning"
+  },
+  "perceptual-processing": {
+    "tagName": "지각 처리",
+    "english": "Perceptual Processing"
+  },
+  "auditory-processing": {
+    "tagName": "청각 처리",
+    "english": "Auditory Processing"
+  },
+  "basal-ganglia": {
+    "tagName": "기저핵",
+    "english": "Basal Ganglia"
+  },
+  "parietal-lobe": {
+    "tagName": "두정엽",
+    "english": "Parietal Lobe"
+  },
+  "white-matter": {
+    "tagName": "백질",
+    "english": "White Matter"
+  },
+  "white-matter-development": {
+    "tagName": "백질 발달",
+    "english": "White Matter Development"
+  },
+  "cerebellum": {
+    "tagName": "소뇌",
+    "english": "Cerebellum"
+  },
+  "prefrontal-cortex": {
+    "tagName": "전전두엽",
+    "english": "Prefrontal Cortex"
+  },
+  "temporal-lobe": {
+    "tagName": "측두엽",
+    "english": "Temporal Lobe"
+  },
+  "amygdala": {
+    "tagName": "편도체",
+    "english": "Amygdala"
+  },
+  "hippocampus": {
+    "tagName": "해마",
+    "english": "Hippocampus"
+  },
+  "hippocampus-dependent-memory": {
+    "tagName": "해마 의존 기억",
+    "english": "Hippocampus-dependent Memory"
+  },
+  "gray-matter": {
+    "tagName": "회백질",
+    "english": "Gray Matter"
+  },
+  "neuron": {
+    "tagName": "뉴런",
+    "english": "Neuron"
+  },
+  "synapse": {
+    "tagName": "시냅스",
+    "english": "Synapse"
+  },
+  "synaptic-efficiency": {
+    "tagName": "시냅스 효율",
+    "english": "Synaptic Efficiency"
+  },
+  "neural-firing-patterns": {
+    "tagName": "신경 발화 패턴",
+    "english": "Neural Firing Patterns"
+  },
+  "neural-adaptation": {
+    "tagName": "신경 적응",
+    "english": "Neural Adaptation"
+  },
+  "neural-transmission": {
+    "tagName": "신경 전달",
+    "english": "Neural Transmission"
+  },
+  "neurotransmitters": {
+    "tagName": "신경 전달 물질",
+    "english": "Neurotransmitters"
+  },
+  "action-potential": {
+    "tagName": "활동 전위",
+    "english": "Action Potential"
+  },
+  "gamma-aminobutyric-acid": {
+    "tagName": "GABA",
+    "english": "Gamma-Aminobutyric Acid, GABA"
+  },
+  "glutamate": {
+    "tagName": "글루타메이트",
+    "english": "Glutamate"
+  },
+  "norepinephrine": {
+    "tagName": "노르에피네프린",
+    "english": "Norepinephrine"
+  },
+  "dopamine": {
+    "tagName": "도파민",
+    "english": "Dopamine"
+  },
+  "serotonin": {
+    "tagName": "세로토닌",
+    "english": "Serotonin"
+  },
+  "stress-hormones": {
+    "tagName": "스트레스 호르몬",
+    "english": "Stress Hormones"
+  },
+  "cortisol": {
+    "tagName": "코르티솔",
+    "english": "Cortisol"
+  },
+  "neural-mechanisms-of-reinforcement": {
+    "tagName": "강화 신경 메커니즘",
+    "english": "Neural Mechanisms of Reinforcement"
+  },
+  "reinforcement-learning": {
+    "tagName": "강화 학습",
+    "english": "Reinforcement Learning"
+  },
+  "computational-neuroscience": {
+    "tagName": "계산 신경과학",
+    "english": "Computational Neuroscience"
+  },
+  "dopamine-reward-system": {
+    "tagName": "도파민 보상 시스템",
+    "english": "Dopamine Reward System"
+  },
+  "reward-based-learning": {
+    "tagName": "보상 기반 학습",
+    "english": "Reward-based Learning"
+  },
+  "prediction-error": {
+    "tagName": "예측 오류",
+    "english": "Prediction Error"
+  },
+  "predictive-processing": {
+    "tagName": "예측 처리",
+    "english": "Predictive Processing"
+  },
+  "hebbian-learning-rule": {
+    "tagName": "Hebbian 학습 규칙",
+    "english": "Hebbian Learning Rule"
+  },
+  "yerkes-dodson-law": {
+    "tagName": "Yerkes-Dodson 법칙",
+    "english": "Yerkes-Dodson Law"
+  },
+  "spacing-consolidation-effect": {
+    "tagName": "간격 공고화 효과",
+    "english": "Spacing Consolidation Effect"
+  },
+  "brain-network-learning-theory": {
+    "tagName": "뇌 네트워크 학습 이론",
+    "english": "Brain Network Learning Theory"
+  },
+  "sleep-dependent-memory-consolidation-theory": {
+    "tagName": "수면 의존 기억 공고화 이론",
+    "english": "Sleep-dependent Memory Consolidation Theory"
+  },
+  "dopamine-learning-signal": {
+    "tagName": "도파민 학습 신호",
+    "english": "Dopamine Learning Signal"
+  },
+  "reward-prediction-error": {
+    "tagName": "보상 예측 오류",
+    "english": "Reward Prediction Error"
+  },
+  "predictive-processing-theory": {
+    "tagName": "예측 처리 이론",
+    "english": "Predictive Processing Theory"
+  },
+  "default-mode-network": {
+    "tagName": "기본 모드 네트워크",
+    "english": "Default Mode Network, DMN"
+  },
+  "brain-network-dynamics": {
+    "tagName": "뇌 네트워크 동역학",
+    "english": "Brain Network Dynamics"
+  },
+  "motivational-circuit": {
+    "tagName": "동기 회로",
+    "english": "Motivational Circuit"
+  },
+  "reward-circuit": {
+    "tagName": "보상 회로",
+    "english": "Reward Circuit"
+  },
+  "salience-network": {
+    "tagName": "살리언스 네트워크",
+    "english": "Salience Network"
+  },
+  "neural-synchronization": {
+    "tagName": "신경 동기화",
+    "english": "Neural Synchronization"
+  },
+  "neural-connectivity": {
+    "tagName": "신경 연결성",
+    "english": "Neural Connectivity"
+  },
+  "neural-circuit": {
+    "tagName": "신경 회로",
+    "english": "Neural Circuit"
+  },
+  "neural-circuit-reorganization": {
+    "tagName": "신경 회로 재구성",
+    "english": "Neural Circuit Reorganization"
+  },
+  "procedural-memory-circuit": {
+    "tagName": "절차 기억 회로",
+    "english": "Procedural Memory Circuit"
+  },
+  "emotion-regulation-circuit": {
+    "tagName": "정서 조절 회로",
+    "english": "Emotion Regulation Circuit"
+  },
+  "attention-network": {
+    "tagName": "주의 네트워크",
+    "english": "Attention Network"
+  },
+  "attention-control-circuit": {
+    "tagName": "주의 조절 회로",
+    "english": "Attention Control Circuit"
+  },
+  "executive-control-network": {
+    "tagName": "집행 통제 네트워크",
+    "english": "Executive Control Network"
+  },
+  "conceptual-change": {
+    "tagName": "개념 변화",
+    "english": "Conceptual Change"
+  },
+  "concept-map": {
+    "tagName": "개념 지도",
+    "english": "Concept Map"
+  },
+  "concept-formation": {
+    "tagName": "개념 형성",
+    "english": "Concept Formation"
+  },
+  "schema": {
+    "tagName": "스키마",
+    "english": "Schema"
+  },
+  "schema-automation": {
+    "tagName": "스키마 자동화",
+    "english": "Schema Automation"
+  },
+  "schema-formation": {
+    "tagName": "스키마 형성",
+    "english": "Schema Formation"
+  },
+  "image-memory": {
+    "tagName": "이미지 기억",
+    "english": "Image Memory"
+  },
+  "dual-coding": {
+    "tagName": "이중 부호화",
+    "english": "Dual Coding"
+  },
+  "cognitive-map": {
+    "tagName": "인지 지도",
+    "english": "Cognitive Map"
+  },
+  "mental-model": {
+    "tagName": "정신 모형",
+    "english": "Mental Model"
+  },
+  "knowledge-structure": {
+    "tagName": "지식 구조",
+    "english": "Knowledge Structure"
+  },
+  "knowledge-organization": {
+    "tagName": "지식 조직화",
+    "english": "Knowledge Organization"
+  },
+  "chunking": {
+    "tagName": "청킹",
+    "english": "Chunking"
+  },
+  "serial-position-effect": {
+    "tagName": "계열 위치 효과",
+    "english": "Serial Position Effect"
+  },
+  "desirable-difficulties": {
+    "tagName": "바람직한 어려움",
+    "english": "Desirable Difficulties"
+  },
+  "fluency-illusion": {
+    "tagName": "유창성 착각",
+    "english": "Fluency Illusion"
+  },
+  "primacy-effect": {
+    "tagName": "초두 효과",
+    "english": "Primacy Effect"
+  },
+  "recency-effect": {
+    "tagName": "최신 효과",
+    "english": "Recency Effect"
+  },
+  "familiarity-illusion": {
+    "tagName": "친숙성 착각",
+    "english": "Familiarity Illusion"
+  },
+  "metacognition": {
+    "tagName": "메타인지",
+    "english": "Metacognition"
+  },
+  "metacognitive-monitoring": {
+    "tagName": "메타인지 모니터링",
+    "english": "Metacognitive Monitoring"
+  },
+  "metacognitive-regulation": {
+    "tagName": "메타인지 조절",
+    "english": "Metacognitive Regulation"
+  },
+  "judgment-of-learning": {
+    "tagName": "학습 판단",
+    "english": "Judgment of Learning"
+  },
+  "spacing-effect": {
+    "tagName": "간격 효과",
+    "english": "Spacing Effect"
+  },
+  "picture-superiority-effect": {
+    "tagName": "그림 우월 효과",
+    "english": "Picture Superiority Effect"
+  },
+  "context-effect": {
+    "tagName": "맥락 효과",
+    "english": "Context Effect"
+  },
+  "encoding-specificity-principle": {
+    "tagName": "부호화 특수성 원리",
+    "english": "Encoding Specificity Principle"
+  },
+  "state-dependent-learning-effect": {
+    "tagName": "상태 의존 학습 효과",
+    "english": "State-dependent Learning Effect"
+  },
+  "production-effect": {
+    "tagName": "생산 효과",
+    "english": "Production Effect"
+  },
+  "generation-effect": {
+    "tagName": "생성 효과",
+    "english": "Generation Effect"
+  },
+  "levels-of-processing-theory": {
+    "tagName": "수준 처리 이론",
+    "english": "Levels of Processing Theory"
+  },
+  "levels-of-processing-effect": {
+    "tagName": "수준 처리 효과",
+    "english": "Levels of Processing Effect"
+  },
+  "enactment-effect": {
+    "tagName": "수행 효과",
+    "english": "Enactment Effect"
+  },
+  "schema-theory": {
+    "tagName": "스키마 이론",
+    "english": "Schema Theory"
+  },
+  "schema-activation-effect": {
+    "tagName": "스키마 활성화 효과",
+    "english": "Schema Activation Effect"
+  },
+  "retrieval-effort-effect": {
+    "tagName": "인출 노력 효과",
+    "english": "Retrieval Effort Effect"
+  },
+  "working-memory-model": {
+    "tagName": "작업 기억 모델",
+    "english": "Working Memory Model"
+  },
+  "reconstructive-memory-theory": {
+    "tagName": "재구성 기억 이론",
+    "english": "Reconstructive Memory Theory"
+  },
+  "transfer-appropriate-processing": {
+    "tagName": "전이 적합 처리",
+    "english": "Transfer-appropriate Processing"
+  },
+  "hypercorrection-effect": {
+    "tagName": "초정정 효과",
+    "english": "Hypercorrection Effect"
+  },
+  "testing-effect": {
+    "tagName": "테스트 효과",
+    "english": "Testing Effect"
+  },
+  "personalization-principle": {
+    "tagName": "개인화 원리",
+    "english": "Personalization Principle"
+  },
+  "spatial-contiguity-principle": {
+    "tagName": "공간 근접성 원리",
+    "english": "Spatial Contiguity Principle"
+  },
+  "multimedia-principle": {
+    "tagName": "멀티미디어 원리",
+    "english": "Multimedia Principle"
+  },
+  "segmenting-principle": {
+    "tagName": "분절화 원리",
+    "english": "Segmenting Principle"
+  },
+  "split-attention-effect": {
+    "tagName": "분할 주의 효과",
+    "english": "Split Attention Effect"
+  },
+  "pre-training-principle": {
+    "tagName": "사전 훈련 원리",
+    "english": "Pre-training Principle"
+  },
+  "temporal-contiguity-principle": {
+    "tagName": "시간 근접성 원리",
+    "english": "Temporal Contiguity Principle"
+  },
+  "signaling-principle": {
+    "tagName": "신호화 원리",
+    "english": "Signaling Principle"
+  },
+  "modality-effect": {
+    "tagName": "양식 효과",
+    "english": "Modality Effect"
+  },
+  "worked-example-effect": {
+    "tagName": "예시 효과",
+    "english": "Worked Example Effect"
+  },
+  "voice-principle": {
+    "tagName": "음성 원리",
+    "english": "Voice Principle"
+  },
+  "coherence-principle": {
+    "tagName": "응집성 원리",
+    "english": "Coherence Principle"
+  },
+  "image-principle": {
+    "tagName": "이미지 원리",
+    "english": "Image Principle"
+  },
+  "redundancy-effect": {
+    "tagName": "중복 효과",
+    "english": "Redundancy Effect"
+  },
+  "problem-space-theory": {
+    "tagName": "문제 공간 이론",
+    "english": "Problem Space Theory"
+  },
+  "mental-set-effect": {
+    "tagName": "심적 자세 효과",
+    "english": "Mental Set Effect"
+  },
+  "intrinsic-load": {
+    "tagName": "내재적 부하",
+    "english": "Intrinsic Load"
+  },
+  "extraneous-load": {
+    "tagName": "외재적 부하",
+    "english": "Extraneous Load"
+  },
+  "germane-load": {
+    "tagName": "유익한 부하",
+    "english": "Germane Load"
+  },
+  "cognitive-load": {
+    "tagName": "인지 부하",
+    "english": "Cognitive Load"
+  },
+  "cognitive-capacity": {
+    "tagName": "인지 용량",
+    "english": "Cognitive Capacity"
+  },
+  "cognitive-resources": {
+    "tagName": "인지 자원",
+    "english": "Cognitive Resources"
+  },
+  "cognitive-efficiency": {
+    "tagName": "인지 효율성",
+    "english": "Cognitive Efficiency"
+  },
+  "near-transfer": {
+    "tagName": "근접 전이",
+    "english": "Near Transfer"
+  },
+  "far-transfer": {
+    "tagName": "원거리 전이",
+    "english": "Far Transfer"
+  },
+  "automation-and-automaticity": {
+    "tagName": "자동화",
+    "english": "Automation / Automaticity"
+  },
+  "transfer": {
+    "tagName": "전이",
+    "english": "Transfer"
+  },
+  "transfer-distance": {
+    "tagName": "전이 거리",
+    "english": "Transfer Distance"
+  },
+  "transfer-failure": {
+    "tagName": "전이 실패",
+    "english": "Transfer Failure"
+  },
+  "pattern-recognition": {
+    "tagName": "패턴 인식",
+    "english": "Pattern Recognition"
+  },
+  "cognitive-psychology": {
+    "tagName": "인지 심리학",
+    "english": "Cognitive Psychology"
+  },
+  "information-processing": {
+    "tagName": "정보 처리",
+    "english": "Information Processing"
+  },
+  "processing-speed": {
+    "tagName": "정보 처리 속도",
+    "english": "Processing Speed"
+  },
+  "interleaving": {
+    "tagName": "교차 학습",
+    "english": "Interleaving"
+  },
+  "rehearsal-strategy": {
+    "tagName": "반복 전략",
+    "english": "Rehearsal Strategy"
+  },
+  "distributed-practice": {
+    "tagName": "분산 학습",
+    "english": "Distributed Practice"
+  },
+  "generative-learning": {
+    "tagName": "생성 학습",
+    "english": "Generative Learning"
+  },
+  "cognitive-strategy": {
+    "tagName": "인지 전략",
+    "english": "Cognitive Strategy"
+  },
+  "retrieval-practice": {
+    "tagName": "인출 연습",
+    "english": "Retrieval Practice"
+  },
+  "self-explanation": {
+    "tagName": "자기 설명",
+    "english": "Self-explanation"
+  },
+  "self-reference": {
+    "tagName": "자기 참조",
+    "english": "Self-reference"
+  },
+  "self-testing": {
+    "tagName": "자기 테스트",
+    "english": "Self-testing"
+  },
+  "elaboration": {
+    "tagName": "정교화",
+    "english": "Elaboration"
+  },
+  "organization-strategy": {
+    "tagName": "조직 전략",
+    "english": "Organization Strategy"
+  },
+  "massed-practice": {
+    "tagName": "집중 학습",
+    "english": "Massed Practice"
+  },
+  "reasoning-strategy": {
+    "tagName": "추론 전략",
+    "english": "Reasoning Strategy"
+  },
+  "learning-strategy": {
+    "tagName": "학습 전략",
+    "english": "Learning Strategy"
+  },
+  "inductive-reasoning": {
+    "tagName": "귀납 추론",
+    "english": "Inductive Reasoning"
+  },
+  "functional-fixedness": {
+    "tagName": "기능적 고착",
+    "english": "Functional Fixedness"
+  },
+  "problem-space": {
+    "tagName": "문제 공간",
+    "english": "Problem Space"
+  },
+  "problem-solving": {
+    "tagName": "문제 해결",
+    "english": "Problem Solving"
+  },
+  "algorithm": {
+    "tagName": "알고리즘",
+    "english": "Algorithm"
+  },
+  "deductive-reasoning": {
+    "tagName": "연역 추론",
+    "english": "Deductive Reasoning"
+  },
+  "analogical-reasoning": {
+    "tagName": "유추 추론",
+    "english": "Analogical Reasoning"
+  },
+  "expert-thinking": {
+    "tagName": "전문가 사고",
+    "english": "Expert Thinking"
+  },
+  "expert-intuition": {
+    "tagName": "전문가 직관",
+    "english": "Expert Intuition"
+  },
+  "expert-cognition": {
+    "tagName": "전문성 인지",
+    "english": "Expert Cognition"
+  },
+  "insight": {
+    "tagName": "통찰",
+    "english": "Insight"
+  },
+  "insight-problem-solving": {
+    "tagName": "통찰 문제 해결",
+    "english": "Insight Problem Solving"
+  },
+  "pattern-based-reasoning": {
+    "tagName": "패턴 기반 추론",
+    "english": "Pattern-based Reasoning"
+  },
+  "probabilistic-thinking": {
+    "tagName": "확률적 사고",
+    "english": "Probabilistic Thinking"
+  },
+  "heuristic": {
+    "tagName": "휴리스틱",
+    "english": "Heuristic"
+  },
+  "interference-theory": {
+    "tagName": "간섭 이론",
+    "english": "Interference Theory"
+  },
+  "sensory-memory": {
+    "tagName": "감각 기억",
+    "english": "Sensory Memory"
+  },
+  "memory-consolidation": {
+    "tagName": "기억 공고화",
+    "english": "Memory Consolidation"
+  },
+  "memory-encoding": {
+    "tagName": "기억 부호화",
+    "english": "Memory Encoding"
+  },
+  "memory-retrieval": {
+    "tagName": "기억 인출",
+    "english": "Memory Retrieval"
+  },
+  "memory-reconsolidation": {
+    "tagName": "기억 재공고화",
+    "english": "Memory Reconsolidation"
+  },
+  "memory-reactivation": {
+    "tagName": "기억 재활성화",
+    "english": "Memory Reactivation"
+  },
+  "memory-storage": {
+    "tagName": "기억 저장",
+    "english": "Memory Storage"
+  },
+  "forgetting": {
+    "tagName": "망각",
+    "english": "Forgetting"
+  },
+  "forgetting-curve": {
+    "tagName": "망각 곡선",
+    "english": "Forgetting Curve"
+  },
+  "proactive-interference": {
+    "tagName": "순행 간섭",
+    "english": "Proactive Interference"
+  },
+  "retroactive-interference": {
+    "tagName": "역행 간섭",
+    "english": "Retroactive Interference"
+  },
+  "semantic-memory": {
+    "tagName": "의미 기억",
+    "english": "Semantic Memory"
+  },
+  "episodic-memory": {
+    "tagName": "일화 기억",
+    "english": "Episodic Memory"
+  },
+  "working-memory": {
+    "tagName": "작업 기억",
+    "english": "Working Memory"
+  },
+  "working-memory-capacity": {
+    "tagName": "작업 기억 용량",
+    "english": "Working Memory Capacity"
+  },
+  "long-term-memory": {
+    "tagName": "장기 기억",
+    "english": "Long-term Memory"
+  },
+  "recognition": {
+    "tagName": "재인",
+    "english": "Recognition"
+  },
+  "procedural-memory": {
+    "tagName": "절차 기억",
+    "english": "Procedural Memory"
+  },
+  "recall": {
+    "tagName": "회상",
+    "english": "Recall"
+  },
+  "selective-attention": {
+    "tagName": "선택적 주의",
+    "english": "Selective Attention"
+  },
+  "visuospatial-sketchpad": {
+    "tagName": "시공간 스케치패드",
+    "english": "Visuospatial Sketchpad"
+  },
+  "inhibitory-control": {
+    "tagName": "억제 통제",
+    "english": "Inhibitory Control"
+  },
+  "episodic-buffer": {
+    "tagName": "에피소드 버퍼",
+    "english": "Episodic Buffer"
+  },
+  "phonological-loop": {
+    "tagName": "음운 루프",
+    "english": "Phonological Loop"
+  },
+  "cognitive-control": {
+    "tagName": "인지 통제",
+    "english": "Cognitive Control"
+  },
+  "cognitive-flexibility": {
+    "tagName": "인지적 유연성",
+    "english": "Cognitive Flexibility"
+  },
+  "attention": {
+    "tagName": "주의",
+    "english": "Attention"
+  },
+  "divided-attention": {
+    "tagName": "주의 분산",
+    "english": "Divided Attention"
+  },
+  "attention-shifting": {
+    "tagName": "주의 전환",
+    "english": "Attention Shifting"
+  },
+  "focused-attention": {
+    "tagName": "주의 집중",
+    "english": "Focused Attention"
+  },
+  "central-executive": {
+    "tagName": "중앙 집행기",
+    "english": "Central Executive"
+  },
+  "sustained-attention": {
+    "tagName": "지속적 주의",
+    "english": "Sustained Attention"
+  },
+  "executive-function": {
+    "tagName": "집행 기능",
+    "english": "Executive Function"
+  }
+}

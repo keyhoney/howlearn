@@ -2,7 +2,7 @@
  * 카테고리·태그 분류 (단일 허용 목록)
  * - 원본: 개발 노트 / 카테고리_태그_분류.md
  * - 카테고리: ALLOWED_CATEGORIES(카테고리 열)만 사용
- * - 태그: ALLOWED_TAGS(학습과학_표준화_태그체계 학문별 하위 태그명)만 사용
+ * - 태그: 필터 UI에서는 글에 실제로 쓰인 태그(개념명 등)를 사용하며, ALLOWED_TAGS는 참고용으로만 둠.
  */
 
 /** 글에서 사용할 수 있는 카테고리 (학습과학 5대 영역). 도메인 한글명과 동일. */
@@ -16,7 +16,7 @@ export const ALLOWED_CATEGORIES = [
 
 export type AllowedCategory = (typeof ALLOWED_CATEGORIES)[number];
 
-/** 글에서 사용할 수 있는 태그. 학습과학_표준화_태그체계 기준 (학문별 하위 태그명). */
+/** (참고용) 학습과학_표준화_태그체계 학문별 하위 태그명. 필터 드롭다운은 이 목록이 아니라 콘텐츠에 실제로 쓰인 태그를 사용함. */
 export const ALLOWED_TAGS = [
   "교수방법",
   "설계·평가",

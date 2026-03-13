@@ -1,11 +1,10 @@
 "use client";
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { AnyContent, ContentType, DomainSlug } from "@/lib/types";
 import { ContentCard } from "@/components/cards/ContentCard";
 import { domainInfo, DOMAIN_ORDER } from "@/lib/domains";
-import { ALLOWED_TAGS } from "@/lib/content-taxonomy";
 import { Search as SearchIcon, ChevronDown, Filter } from "lucide-react";
 import { PaginationBar } from "@/components/shared/PaginationBar";
 import type { ContentHubPagination } from "@/components/shared/ContentHub";
@@ -41,6 +40,8 @@ export function ContentHubFilters({ content, type, title, pagination, availableT
   const [searchInput, setSearchInput] = useState(queryFromUrl);
   const domainParam = searchParams.get("domain") ?? "";
   const tagParam = searchParams.get("tag") ?? "";
+  const [tagDropdownOpen, setTagDropdownOpen] = useState(false);
+  const tagDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setSearchInput(queryFromUrl);
@@ -48,14 +49,14 @@ export function ContentHubFilters({ content, type, title, pagination, availableT
 
   const domains = DOMAIN_ORDER;
 
-  /** 페이지네이션 없을 때만 클라이언트에서 계산 (content가 전체 목록). 페이지네이션 있을 때는 서버에서 availableTags 전달 */
+  /** 페이지네이션 없을 때만 클라이언트에서 계산 (content가 전체 목록). 페이지네이션 있을 때는 서버에서 availableTags 전달. 태그는 글에 실제로 쓰인 개념명 등으로 제한 없이 표시 */
   const clientAvailableTags = useMemo(() => {
     if (pagination && availableTags) return availableTags;
-    if (!domainParam) return [...ALLOWED_TAGS];
-    const itemsInDomain = content.filter((c) => c.domains.includes(domainParam as DomainSlug));
+    let list = content;
+    if (domainParam) list = list.filter((c) => c.domains.includes(domainParam as DomainSlug));
     const tagSet = new Set<string>();
-    itemsInDomain.forEach((c) => c.tags.forEach((t) => tagSet.add(t)));
-    return ALLOWED_TAGS.filter((t) => tagSet.has(t));
+    list.forEach((c) => c.tags.forEach((t) => tagSet.add(t)));
+    return Array.from(tagSet).sort();
   }, [pagination, availableTags, content, domainParam]);
 
   const effectiveAvailableTags = useMemo(
@@ -73,6 +74,16 @@ export function ContentHubFilters({ content, type, title, pagination, availableT
     if (pagination) params.set("page", "1");
     router.replace(`${pathname}${params.toString() ? `?${params.toString()}` : ""}`);
   }, [domainParam, tagParam, effectiveAvailableTags, pathname, router, searchParams, pagination]);
+
+  /** 태그 드롭다운 외부 클릭 시 닫기 */
+  useEffect(() => {
+    if (!tagDropdownOpen) return;
+    function handleClickOutside(e: MouseEvent) {
+      if (tagDropdownRef.current && !tagDropdownRef.current.contains(e.target as Node)) setTagDropdownOpen(false);
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [tagDropdownOpen]);
 
   /** 페이지네이션 사용 시: 서버가 이미 필터·슬라이스한 content만 표시. 미사용 시: 클라이언트 필터 */
   const displayList = useMemo(() => {
@@ -161,21 +172,53 @@ export function ContentHubFilters({ content, type, title, pagination, availableT
               </select>
               <ChevronDown className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none" aria-hidden />
             </div>
-            <div className="relative w-[160px] sm:w-[200px]">
-              <select
-                value={tagParam}
-                onChange={(e) => setTag(e.target.value)}
-                className={selectBase}
+            <div className="relative w-[160px] sm:w-[200px]" ref={tagDropdownRef}>
+              <button
+                type="button"
+                onClick={() => setTagDropdownOpen((v) => !v)}
+                className={selectBase + " text-left flex items-center justify-between"}
                 aria-label="태그 선택"
+                aria-expanded={tagDropdownOpen}
+                aria-haspopup="listbox"
               >
-                <option value="">전체 태그</option>
-                {effectiveAvailableTags.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none" aria-hidden />
+                <span className="truncate">{tagParam ? tagParam : "전체 태그"}</span>
+                <ChevronDown className={`h-4 w-4 shrink-0 text-slate-400 dark:text-slate-500 transition-transform ${tagDropdownOpen ? "rotate-180" : ""}`} aria-hidden />
+              </button>
+              {tagDropdownOpen && (
+                <div
+                  role="listbox"
+                  className="absolute left-0 right-0 top-full z-20 mt-1 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 shadow-lg py-1 max-h-[400px] overflow-y-auto"
+                  style={{ maxHeight: "400px" }}
+                >
+                    <button
+                      type="button"
+                      role="option"
+                      aria-selected={!tagParam}
+                      onClick={() => {
+                        setTag("");
+                        setTagDropdownOpen(false);
+                      }}
+                      className="w-full px-4 py-2.5 text-left text-sm font-medium text-slate-900 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-700/80 focus:bg-slate-100 dark:focus:bg-slate-700/80 focus:outline-none"
+                    >
+                      전체 태그
+                    </button>
+                    {effectiveAvailableTags.map((t) => (
+                      <button
+                        key={t}
+                        type="button"
+                        role="option"
+                        aria-selected={tagParam === t}
+                        onClick={() => {
+                          setTag(t);
+                          setTagDropdownOpen(false);
+                        }}
+                        className={`w-full px-4 py-2.5 text-left text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-700/80 focus:bg-slate-100 dark:focus:bg-slate-700/80 focus:outline-none ${tagParam === t ? "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300" : "text-slate-900 dark:text-slate-100"}`}
+                      >
+                        {t}
+                      </button>
+                    ))}
+                </div>
+              )}
             </div>
           </div>
         </div>

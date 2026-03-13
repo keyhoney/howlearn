@@ -6,14 +6,17 @@ import {
   getContentReferringToConcept,
   getAllContent,
 } from "@/lib/content";
-import { getMdxBySlug } from "@/lib/content-files";
+import { getMdxBySlug, getMdxSlugs } from "@/lib/content-files";
 import { ContentDetail } from "@/components/shared/ContentDetail";
 import { MarkdownRenderer } from "@/components/shared/MarkdownRenderer";
 import { extractHeadings } from "@/lib/headings";
-import { mdxComponents } from "@/lib/mdx-components";
+import { getMdxComponents } from "@/lib/mdx-components";
 import { sharedMdxOptions } from "@/lib/mdx-options";
 import { constructMetadata } from "@/lib/seo";
 import { generateJsonLd } from "@/lib/schema";
+
+/** 미작성 개념 슬러그는 404로 처리(스텁 페이지 없음) */
+export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const content = await getAllContent();
@@ -39,9 +42,7 @@ export default async function ConceptDetailPage({
   const { slug } = await params;
   const content = await getContentBySlug("concept", slug);
 
-  if (!content || content.type !== "concept") {
-    notFound();
-  }
+  if (!content || content.type !== "concept") notFound();
 
   const [relatedContent, referringContent] = await Promise.all([
     getRelatedContent(content),
@@ -51,9 +52,11 @@ export default async function ConceptDetailPage({
   const mdxFile = getMdxBySlug("concept", slug);
   const tocHeadings = extractHeadings(mdxFile?.content ?? content.body ?? "");
   const references = content.references;
+  const publishedConceptSlugs = getMdxSlugs("concept");
+  const components = getMdxComponents(publishedConceptSlugs);
 
   const bodyContent = mdxFile ? (
-    <MDXRemote source={mdxFile.content} components={mdxComponents} options={sharedMdxOptions} />
+    <MDXRemote source={mdxFile.content} components={components} options={sharedMdxOptions} />
   ) : (
     <MarkdownRenderer content={content.body ?? ""} />
   );

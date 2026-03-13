@@ -2,7 +2,6 @@ import { cache } from "react";
 import { AnyContent, ContentType, DomainSlug } from "./types";
 import { domainInfo } from "./domains";
 import { getMdxSlugs, getMdxBySlug } from "./content-files";
-import { ALLOWED_TAGS } from "./content-taxonomy";
 
 /** 카테고리(한글) → 도메인 슬러그. MDX frontmatter category를 domains로 변환할 때 사용 */
 const CATEGORY_TO_DOMAIN: Record<string, DomainSlug> = Object.fromEntries(
@@ -235,13 +234,13 @@ export function paginateContent<T>(items: T[], page: number, perPage: number): {
   return { items: itemsSlice, totalCount, totalPages };
 }
 
-/** 도메인 선택 시 드롭다운에 쓸 태그 목록 (해당 도메인 콘텐츠에 실제로 쓰인 태그만) */
+/** 도메인 선택 시 드롭다운에 쓸 태그 목록 (해당 도메인 콘텐츠에 실제로 쓰인 태그만, 개념명 등 자유 태그 허용) */
 export function getAvailableTagsForDomain(content: AnyContent[], domain?: string): string[] {
   let list = content;
   if (domain) list = list.filter((c) => c.domains.includes(domain as DomainSlug));
   const tagSet = new Set<string>();
   list.forEach((c) => c.tags.forEach((t) => tagSet.add(t)));
-  return (ALLOWED_TAGS as readonly string[]).filter((t) => tagSet.has(t));
+  return Array.from(tagSet).sort();
 }
 
 export async function getContentByDomain(domain: DomainSlug): Promise<AnyContent[]> {

@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getContentBySlug, getRelatedContent, getAllContent } from "@/lib/content";
-import { getMdxBySlug } from "@/lib/content-files";
+import { getMdxBySlug, getMdxSlugs } from "@/lib/content-files";
 import { ContentDetail } from "@/components/shared/ContentDetail";
 import { MarkdownRenderer } from "@/components/shared/MarkdownRenderer";
 import { extractHeadings } from "@/lib/headings";
-import { mdxComponents } from "@/lib/mdx-components";
+import { getMdxComponents } from "@/lib/mdx-components";
 import { sharedMdxOptions } from "@/lib/mdx-options";
 import { constructMetadata } from "@/lib/seo";
 import { generateJsonLd } from "@/lib/schema";
@@ -44,9 +44,10 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
     mdxFile?.content ?? content.body ?? ""
   );
   const references = content.references;
+  const components = getMdxComponents(getMdxSlugs("concept"));
 
   const bodyContent = mdxFile ? (
-    <MDXRemote source={mdxFile.content} components={mdxComponents} options={sharedMdxOptions} />
+    <MDXRemote source={mdxFile.content} components={components} options={sharedMdxOptions} />
   ) : (
     <>
       {content.intro && (
