@@ -21,11 +21,36 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+const defaultOgImage = "https://learninsight.pages.dev/ogprofile/opimage.png";
+
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.howlearn.kr"),
   title: site.name,
   description: site.description,
   icons: {
     icon: "/favicon.png",
+  },
+  openGraph: {
+    title: site.name,
+    description: site.description,
+    url: "https://www.howlearn.kr",
+    siteName: site.name,
+    type: "website",
+    locale: "ko_KR",
+    images: [
+      {
+        url: defaultOgImage,
+        width: 1200,
+        height: 630,
+        alt: site.name,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: site.name,
+    description: site.description,
+    images: [defaultOgImage],
   },
 };
 
