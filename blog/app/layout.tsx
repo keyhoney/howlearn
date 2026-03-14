@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import "./globals.css";
 import { site } from "@/lib/site";
 import { SiteHeader } from "@/components/layout/SiteHeader";
@@ -7,6 +6,7 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import { ScrollDepthTracker } from "@/components/ScrollDepthTracker";
+import { AnalyticsLoader } from "@/components/AnalyticsLoader";
 import { Inter, JetBrains_Mono } from "next/font/google";
 
 const inter = Inter({
@@ -46,7 +46,7 @@ export default function RootLayout({
   return (
     <html lang="ko" className={`${inter.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://www.gstatic.com" crossOrigin="" />
+        {/* GA만 사용 시 preconnect(폰트는 next/font로 셀프호스팅해 gstatic 미사용) */}
         {process.env.NEXT_PUBLIC_GA_ID && (
           <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="" />
         )}
@@ -71,18 +71,12 @@ export default function RootLayout({
         <CookieConsentBanner />
         {process.env.NEXT_PUBLIC_GA_ID && (
           <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
-              strategy="lazyOnload"
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}`,
+              }}
             />
-            <Script id="google-analytics" strategy="lazyOnload">
-              {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
-              `}
-            </Script>
+            <AnalyticsLoader />
           </>
         )}
       </body>

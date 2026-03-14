@@ -6,6 +6,10 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  experimental: {
+    // 크리티컬 요청 체인 완화: CSS를 HTML에 인라인해 별도 CSS 요청/워터폴 제거 → FCP·LCP 개선 (Tailwind 등 원자적 CSS에 적합)
+    inlineCss: true,
+  },
   // turbopack 비활성: dev 중 Flight chunk.reason.enqueueModel 등 RSC 디코딩 이슈 완화
   // 필요 시 next dev --turbo 로만 터보팩 사용
   // URL 변경 시 영구 이동은 301(permanent: true)로 설정하세요. 302는 임시 이동입니다.

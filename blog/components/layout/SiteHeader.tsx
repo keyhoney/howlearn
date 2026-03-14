@@ -12,12 +12,14 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/80 backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/80 transition-colors">
       <div className="container mx-auto flex h-14 sm:h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
         <div className="flex min-w-0 flex-1 items-center gap-4 md:gap-8">
-          <Link href="/" className="flex shrink-0 items-center">
+          <Link href="/" className="flex shrink-0 items-center" aria-label="HowLearn 홈으로 가기">
             <Image
               src={BRAND_LOGO_URL}
               alt={site.name}
               width={144}
               height={36}
+              sizes="(max-width: 640px) 120px, 144px"
+              quality={70}
               className="h-[29px] w-auto sm:h-[34px] object-contain object-left"
               priority
             />

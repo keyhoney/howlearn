@@ -101,7 +101,7 @@ export default async function Home() {
               <p className="mt-2 text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed">새롭게 추가된 가이드와 실천 자료입니다.</p>
             </div>
             <Link href="/guides" className="hidden sm:flex items-center text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300">
-              전체 보기 <ArrowRight className="ml-1 w-4 h-4" aria-hidden />
+              가이드 전체 보기 <ArrowRight className="ml-1 w-4 h-4" aria-hidden />
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
@@ -111,7 +111,7 @@ export default async function Home() {
           </div>
           <div className="mt-10 sm:hidden flex justify-center">
             <Link href="/guides" className="inline-flex items-center text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300">
-              전체 보기 <ArrowRight className="ml-1 w-4 h-4" aria-hidden />
+              가이드 전체 보기 <ArrowRight className="ml-1 w-4 h-4" aria-hidden />
             </Link>
           </div>
         </div>

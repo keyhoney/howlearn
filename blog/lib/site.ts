@@ -21,7 +21,7 @@ function getSiteUrl(): string {
 export const site = {
   name: "HowLearn",
   description:
-    "자녀의 학습을 과학적으로 이해하고 돕고 싶은 부모를 위한 학습과학 기반 지식 공간입니다. '왜 그럴까?'에 대한 개념, 상황별 실천 가이드, 툴킷, 추천 도서를 한곳에서 탐색할 수 있습니다.",
+    "자녀의 학습을 과학적으로 이해하고 돕고 싶은 부모를 위한 학습과학 기반 지식 공간입니다. 상황별 실천 가이드를 한곳에서 탐색할 수 있습니다.",
   get url() {
     return getSiteUrl();
   },
