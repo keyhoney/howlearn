@@ -11,7 +11,7 @@ export const ALLOWED_CATEGORIES = [
   "신경과학",
   "교육심리학",
   "발달심리학",
-  "동기·정서심리학",
+  "동기 및 정서심리학",
 ] as const;
 
 export type AllowedCategory = (typeof ALLOWED_CATEGORIES)[number];

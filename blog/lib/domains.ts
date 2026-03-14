@@ -42,7 +42,7 @@ export const domainInfo: Record<
       "bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/40 dark:text-amber-300 dark:border-amber-700",
   },
   "motivation-emotion": {
-    name: "동기·정서심리학",
+    name: "동기 및 정서심리학",
     description:
       "학습을 이끄는 내적 동력과 감정이 인지 과정에 미치는 영향을 분석합니다.",
     color:

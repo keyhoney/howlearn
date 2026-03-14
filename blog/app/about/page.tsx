@@ -16,7 +16,7 @@ export default function AboutPage() {
       </h1>
       <div className="prose prose-slate prose-lg max-w-none dark:prose-invert">
         <p className="lead text-slate-600 dark:text-slate-300">
-          {site.name}은 인지심리학, 신경과학, 교육심리학, 발달심리학, 동기·정서심리학 연구를 바탕으로 한 부모 교육 가이드와 실천 도구를 제공합니다.
+          {site.name}은 인지심리학, 신경과학, 교육심리학, 발달심리학, 동기 및 정서심리학 연구를 바탕으로 한 부모 교육 가이드와 실천 도구를 제공합니다.
           단편적인 정보가 아닌 연결된 지식망을 통해, 부모와 교육자가 학습의 본질을 이해하고 실제 교육 현장에 적용할 수 있도록 돕습니다.
         </p>
 
