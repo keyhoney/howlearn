@@ -2,6 +2,9 @@ import { Metadata } from "next";
 import { toImageUrl } from "@/lib/image-url";
 import { site } from "@/lib/site";
 
+/** 기본 OG 이미지 절대 URL (소셜 미리보기용) */
+const DEFAULT_OG_IMAGE_URL = "http://learninsight.pages.dev/ogprofile/opimage.png";
+
 interface SeoProps {
   title?: string;
   description?: string;
@@ -25,15 +28,14 @@ function buildCanonical(path: string | undefined): string | undefined {
 export function constructMetadata({
   title,
   description = site.description,
-  image = "/opimage.png",
+  image,
   path,
   url,
   type = "website",
   lang,
   noindex = false,
 }: SeoProps = {}): Metadata {
-  const defaultOgImage = "/opimage.png";
-  const imageUrl = image ? toImageUrl(image) : toImageUrl(defaultOgImage);
+  const imageUrl = image ? toImageUrl(image) : DEFAULT_OG_IMAGE_URL;
   const canonical = buildCanonical(path);
   const resolvedUrl = url ?? canonical ?? site.url;
   return {
