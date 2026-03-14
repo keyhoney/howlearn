@@ -9,7 +9,9 @@ import { constructMetadata } from "@/lib/seo";
 import { site } from "@/lib/site";
 
 export const metadata = constructMetadata({
-  title: "홈",
+  title: "학습 과학으로 찾는 우리 아이 공부법·학습 전략",
+  description:
+    "공부는 하는데 왜 성적이 안 오를까? 그 답을 학습 과학에서 찾습니다. 초·중·고등학생 자녀를 둔 학부모를 위해 한국 입시·교육 현실에 맞는 공부 습관, 집중력, 자기주도학습 전략을 연구 기반으로 안내합니다.",
   path: "/",
 });
 

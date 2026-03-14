@@ -39,7 +39,7 @@ export function constructMetadata({
   const canonical = buildCanonical(path);
   const resolvedUrl = url ?? canonical ?? site.url;
   return {
-    title: title ? `${title} | ${site.name}` : site.name,
+    title: title ? `${site.name} | ${title}` : site.name,
     description,
     ...(canonical && {
       alternates: { canonical },
@@ -49,7 +49,7 @@ export function constructMetadata({
     }),
     ...(lang && { other: { "content-language": lang } }),
     openGraph: {
-      title: title ? `${title} | ${site.name}` : site.name,
+      title: title ? `${site.name} | ${title}` : site.name,
       description,
       type,
       url: resolvedUrl,
@@ -67,7 +67,7 @@ export function constructMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: title ? `${title} | ${site.name}` : site.name,
+      title: title ? `${site.name} | ${title}` : site.name,
       description,
       images: imageUrl ? [imageUrl] : undefined,
     },

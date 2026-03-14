@@ -98,7 +98,7 @@ export type MdxH2Props = ComponentProps<"h2"> & {
 };
 
 /**
- * MDX ## — 좌측 정렬 + 상단 연보라 배지(아이콘 ± 텍스트)
+ * MDX ## — 2층 구조(아이콘 배지 → 소제목) + 중앙 정렬
  * - `## 제목`만 쓰면 아이콘은 제목 해시로 자동 선택
  * - 수동 지정: `<MdxH2 icon="brain" badge="관점의 전환">제목</MdxH2>`
  */
@@ -109,7 +109,7 @@ export function MdxH2({ children, icon, badge, ...props }: MdxH2Props) {
   const hasBadgeText = Boolean(badge && badge.trim());
 
   return (
-    <div className="not-prose my-8 flex w-full flex-row flex-wrap items-center gap-2 sm:gap-3 text-left">
+    <div className="not-prose my-8 flex w-full flex-col items-center gap-3 text-center">
       <div
         className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-violet-200/80 bg-violet-100/90 px-3 py-1.5 text-sm font-medium text-violet-900 dark:border-violet-800/60 dark:bg-violet-950/50 dark:text-violet-100"
         aria-hidden={!hasBadgeText}
@@ -125,7 +125,7 @@ export function MdxH2({ children, icon, badge, ...props }: MdxH2Props) {
       <h2
         {...props}
         id={id}
-        className="min-w-0 flex-1 text-balance text-left text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-2xl md:text-[1.65rem]"
+        className="w-full text-balance text-center text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-2xl md:text-[1.65rem]"
       >
         {children}
       </h2>
