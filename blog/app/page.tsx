@@ -27,7 +27,7 @@ export default async function Home() {
             alt=""
             role="presentation"
             fill
-            sizes="100vw"
+            sizes="(max-width: 1280px) 100vw, 1280px"
             className="object-cover object-center"
             priority
           />
@@ -50,7 +50,7 @@ export default async function Home() {
             })()}
           </h1>
           <p className="mx-auto mt-5 sm:mt-6 max-w-2xl text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-            학습과학 기반 부모 교육을 위한 지식 아카이브입니다. 가이드, 개념, 툴킷, 도서를 제공합니다.
+            {site.description}
           </p>
           <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
             <CtaLink href="/guides" variant="primary">

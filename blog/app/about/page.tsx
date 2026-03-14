@@ -4,7 +4,7 @@ import { site } from "@/lib/site";
 
 export const metadata = constructMetadata({
   title: "소개",
-  description: `${site.name} 소개. 학습과학 기반 부모 교육을 위한 지식 아카이브입니다.`,
+  description: `${site.name} 소개. ${site.description}`,
   path: "/about",
 });
 
@@ -57,6 +57,26 @@ export default function AboutPage() {
           <p className="mt-2 text-slate-600 dark:text-slate-300">
             {site.name}에서 정리한 내용을 바탕으로 집필한 전자책이 리디, 알라딘, Yes24, 교보문고 등에 출간되어 있습니다.
           </p>
+
+          <h3 className="mt-6 text-lg font-semibold text-slate-800 dark:text-slate-200">출간 도서</h3>
+          <ul className="mt-2 space-y-4 text-slate-600 dark:text-slate-300 list-none pl-0">
+            <li>
+              <span className="font-medium text-slate-800 dark:text-slate-200">수학 공부의 뇌</span>
+              <span className="block text-sm mt-0.5 text-slate-500 dark:text-slate-400">뇌과학과 심리학이 밝혀낸 수학 공부 최적화 기술</span>
+              <span className="block text-sm mt-1">ISBN 9791142194719</span>
+              <p className="mt-1.5 text-slate-600 dark:text-slate-300">
+                수학 학습과 뇌·인지 연구를 연결해, 효과적인 연습·복습·불안 조절 방법을 다룹니다.
+              </p>
+            </li>
+            <li>
+              <span className="font-medium text-slate-800 dark:text-slate-200">공부를 잘하는 아이는 집에서 무엇이 다를까</span>
+              <span className="block text-sm mt-0.5 text-slate-500 dark:text-slate-400">통제가 아닌 구조, 관리가 아닌 시스템</span>
+              <span className="block text-sm mt-1">ISBN 9791142193170</span>
+              <p className="mt-1.5 text-slate-600 dark:text-slate-300">
+                가정 환경, 부모의 역할, 학습 습관 형성 연구를 바탕으로 가정에서의 학습 지원 방식을 정리한 책입니다.
+              </p>
+            </li>
+          </ul>
 
           <h3 className="mt-6 text-lg font-semibold text-slate-800 dark:text-slate-200">{site.name}을 시작하게 된 이유</h3>
           <p className="mt-2 text-slate-600 dark:text-slate-300">

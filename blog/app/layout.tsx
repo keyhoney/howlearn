@@ -12,11 +12,13 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
 });
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -43,6 +45,12 @@ export default function RootLayout({
 }: { children: React.ReactNode }) {
   return (
     <html lang="ko" className={`${inter.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://www.gstatic.com" crossOrigin="" />
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="" />
+        )}
+      </head>
       <body
         className="min-h-screen flex flex-col font-sans text-slate-900 bg-white dark:bg-slate-900 dark:text-slate-100 transition-colors"
         suppressHydrationWarning
@@ -65,9 +73,9 @@ export default function RootLayout({
           <>
             <Script
               src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
-              strategy="afterInteractive"
+              strategy="lazyOnload"
             />
-            <Script id="google-analytics" strategy="afterInteractive">
+            <Script id="google-analytics" strategy="lazyOnload">
               {`
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}

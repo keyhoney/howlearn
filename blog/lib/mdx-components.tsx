@@ -88,9 +88,23 @@ function createHeading(level: 3) {
 function MdxImage(props: React.ImgHTMLAttributes<HTMLImageElement>) {
   const src = typeof props.src === "string" ? props.src : "";
   const alt = props.alt ?? "";
+  const { width, height, className, style, ...rest } = props;
+  const hasDimensions = width != null && height != null;
+  const reservedStyle = hasDimensions ? style : { ...style, aspectRatio: "16/9" as const };
   return (
     // eslint-disable-next-line @next/next/no-img-element -- MDX 콘텐츠는 동적 src/외부 URL이 많아 next/image 대신 img 사용
-    <img {...props} src={toImageUrl(src)} alt={alt} role={alt ? undefined : "presentation"} />
+    <img
+      {...rest}
+      src={toImageUrl(src)}
+      alt={alt}
+      role={alt ? undefined : "presentation"}
+      loading="lazy"
+      decoding="async"
+      width={width}
+      height={height}
+      className={className}
+      style={reservedStyle}
+    />
   );
 }
 MdxImage.displayName = "MdxImage";

@@ -1,5 +1,9 @@
 import type {NextConfig} from 'next';
 
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   // turbopack 비활성: dev 중 Flight chunk.reason.enqueueModel 등 RSC 디코딩 이슈 완화
@@ -28,6 +32,12 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/:path*.ico',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=86400' },
+        ],
+      },
+      {
+        source: '/favicon.png',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=86400' },
         ],
@@ -74,4 +84,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

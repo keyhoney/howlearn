@@ -7,6 +7,7 @@ import {
   MessageCircle,
   Brain,
   Compass,
+  HelpCircle,
   type LucideIcon,
 } from "lucide-react";
 import { extractTextFromNode, slugify } from "@/lib/headings";
@@ -20,6 +21,7 @@ export const H2_ICON_NAMES = [
   "messageCircle",
   "brain",
   "compass",
+  "helpCircle",
 ] as const;
 
 export type MdxH2IconName = (typeof H2_ICON_NAMES)[number];
@@ -32,6 +34,7 @@ const ICON_MAP: Record<MdxH2IconName, LucideIcon> = {
   messageCircle: MessageCircle,
   brain: Brain,
   compass: Compass,
+  helpCircle: HelpCircle,
 };
 
 const H2_ICONS_ORDER: LucideIcon[] = [
@@ -42,9 +45,10 @@ const H2_ICONS_ORDER: LucideIcon[] = [
   MessageCircle,
   Brain,
   Compass,
+  HelpCircle,
 ];
 
-/** 별칭: bookopen → bookOpen 등 */
+/** 별칭: bookopen → bookOpen, help-circle → helpCircle 등 */
 const ICON_ALIAS: Record<string, MdxH2IconName> = {
   sparkles: "sparkles",
   lightbulb: "lightbulb",
@@ -55,6 +59,9 @@ const ICON_ALIAS: Record<string, MdxH2IconName> = {
   messageCircle: "messageCircle",
   brain: "brain",
   compass: "compass",
+  helpcircle: "helpCircle",
+  helpCircle: "helpCircle",
+  "help-circle": "helpCircle",
 };
 
 function normalizeIconName(name: string): MdxH2IconName | null {
@@ -84,7 +91,7 @@ function resolveIcon(iconProp: string | undefined, text: string): LucideIcon {
 
 export type MdxH2Props = ComponentProps<"h2"> & {
   children?: ReactNode;
-  /** 7종 중 하나: sparkles | lightbulb | bookOpen | target | messageCircle | brain | compass (대소문자 무관) */
+  /** 8종 중 하나: sparkles | lightbulb | bookOpen | target | messageCircle | brain | compass | helpCircle (대소문자 무관. FAQ에는 helpCircle 또는 help-circle) */
   icon?: string;
   /** 배지에 표시할 텍스트 (예: 관점의 전환) */
   badge?: string;
