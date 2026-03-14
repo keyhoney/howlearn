@@ -2,7 +2,10 @@ import { toStringArray } from "@/lib/mdx-props";
 
 type MidSummaryBoxProps = {
   title?: string;
+  /** 요약 bullet 목록. JSON 배열 문자열 또는 배열. (items는 points의 별칭—호환용, 신규 작성 시 points만 사용) */
   points?: string[] | string | null;
+  /** @deprecated points만 사용. 기존 MDX 호환용 별칭 */
+  items?: string[] | string | null;
   highlight?: string;
 };
 
@@ -13,9 +16,10 @@ type MidSummaryBoxProps = {
 export function MidSummaryBox({
   title = "바쁜 부모님을 위한 30초 요약",
   points,
+  items,
   highlight,
 }: MidSummaryBoxProps) {
-  const list = toStringArray(points);
+  const list = toStringArray(points ?? items);
   if (list.length === 0 && !highlight) return null;
 
   const textWhite = { color: "#FFFFFF" } as const;

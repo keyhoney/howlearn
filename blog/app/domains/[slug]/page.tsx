@@ -23,7 +23,7 @@ function parseParams(sp: Awaited<SearchParams>) {
   const perPage = isAllowedPerPage(rawPer) ? rawPer : 12;
   const typeParam = (sp?.type ?? "").trim().toLowerCase();
   const type: ContentType | undefined = VALID_TYPES.includes(typeParam as ContentType | "")
-    ? (typeParam || undefined)
+    ? (typeParam ? (typeParam as ContentType) : undefined)
     : undefined;
   return { page, perPage, type };
 }

@@ -29,9 +29,10 @@ export function ReferenceCard({ items }: ReferenceCardProps) {
         {list.map((item, i) => {
           const label = item.title || item.url || "";
           const hasUrl = typeof item.url === "string" && item.url.trim() !== "";
+          const refId = `ref-${i + 1}`;
 
           return (
-            <li key={i}>
+            <li key={i} id={refId} className="scroll-mt-24">
               {hasUrl ? (
                 <a
                   href={item.url}

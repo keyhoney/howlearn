@@ -3,7 +3,10 @@ import { toStringArray } from "@/lib/mdx-props";
 type BottomSummaryProps = {
   /** 기본: 한눈에 정리하면 */
   title?: string;
+  /** 번호 붙는 요약 항목. JSON 배열 문자열 또는 배열. (items는 points의 별칭—호환용, 신규 작성 시 points만 사용) */
   points?: string[] | string | null;
+  /** @deprecated points만 사용. 기존 MDX 호환용 별칭 */
+  items?: string[] | string | null;
 };
 
 /**
@@ -12,8 +15,9 @@ type BottomSummaryProps = {
 export function BottomSummary({
   title = "한눈에 정리하면",
   points,
+  items,
 }: BottomSummaryProps) {
-  const list = toStringArray(points);
+  const list = toStringArray(points ?? items);
   if (list.length === 0) return null;
 
   return (

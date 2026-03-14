@@ -18,6 +18,7 @@ import {
   BottomSummary,
   BookStoreLinks,
   BookToc,
+  Citation,
 } from "@/components/mdx";
 import { toImageUrl } from "@/lib/image-url";
 import { slugify, extractTextFromNode } from "@/lib/headings";
@@ -131,6 +132,7 @@ const baseMdxComponents: MDXComponents = {
   BottomSummary,
   BookStoreLinks,
   BookToc,
+  Citation,
   FAQ,
 };
 
