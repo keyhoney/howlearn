@@ -16,6 +16,8 @@ import {
   TrustModule,
   MidSummaryBox,
   BottomSummary,
+  BookStoreLinks,
+  BookToc,
 } from "@/components/mdx";
 import { toImageUrl } from "@/lib/image-url";
 import { slugify, extractTextFromNode } from "@/lib/headings";
@@ -113,6 +115,8 @@ const baseMdxComponents: MDXComponents = {
   TrustModule,
   MidSummaryBox,
   BottomSummary,
+  BookStoreLinks,
+  BookToc,
   FAQ,
 };
 

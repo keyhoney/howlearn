@@ -15,3 +15,5 @@ export { OxQuiz } from "./OxQuiz";
 export { CheckboxChecklist } from "./CheckboxChecklist";
 export { MdxH2, H2_ICON_NAMES } from "./MdxH2";
 export type { MdxH2IconName, MdxH2Props } from "./MdxH2";
+export { BookStoreLinks } from "./BookStoreLinks";
+export { BookToc } from "./BookToc";

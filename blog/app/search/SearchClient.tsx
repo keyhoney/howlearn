@@ -59,7 +59,6 @@ export function SearchClient({ initialData }: { initialData: SearchableContent[]
     { value: "all", label: "전체" },
     { value: "guide", label: "가이드" },
     { value: "concept", label: "개념" },
-    { value: "toolkit", label: "툴킷" },
     { value: "book", label: "전자책" },
   ];
 

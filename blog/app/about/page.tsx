@@ -3,7 +3,7 @@ import { constructMetadata } from "@/lib/seo";
 import { site } from "@/lib/site";
 
 export const metadata = constructMetadata({
-  title: "About Us",
+  title: "소개",
   description: `${site.name} 소개. 학습과학 기반 부모 교육을 위한 지식 아카이브입니다.`,
   path: "/about",
 });
@@ -12,7 +12,7 @@ export default function AboutPage() {
   return (
     <div className="container mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
       <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 mb-8">
-        About {site.name}
+        {site.name} 소개
       </h1>
       <div className="prose prose-slate prose-lg max-w-none dark:prose-invert">
         <p className="lead text-slate-600 dark:text-slate-300">

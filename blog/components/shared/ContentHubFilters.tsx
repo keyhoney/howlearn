@@ -3,10 +3,8 @@
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useMemo, useState, useEffect, useRef } from "react";
 import { AnyContent, ContentType, DomainSlug } from "@/lib/types";
-import { ContentCard } from "@/components/cards/ContentCard";
 import { domainInfo, DOMAIN_ORDER } from "@/lib/domains";
 import { Search as SearchIcon, ChevronDown, Filter } from "lucide-react";
-import { PaginationBar } from "@/components/shared/PaginationBar";
 import type { ContentHubPagination } from "@/components/shared/ContentHub";
 
 interface ContentHubFiltersProps {
@@ -17,18 +15,6 @@ interface ContentHubFiltersProps {
   pagination?: ContentHubPagination;
   /** 페이지네이션 사용 시 서버에서 계산한 태그 목록 (도메인별) */
   availableTags?: string[];
-}
-
-function matchesSearch(item: AnyContent, q: string): boolean {
-  const lower = q.trim().toLowerCase();
-  if (!lower) return true;
-  if (item.title.toLowerCase().includes(lower)) return true;
-  if (item.summary?.toLowerCase().includes(lower)) return true;
-  if (item.tags.some((t) => t.toLowerCase().includes(lower))) return true;
-  if (item.categories.some((c) => c.toLowerCase().includes(lower))) return true;
-  if (item.type === "concept" && "shortDefinition" in item && String(item.shortDefinition).toLowerCase().includes(lower))
-    return true;
-  return false;
 }
 
 export function ContentHubFilters({ content, type, title, pagination, availableTags }: ContentHubFiltersProps) {
@@ -90,16 +76,6 @@ export function ContentHubFilters({ content, type, title, pagination, availableT
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [tagDropdownOpen]);
-
-  /** 페이지네이션 사용 시: 서버가 이미 필터·슬라이스한 content만 표시. 미사용 시: 클라이언트 필터 */
-  const displayList = useMemo(() => {
-    if (pagination) return content;
-    let list = content;
-    if (searchInput.trim()) list = list.filter((c) => matchesSearch(c, searchInput));
-    if (domainParam) list = list.filter((c) => c.domains.includes(domainParam as DomainSlug));
-    if (tagParam) list = list.filter((c) => c.tags.includes(tagParam));
-    return list;
-  }, [pagination, content, searchInput, domainParam, tagParam]);
 
   useEffect(() => {
     const t = setTimeout(() => {
@@ -257,35 +233,6 @@ export function ContentHubFilters({ content, type, title, pagination, availableT
             </div>
         </div>
       </div>
-
-      {displayList.length > 0 ? (
-        <div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {displayList.map((item) => (
-              <ContentCard key={item.id} content={item} />
-            ))}
-          </div>
-          {pagination && (
-            <PaginationBar
-              pathname={pagination.pathname}
-              currentPage={pagination.page}
-              totalPages={pagination.totalPages}
-              totalCount={pagination.totalCount}
-              perPage={pagination.perPage}
-              preserveParams
-            />
-          )}
-        </div>
-      ) : (
-        <div className="text-center py-12 sm:py-20 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-dashed border-slate-300 dark:border-slate-600">
-          <h3 className="text-lg font-medium text-slate-900 dark:text-slate-100">
-            {searchInput.trim() || domainParam || tagParam ? "검색 결과가 없습니다." : `매칭되는 ${title}이 없습니다.`}
-          </h3>
-          <p className="mt-2 text-slate-500 dark:text-slate-400">
-            {searchInput.trim() || domainParam || tagParam ? "다른 검색어나 필터를 시도해 보세요." : "필터를 바꿔 보세요."}
-          </p>
-        </div>
-      )}
     </>
   );
 }

@@ -5,7 +5,7 @@ import { constructMetadata } from "@/lib/seo";
 
 export const metadata = constructMetadata({
   title: "지식 검색",
-  description: "가이드, 개념, 툴킷, 전자책 등 모든 지식 노드를 검색하세요.",
+  description: "가이드, 개념, 전자책 등 모든 지식 노드를 검색하세요.",
   path: "/search",
   noindex: true,
 });
@@ -19,7 +19,7 @@ export default async function SearchPage() {
       <div className="mb-8 sm:mb-12 text-center">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100">지식 검색</h1>
         <p className="mt-3 sm:mt-4 text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto px-2">
-          가이드, 개념, 툴킷, 전자책 등 모든 지식 노드를 검색하세요.
+          가이드, 개념, 전자책 등 모든 지식 노드를 검색하세요.
         </p>
       </div>
       

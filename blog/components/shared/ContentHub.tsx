@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { ContentType, AnyContent } from "@/lib/types";
 import { ContentHubFilters } from "@/components/shared/ContentHubFilters";
+import { ContentHubList } from "@/components/shared/ContentHubList";
 
 export interface ContentHubPagination {
   totalCount: number;
@@ -45,6 +46,7 @@ export function ContentHub({ title, description, content, type, hideHeader, pagi
           availableTags={availableTags}
         />
       </Suspense>
+      <ContentHubList content={content} type={type} title={title} pagination={pagination} />
     </div>
   );
 }
