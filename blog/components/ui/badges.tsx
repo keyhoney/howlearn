@@ -17,10 +17,11 @@ export function DomainBadge({ domain, className }: { domain: DomainSlug; classNa
 }
 
 export function TagList({ tags, className }: { tags: string[]; className?: string }) {
-  if (!tags || tags.length === 0) return null;
+  const list = Array.isArray(tags) ? tags : [];
+  if (list.length === 0) return null;
   return (
     <div className={cn("flex flex-wrap gap-2", className)}>
-      {tags.map(tag => (
+      {list.map(tag => (
         <span key={tag} className="inline-flex items-center text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 rounded-md px-2 py-1">
           #{tag}
         </span>

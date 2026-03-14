@@ -53,8 +53,14 @@ export default function CookiesPage() {
 
         <h3 className="text-slate-900 dark:text-slate-100">2.4 광고 및 타기팅 쿠키</h3>
         <p className="text-slate-600 dark:text-slate-300">
-          본 사이트는 현재 방문 통계 분석을 주로 사용하며, 광고를 도입하는 경우 일부 지역·페이지에서 광고 제공, 성과 측정, 맞춤형 노출 등을 위해 광고·타기팅 쿠키를 사용할 수 있습니다.
-          해당 쿠키는 적용 법령상 필요한 경우 사전 동의를 받은 후에만 활성화됩니다.
+          본 사이트는 Google AdSense 광고 신청을 준비 중이며, 추후 승인이 있을 경우 Google 애드센스 광고를 게재할 예정입니다.
+          광고가 게재되는 경우, Google은 광고 제공, 노출 빈도 제한, 맞춤형(타기팅) 광고 표시, 광고 성과 측정 등을 위해 자체 쿠키 및 유사 기술을 사용할 수 있습니다.
+        </p>
+        <p className="text-slate-600 dark:text-slate-300">
+          이러한 광고·타기팅 쿠키는 이용자가 본 사이트 또는 다른 사이트에서 본 광고와 상호작용한 정보, 방문한 페이지, 기기 정보 등을 활용할 수 있으며, 적용 법령상 필요한 경우 사전 동의를 받은 후에만 활성화됩니다.
+          이용자는{" "}
+          <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" className="text-indigo-600 dark:text-indigo-400 hover:underline">Google 광고 설정</a>
+          에서 맞춤 광고 사용 여부를 변경하거나, 브라우저에서 쿠키를 차단할 수 있습니다.
         </p>
 
         <h3 className="text-slate-900 dark:text-slate-100">2.5 동의 관리용 쿠키</h3>
@@ -65,8 +71,13 @@ export default function CookiesPage() {
 
         <h2 className="text-slate-900 dark:text-slate-100">3. 제3자 쿠키</h2>
         <p className="text-slate-600 dark:text-slate-300">
-          본 사이트는 방문 통계 분석(예: Google Analytics)을 사용하며, 광고·동의 관리를 도입하는 경우 해당 제3자 서비스를 사용할 수 있습니다.
-          이 경우 Google Analytics, 호스팅·CDN(예: Vercel, Cloudflare), 광고 사업자, 동의 관리(CMP) 제공자 등 해당 제3자 서비스 제공자가 이용자의 기기에 직접 쿠키를 설정하거나 유사 기술을 사용할 수 있습니다.
+          본 사이트는 방문 통계 분석(예: Google Analytics)을 사용하며, 댓글 서비스(Firebase) 및 광고·동의 관리를 도입하는 경우 해당 제3자 서비스를 사용할 수 있습니다.
+          이 경우 Google Analytics, Firebase, 호스팅·CDN(예: Vercel, Cloudflare), 광고 사업자, 동의 관리(CMP) 제공자 등 해당 제3자 서비스 제공자가 이용자의 기기에 직접 쿠키 또는 로컬 스토리지를 설정하거나 유사 기술을 사용할 수 있습니다.
+        </p>
+        <p className="text-slate-600 dark:text-slate-300">
+          Google AdSense를 게재하는 경우, Google은 자체 정책에 따라 쿠키를 설정하여 광고 게재, 빈도 제한, 맞춤 광고, 성과 측정 등을 수행할 수 있습니다. Google이 사용하는 쿠키 및 데이터 처리에 대한 자세한 내용은{" "}
+          <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer" className="text-indigo-600 dark:text-indigo-400 hover:underline">Google의 광고 및 쿠키 정책</a>
+          을 참고하시기 바랍니다.
         </p>
         <p className="text-slate-600 dark:text-slate-300">
           제3자 쿠키의 수집·이용 방식, 보관기간 및 처리 기준은 각 제3자 제공자의 정책에 따르며, 본 사이트는 제3자 시스템의 운영을 직접 통제하지 않습니다.

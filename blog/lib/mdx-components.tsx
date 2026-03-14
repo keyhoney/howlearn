@@ -20,8 +20,12 @@ import {
 import { toImageUrl } from "@/lib/image-url";
 import { slugify, extractTextFromNode } from "@/lib/headings";
 import { MdxH2 } from "@/components/mdx/MdxH2";
+import { FAQ } from "@/components/FAQ";
 
-function createConceptAwareAnchor(publishedConceptSlugs: string[]) {
+function createConceptAwareAnchor(
+  publishedConceptSlugs: string[],
+  currentConceptSlug?: string | null
+) {
   const slugSet = new Set(publishedConceptSlugs);
   return function MdxA({
     href,
@@ -35,17 +39,21 @@ function createConceptAwareAnchor(publishedConceptSlugs: string[]) {
     const isConcept =
       normalized.startsWith("concepts/") || normalized.startsWith("concept/");
     const targetSlug = normalized.replace(/^concepts?\//, "");
-    const isReady = isConcept && targetSlug.length > 0 && slugSet.has(targetSlug);
 
-    if (isConcept && !isReady) {
-      return (
-        <span
-          className="text-slate-400 border-b border-dotted border-slate-400 cursor-default opacity-70"
-          title="콘텐츠 준비 중입니다"
-        >
-          {children}
-        </span>
-      );
+    if (isConcept && targetSlug.length > 0) {
+      if (currentConceptSlug != null && targetSlug === currentConceptSlug) {
+        return <span>{children}</span>;
+      }
+      if (!slugSet.has(targetSlug)) {
+        return (
+          <span
+            className="text-slate-400 border-b border-dotted border-slate-400 cursor-default opacity-70"
+            title="콘텐츠 준비 중입니다"
+          >
+            {children}
+          </span>
+        );
+      }
     }
 
     const isInternal = href.startsWith("/") && !href.startsWith("//");
@@ -105,13 +113,17 @@ const baseMdxComponents: MDXComponents = {
   TrustModule,
   MidSummaryBox,
   BottomSummary,
+  FAQ,
 };
 
-/** 발행된 개념 슬러그 목록을 받아, 개념 링크는 발행된 것만 <a>, 미작성은 <span>으로 렌더하는 컴포넌트 맵 반환 */
-export function getMdxComponents(publishedConceptSlugs: string[]): MDXComponents {
+/** 발행된 개념 슬러그 목록을 받아, 개념 링크는 발행된 것만 <a>, 미작성은 <span>으로 렌더. currentConceptSlug를 주면 해당 개념 글에서는 자기 자신 링크는 평문으로 표시 */
+export function getMdxComponents(
+  publishedConceptSlugs: string[],
+  currentConceptSlug?: string | null
+): MDXComponents {
   return {
     ...baseMdxComponents,
-    a: createConceptAwareAnchor(publishedConceptSlugs) as MDXComponents["a"],
+    a: createConceptAwareAnchor(publishedConceptSlugs, currentConceptSlug) as MDXComponents["a"],
   };
 }
 

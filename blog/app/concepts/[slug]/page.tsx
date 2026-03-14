@@ -53,7 +53,7 @@ export default async function ConceptDetailPage({
   const tocHeadings = extractHeadings(mdxFile?.content ?? content.body ?? "");
   const references = content.references;
   const publishedConceptSlugs = getMdxSlugs("concept");
-  const components = getMdxComponents(publishedConceptSlugs);
+  const components = getMdxComponents(publishedConceptSlugs, slug);
 
   const bodyContent = mdxFile ? (
     <MDXRemote source={mdxFile.content} components={components} options={sharedMdxOptions} />

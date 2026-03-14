@@ -48,8 +48,14 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <a
+          href="#main-content"
+          className="fixed left-4 top-4 z-[100] -translate-y-[200%] rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-lg focus:translate-y-0 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:bg-indigo-500 dark:focus:ring-offset-slate-900"
+        >
+          본문으로 건너뛰기
+        </a>
         <SiteHeader />
-        <main className="flex-1 flex flex-col">
+        <main id="main-content" className="flex-1 flex flex-col" tabIndex={-1}>
           <PageTransition>{children}</PageTransition>
         </main>
         <SiteFooter />

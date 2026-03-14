@@ -4,3 +4,22 @@
 
 /* Class-based dark mode (toggle on <html>) */
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* 접근성: 키보드 포커스 시 링 표시 */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+select:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px white inset, 0 0 0 4px #6366f1;
+}
+.dark a:focus-visible,
+.dark button:focus-visible,
+.dark [role="button"]:focus-visible,
+.dark select:focus-visible,
+.dark input:focus-visible,
+.dark textarea:focus-visible {
+  box-shadow: 0 0 0 2px #0f172a inset, 0 0 0 4px #818cf8;
+}

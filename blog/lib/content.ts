@@ -90,6 +90,9 @@ function buildContentFromMdx(
   const featured = fm.featured === true;
   const author = typeof fm.author === "string" ? fm.author : undefined;
   const lang = typeof fm.lang === "string" ? fm.lang : undefined;
+  const safeDomains = Array.isArray(domains) ? domains : (["educational-psychology"] as DomainSlug[]);
+  const safeCategories = Array.isArray(categories) ? categories : [];
+  const safeTags = Array.isArray(tags) ? tags : [];
   const base = {
     id,
     type,
@@ -98,9 +101,9 @@ function buildContentFromMdx(
     summary,
     publishedAt,
     status,
-    domains: domains.length ? domains : (["educational-psychology"] as DomainSlug[]),
-    categories,
-    tags,
+    domains: safeDomains.length ? safeDomains : (["educational-psychology"] as DomainSlug[]),
+    categories: safeCategories,
+    tags: safeTags,
     body: "",
     ...(coverImage && { coverImage }),
     ...(ogImage && { ogImage }),
@@ -118,7 +121,6 @@ function buildContentFromMdx(
       ...base,
       type: "guide" as const,
       intro: (fm.intro as string) || "",
-      keyTakeaways: Array.isArray(fm.keyTakeaways) ? (fm.keyTakeaways as string[]) : [],
     };
   }
   if (type === "concept") {
@@ -193,8 +195,8 @@ export function matchesSearchForFilter(item: AnyContent, q: string): boolean {
   if (!lower) return true;
   if (item.title.toLowerCase().includes(lower)) return true;
   if (item.summary?.toLowerCase().includes(lower)) return true;
-  if (item.tags.some((t) => t.toLowerCase().includes(lower))) return true;
-  if (item.categories.some((c) => c.toLowerCase().includes(lower))) return true;
+  if (Array.isArray(item.tags) && item.tags.some((t) => String(t).toLowerCase().includes(lower))) return true;
+  if (Array.isArray(item.categories) && item.categories.some((c) => String(c).toLowerCase().includes(lower))) return true;
   if (item.type === "concept" && "shortDefinition" in item && String(item.shortDefinition).toLowerCase().includes(lower))
     return true;
   return false;
@@ -213,11 +215,11 @@ export function filterContentByQuery(content: AnyContent[], opts: FilterContentO
     list = list.filter((c) => matchesSearchForFilter(c, opts.q!));
   }
   if (opts.domain) {
-    list = list.filter((c) => c.domains.includes(opts.domain as DomainSlug));
+    list = list.filter((c) => Array.isArray(c.domains) && c.domains.includes(opts.domain as DomainSlug));
   }
   if (opts.tag) {
     const tag = opts.tag;
-    list = list.filter((c) => c.tags.includes(tag));
+    list = list.filter((c) => Array.isArray(c.tags) && c.tags.includes(tag));
   }
   return list;
 }
@@ -295,10 +297,13 @@ export async function getRelatedContent(content: AnyContent, limit = 6): Promise
     }
   }
 
+  const contentTags = Array.isArray(content.tags) ? content.tags : [];
+  const contentDomains = Array.isArray(content.domains) ? content.domains : [];
+
   // 1) 부족하면 태그 일치로 보강
-  if (related.length < limit && content.tags.length > 0) {
+  if (related.length < limit && contentTags.length > 0) {
     const byTag = all.filter(
-      (c) => !seen.has(c.id) && c.tags.some((t) => content.tags.includes(t))
+      (c) => !seen.has(c.id) && Array.isArray(c.tags) && c.tags.some((t) => contentTags.includes(t))
     );
     for (const c of byTag) {
       if (related.length >= limit) break;
@@ -308,11 +313,12 @@ export async function getRelatedContent(content: AnyContent, limit = 6): Promise
   }
 
   // 2) 그래도 부족하면 도메인 일치로 보강
-  if (related.length < limit && content.domains.length > 0) {
+  if (related.length < limit && contentDomains.length > 0) {
     const byDomain = all.filter(
       (c) =>
         !seen.has(c.id) &&
-        c.domains.some((d) => content.domains.includes(d))
+        Array.isArray(c.domains) &&
+        c.domains.some((d) => contentDomains.includes(d))
     );
     for (const c of byDomain) {
       if (related.length >= limit) break;
@@ -341,7 +347,8 @@ export async function getAllTags(): Promise<string[]> {
   const content = await getAllContent();
   const set = new Set<string>();
   for (const c of content) {
-    for (const t of c.tags) set.add(t);
+    const tags = Array.isArray(c.tags) ? c.tags : [];
+    for (const t of tags) set.add(String(t));
   }
   return Array.from(set);
 }
@@ -350,7 +357,7 @@ export async function getAllTags(): Promise<string[]> {
 export async function getContentByTag(tag: string): Promise<AnyContent[]> {
   const content = await getAllContent();
   return content
-    .filter((c) => c.tags.includes(tag))
+    .filter((c) => Array.isArray(c.tags) && c.tags.includes(tag))
     .sort((a, b) => new Date(b.publishedAt || "").getTime() - new Date(a.publishedAt || "").getTime());
 }
 
@@ -372,8 +379,9 @@ export async function getContentReferringToConcept(
   const out: { type: ContentType; slug: string; title: string; path: string }[] = [];
   for (const c of all) {
     if (c.type === "concept") continue;
-    const tagMatch = c.tags.some((t) => {
-      const n = t.toLowerCase().trim();
+    const tags = Array.isArray(c.tags) ? c.tags : [];
+    const tagMatch = tags.some((t) => {
+      const n = String(t).toLowerCase().trim();
       return n === normalizedSlug || n === normalizedTitle;
     });
     if (tagMatch) {

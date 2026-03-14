@@ -102,9 +102,9 @@ export function MdxH2({ children, icon, badge, ...props }: MdxH2Props) {
   const hasBadgeText = Boolean(badge && badge.trim());
 
   return (
-    <div className="not-prose my-8 flex w-full flex-col items-start text-left">
+    <div className="not-prose my-8 flex w-full flex-row flex-wrap items-center gap-2 sm:gap-3 text-left">
       <div
-        className="mb-3 inline-flex items-center gap-1.5 rounded-lg border border-violet-200/80 bg-violet-100/90 px-3 py-1.5 text-sm font-medium text-violet-900 dark:border-violet-800/60 dark:bg-violet-950/50 dark:text-violet-100"
+        className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-violet-200/80 bg-violet-100/90 px-3 py-1.5 text-sm font-medium text-violet-900 dark:border-violet-800/60 dark:bg-violet-950/50 dark:text-violet-100"
         aria-hidden={!hasBadgeText}
         {...(hasBadgeText ? { "aria-label": badge } : {})}
       >
@@ -118,7 +118,7 @@ export function MdxH2({ children, icon, badge, ...props }: MdxH2Props) {
       <h2
         {...props}
         id={id}
-        className="w-full max-w-3xl text-balance text-left text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-2xl md:text-[1.65rem]"
+        className="min-w-0 flex-1 text-balance text-left text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-2xl md:text-[1.65rem]"
       >
         {children}
       </h2>

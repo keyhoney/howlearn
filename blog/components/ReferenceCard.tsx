@@ -8,7 +8,8 @@ type ReferenceCardProps = {
 };
 
 export function ReferenceCard({ items }: ReferenceCardProps) {
-  if (!items || items.length === 0) return null;
+  const list = Array.isArray(items) ? items : [];
+  if (list.length === 0) return null;
 
   return (
     <aside
@@ -25,7 +26,7 @@ export function ReferenceCard({ items }: ReferenceCardProps) {
         본 문서에서 인용·참고한 자료입니다.
       </p>
       <ul className="mt-4 space-y-2">
-        {items.map((item, i) => {
+        {list.map((item, i) => {
           const label = item.title || item.url || "";
           const hasUrl = typeof item.url === "string" && item.url.trim() !== "";
 

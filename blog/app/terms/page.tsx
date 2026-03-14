@@ -100,6 +100,15 @@ export default function TermsPage() {
           그 내용, 정확성, 가용성, 보안성 또는 개인정보 처리에 대하여 본 사이트가 보증하거나 책임지지 않습니다.
         </p>
 
+        <h2 className="text-slate-900 dark:text-slate-100">9-1. 광고</h2>
+        <p className="text-slate-600 dark:text-slate-300">
+          본 사이트에 광고가 게재되는 경우, 해당 광고는 제3자(광고 네트워크·광고주 등)에 의해 제공됩니다.
+          이용자가 광고를 클릭하면 외부 사이트로 이동할 수 있으며, 이동한 사이트의 이용 조건, 개인정보 처리방침 등은 해당 사이트의 정책이 적용됩니다.
+        </p>
+        <p className="text-slate-600 dark:text-slate-300">
+          게재된 광고의 내용, 상품, 서비스 또는 링크된 외부 사이트는 본 사이트의 의견, 입장 또는 권장을 반영한 것이 아니며, 본 사이트는 광고 내용 및 외부 사이트에 대해 보증하거나 책임지지 않습니다.
+        </p>
+
         <h2 className="text-slate-900 dark:text-slate-100">10. 서비스 이용 제한</h2>
         <p className="text-slate-600 dark:text-slate-300">
           본 사이트는 이용자가 본 약관 또는 관련 법령을 위반하거나,

@@ -25,14 +25,15 @@ function buildCanonical(path: string | undefined): string | undefined {
 export function constructMetadata({
   title,
   description = site.description,
-  image = "https://picsum.photos/seed/learning/1200/630",
+  image = "/opimage.png",
   path,
   url,
   type = "website",
   lang,
   noindex = false,
 }: SeoProps = {}): Metadata {
-  const imageUrl = image ? toImageUrl(image) : undefined;
+  const defaultOgImage = "/opimage.png";
+  const imageUrl = image ? toImageUrl(image) : toImageUrl(defaultOgImage);
   const canonical = buildCanonical(path);
   const resolvedUrl = url ?? canonical ?? site.url;
   return {

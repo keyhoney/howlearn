@@ -17,7 +17,7 @@ function getContentDir(type: ContentType): string {
 
 /**
  * MDX 원문에서 frontmatter(--- ... ---)와 본문을 파싱합니다.
- * gray-matter로 YAML 중첩·배열(references, keyTakeaways, reflectionPrompt 등)을 올바르게 파싱합니다.
+ * gray-matter로 YAML 중첩·배열(references 등)을 올바르게 파싱합니다.
  * 이전 단순 줄 단위 파서는 들여쓰기된 key(예: reflectionPrompt 아래 title)를 최상위 key로 넣어
  * 게시글 title이 덮어쓰이는 버그가 있었습니다.
  */

@@ -1,0 +1,17 @@
+rules_version = '2';
+// Firebase Console > Firestore > 규칙 에서 이 내용으로 설정하거나, Firebase CLI로 배포하세요.
+// 댓글 컬렉션: path(글경로), author(별명), body(본문), createdAt(timestamp)
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /comments/{commentId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasAll(['path', 'author', 'body', 'createdAt'])
+        && request.resource.data.path is string
+        && request.resource.data.author is string
+        && request.resource.data.body is string
+        && request.resource.data.author.size() <= 50
+        && request.resource.data.body.size() <= 2000;
+      allow update, delete: if false;
+    }
+  }
+}

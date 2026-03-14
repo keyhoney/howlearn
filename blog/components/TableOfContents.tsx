@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { HeadingItem } from "@/lib/headings";
 
 type TableOfContentsProps = {
@@ -10,10 +10,11 @@ type TableOfContentsProps = {
 
 export function TableOfContents({ headings }: TableOfContentsProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
+  const list = useMemo(() => (Array.isArray(headings) ? headings : []), [headings]);
 
   useEffect(() => {
-    if (headings.length === 0) return;
-    const ids = headings.map((h) => h.id);
+    if (list.length === 0) return;
+    const ids = list.map((h) => h.id);
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -30,9 +31,9 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
       if (el) observer.observe(el);
     });
     return () => observer.disconnect();
-  }, [headings]);
+  }, [list]);
 
-  if (headings.length === 0) return null;
+  if (list.length === 0) return null;
 
   return (
     <nav aria-label="Table of contents">
@@ -42,11 +43,11 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
           Contents
         </h2>
         <ul className="mt-2 space-y-1.5 border-l border-slate-200 dark:border-slate-700 pl-4">
-          {headings.map((h) => (
+          {list.map((h) => (
             <li key={h.id} className={h.level === 3 ? "pl-2" : ""}>
               <Link
                 href={`#${h.id}`}
-                className={`block text-sm transition hover:text-slate-900 dark:hover:text-slate-100 ${
+                className={`block text-sm break-words transition hover:text-slate-900 dark:hover:text-slate-100 ${
                   activeId === h.id
                     ? "font-medium text-slate-900 dark:text-slate-100"
                     : "text-slate-500 dark:text-slate-400"

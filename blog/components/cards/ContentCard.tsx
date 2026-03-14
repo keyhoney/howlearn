@@ -110,12 +110,12 @@ export function ContentCard({ content }: { content: ContentCardContent }) {
 
       <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-slate-100 dark:border-slate-700">
         <div className="flex flex-wrap gap-2 mb-3 sm:mb-4">
-          {content.domains.slice(0, 2).map((domain) => (
+          {(Array.isArray(content.domains) ? content.domains : []).slice(0, 2).map((domain) => (
             <DomainBadge key={domain} domain={domain} />
           ))}
         </div>
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <TagList tags={content.tags.slice(0, 3)} />
+          <TagList tags={(Array.isArray(content.tags) ? content.tags : []).slice(0, 3)} />
           <CardFooterLink content={content}>
             <span className="sr-only">Read more about {content.title}</span>
             <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-200" aria-hidden />

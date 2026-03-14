@@ -4,18 +4,26 @@ import { useState } from "react";
 
 type OxQuizProps = {
   question: string;
-  /** true = O가 정답 */
-  correctIsO: boolean;
+  /** true = O가 정답 (MDX에서 문자열 "true"/"false"로 올 수 있음) */
+  correctIsO?: boolean | string;
   /** 정답 선택 후 표시 */
   explanation: string;
 };
+
+/** MDX 등에서 문자열로 넘어온 prop을 boolean으로 통일 */
+function toBoolean(v: boolean | string | undefined): boolean {
+  if (v === true || v === "true") return true;
+  if (v === false || v === "false") return false;
+  return false;
+}
 
 /**
  * 참여 모듈: OX 퀴즈 (ParticipationModule 톤: indigo 박스 + 원형 O/X 버튼)
  */
 export function OxQuiz({ question, correctIsO, explanation }: OxQuizProps) {
   const [picked, setPicked] = useState<"O" | "X" | null>(null);
-  const correct = picked !== null && (picked === "O") === correctIsO;
+  const isCorrectO = toBoolean(correctIsO);
+  const correct = picked !== null && (picked === "O") === isCorrectO;
 
   return (
     <aside
@@ -35,7 +43,7 @@ export function OxQuiz({ question, correctIsO, explanation }: OxQuizProps) {
           const isSelected = picked === choice;
           const isCorrectChoice =
             picked !== null &&
-            ((choice === "O" && correctIsO) || (choice === "X" && !correctIsO));
+            ((choice === "O" && isCorrectO) || (choice === "X" && !isCorrectO));
           return (
             <button
               key={choice}

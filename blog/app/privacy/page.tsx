@@ -35,10 +35,13 @@ export default function PrivacyPage() {
         </p>
         <p className="text-slate-600 dark:text-slate-300">
           둘째, 이용자가 문의 시 이메일·메신저 등으로 직접 전달해 주시는 정보(이메일 주소, 이름, 문의 내용 등)는 해당 연락 과정에서 수집될 수 있습니다.
-          본 사이트에는 문의를 위한 온라인 입력 폼이 없으며, 문의하기 페이지에 안내된 이메일·카카오톡 등으로 연락하시는 과정에서만 위 정보가 수집될 수 있습니다.
+          문의하기 페이지의 문의 폼 또는 이메일·카카오톡 등으로 연락하시는 과정에서 위 정보가 수집될 수 있습니다.
         </p>
         <p className="text-slate-600 dark:text-slate-300">
           셋째, 방문 통계 분석(예: Google Analytics), 호스팅·배포·CDN(예: Vercel, Cloudflare)의 로그·분석, 그리고 광고·동의 관리 서비스를 사용하는 경우 해당 제3자 제공자가 관련 정보를 수집할 수 있습니다.
+        </p>
+        <p className="text-slate-600 dark:text-slate-300">
+          넷째, 가이드·개념 글 하단 댓글 서비스를 위해 이용자가 입력한 별명, 댓글 내용, 작성 시각, 해당 글 경로가 Google Firebase(Firestore)에 저장됩니다. 로그인 없이 작성 가능하며, 수집 항목은 위 입력값에 한합니다.
         </p>
 
         <h2 className="text-slate-900 dark:text-slate-100">2. 개인정보의 수집 및 이용 목적</h2>
@@ -47,7 +50,7 @@ export default function PrivacyPage() {
         </p>
         <p className="text-slate-600 dark:text-slate-300">
           서비스 제공 및 운영, 사이트 안정성 및 보안 유지, 방문 통계 분석(예: Google Analytics), 콘텐츠 품질 개선,
-          이용자 문의 응답, 법령 준수, 부정 이용 또는 비정상 접근 방지가 이에 포함됩니다.
+          댓글 서비스 제공, 이용자 문의 응답, 법령 준수, 부정 이용 또는 비정상 접근 방지가 이에 포함됩니다.
           광고 또는 동의 관리 서비스를 사용하는 경우에는 적용 법령에 따라 동의를 받은 뒤 해당 목적로 이용할 수 있습니다.
         </p>
 
@@ -78,13 +81,36 @@ export default function PrivacyPage() {
           에서 확인할 수 있습니다.
         </p>
 
+        <h2 className="text-slate-900 dark:text-slate-100">5-1. 광고 서비스(Google AdSense)에 관한 안내</h2>
+        <p className="text-slate-600 dark:text-slate-300">
+          본 사이트는 Google AdSense 광고 신청을 준비 중이며, 추후 승인이 있을 경우 사이트에 Google 애드센스 광고를 게재할 예정입니다.
+        </p>
+        <p className="text-slate-600 dark:text-slate-300">
+          광고가 게재되는 경우, Google 및 그 파트너사는 이용자의 방문 정보, 기기 정보, IP 주소, 쿠키 등을 이용하여 광고 제공, 광고 노출 빈도 제한, 맞춤형 광고 표시, 광고 성과 측정 등을 수행할 수 있습니다.
+          이러한 처리 방식은 Google의 개인정보처리방침 및 광고 정책에 따르며, 이용자는 Google의 광고 설정(
+          <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" className="text-indigo-600 dark:text-indigo-400 hover:underline">adssettings.google.com</a>
+          )에서 맞춤 광고를 끄거나 쿠키를 관리할 수 있습니다.
+        </p>
+        <p className="text-slate-600 dark:text-slate-300">
+          Google의 개인정보 처리에 대한 자세한 내용은{" "}
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-indigo-600 dark:text-indigo-400 hover:underline">Google 개인정보처리방침</a>
+          을 참고하시기 바랍니다.
+        </p>
+
+        <h2 className="text-slate-900 dark:text-slate-100">5-2. 댓글 서비스(Firebase)에 관한 안내</h2>
+        <p className="text-slate-600 dark:text-slate-300">
+          본 사이트는 가이드·개념 글 하단 댓글 기능을 위해 Google Firebase(Firestore)를 사용합니다. 이용자가 입력한 별명, 댓글 내용, 작성 시각, 해당 글 경로가 Firebase 서버에 저장되며, 해당 데이터는 Google의 Firebase 개인정보 처리 방침이 적용됩니다. Firebase 정책은{" "}
+          <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener noreferrer" className="text-indigo-600 dark:text-indigo-400 hover:underline">Firebase 개인정보 보호</a>
+          를 참고하시기 바랍니다.
+        </p>
+
         <h2 className="text-slate-900 dark:text-slate-100">6. 개인정보의 제3자 제공</h2>
         <p className="text-slate-600 dark:text-slate-300">
           본 사이트는 원칙적으로 이용자의 개인정보를 외부에 판매하지 않으며,
           법령에 근거가 있거나 이용자의 동의가 있는 경우를 제외하고 제3자에게 제공하지 않습니다.
         </p>
         <p className="text-slate-600 dark:text-slate-300">
-          다만 방문 통계 분석(예: Google Analytics), 호스팅·배포·CDN(예: Vercel, Cloudflare), 보안, 그리고 광고·동의 관리를 사용하는 경우 해당 제3자 제공자가 관련 정보를 처리할 수 있으며, 이 경우 해당 처리는 각 제공자의 정책 및 계약 관계에 따릅니다.
+          다만 방문 통계 분석(예: Google Analytics), 호스팅·배포·CDN(예: Vercel, Cloudflare), 보안, 댓글 저장(예: Firebase), 그리고 광고·동의 관리를 사용하는 경우 해당 제3자 제공자가 관련 정보를 처리할 수 있으며, 이 경우 해당 처리는 각 제공자의 정책 및 계약 관계에 따릅니다.
         </p>
 
         <h2 className="text-slate-900 dark:text-slate-100">7. 개인정보 처리의 위탁</h2>

@@ -38,7 +38,6 @@ export type BaseContent = {
 export type Guide = BaseContent & {
   type: "guide";
   intro?: string;
-  keyTakeaways?: string[];
   body: string;
 };
 

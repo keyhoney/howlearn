@@ -21,18 +21,18 @@ export default async function Home() {
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-slate-50 dark:bg-slate-800/60 py-14 sm:py-24 lg:py-32">
-        <div className="absolute inset-0 opacity-10 dark:opacity-5" role="presentation" aria-hidden="true">
+        <div className="absolute inset-0 opacity-30 dark:opacity-20" role="presentation" aria-hidden="true">
           <Image
-            src="https://picsum.photos/seed/learning/1920/1080?blur=10"
+            src="/opimage.png"
             alt=""
             role="presentation"
             fill
             sizes="100vw"
             className="object-cover object-center"
-            loading="lazy"
-            fetchPriority="low"
+            priority
           />
         </div>
+        <div className="absolute inset-0 bg-black/5 dark:bg-black/45" role="presentation" aria-hidden="true" />
         <div className="container relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100 sm:text-5xl lg:text-6xl">
             {(() => {
@@ -42,7 +42,7 @@ export default async function Home() {
               return part2 ? (
                 <>
                   <span className="text-[#FD9A32]">{part1}</span>
-                  <span className="text-[#97D5D4]">{part2}</span>
+                  <span className="text-teal-600 dark:text-teal-400">{part2}</span>
                 </>
               ) : (
                 <span>{site.name}</span>

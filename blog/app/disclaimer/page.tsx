@@ -36,6 +36,15 @@ export default function DisclaimerPage() {
           사이트 내용을 적용한 결과에 대해서는 보장하지 않습니다.
           외부 링크나 참고 자료의 정확성, 완전성, 최신성에 대해서도 별도의 보증을 제공하지 않습니다.
         </p>
+
+        <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 mt-10 mb-3">광고에 관한 안내</h2>
+        <p className="text-slate-600 dark:text-slate-300">
+          본 사이트에 광고가 게재되는 경우, 해당 광고는 제3자(광고 네트워크·광고주)에 의해 제공됩니다.
+          광고를 클릭하시면 외부 사이트로 이동할 수 있으며, 해당 외부 사이트의 이용·개인정보 처리 등은 해당 사이트의 정책을 따릅니다.
+        </p>
+        <p className="text-slate-600 dark:text-slate-300">
+          게재된 광고의 내용, 상품, 서비스, 링크 대상은 본 사이트의 의견이나 권장을 반영한 것이 아니며, 본 사이트는 광고 내용에 대해 보증하거나 책임지지 않습니다.
+        </p>
       </div>
     </main>
   );

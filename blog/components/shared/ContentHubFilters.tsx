@@ -43,6 +43,12 @@ export function ContentHubFilters({ content, type, title, pagination, availableT
   const [tagDropdownOpen, setTagDropdownOpen] = useState(false);
   const tagDropdownRef = useRef<HTMLDivElement>(null);
 
+  /** 수화 시 서버/클라이언트 마크업 불일치 방지: 마운트 후에만 필터 UI 렌더 */
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     setSearchInput(queryFromUrl);
   }, [queryFromUrl]);
@@ -132,12 +138,38 @@ export function ContentHubFilters({ content, type, title, pagination, availableT
   const selectBase =
     "min-h-[44px] w-full min-w-0 appearance-none rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 py-3 pl-4 pr-10 text-sm font-medium text-slate-900 dark:text-slate-100 focus:border-indigo-500 dark:focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:focus:ring-indigo-400/20 transition-colors cursor-pointer";
 
+  if (!mounted) {
+    return (
+      <div className="mb-8 border-b border-slate-200 dark:border-slate-700 pb-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-stretch">
+          <div className="relative w-full min-w-0 sm:flex-1 sm:min-w-[200px]">
+            <div className="min-h-[44px] w-full rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/50" aria-hidden />
+          </div>
+          <div className="flex flex-col gap-2 w-full min-w-0 sm:flex-row sm:flex-wrap sm:items-center sm:w-auto sm:shrink-0">
+            <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-sm font-medium shrink-0">
+              <Filter className="h-4 w-4" aria-hidden />
+              <span>필터</span>
+            </div>
+            <div className="flex flex-wrap gap-2 sm:flex-nowrap">
+              <div className="relative flex-1 min-w-[min(100%,140px)] sm:flex-none sm:w-[160px] lg:w-[180px]">
+                <div className="min-h-[44px] w-full rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/50" aria-hidden />
+              </div>
+              <div className="relative w-[160px] sm:w-[200px]">
+                <div className="min-h-[44px] w-full rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/50" aria-hidden />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
-      {/* 검색 + 필터 한 줄 (좁은 화면에서만 줄바꿈) */}
+      {/* 검색 + 필터: 모바일에서는 세로 배치·전체 너비로 겹침 방지 */}
       <div className="mb-8 border-b border-slate-200 dark:border-slate-700 pb-6">
-        <div className="flex flex-wrap items-stretch gap-3">
-          <div className="relative flex-1 min-w-[200px]">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-stretch">
+          <div className="relative w-full min-w-0 sm:flex-1 sm:min-w-[200px]">
             <SearchIcon className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none" aria-hidden />
             <input
               type="search"
@@ -148,13 +180,14 @@ export function ContentHubFilters({ content, type, title, pagination, availableT
               aria-label="검색"
             />
           </div>
-          <div className="flex flex-wrap items-center gap-2 shrink-0">
-            <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-sm font-medium">
+          <div className="flex flex-col gap-2 w-full min-w-0 sm:flex-row sm:flex-wrap sm:items-center sm:w-auto sm:shrink-0">
+            <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-sm font-medium shrink-0">
               <Filter className="h-4 w-4" aria-hidden />
               <span>필터</span>
             </div>
-            <div className="relative w-[160px] sm:w-[180px]">
-              <select
+            <div className="flex flex-wrap gap-2 sm:flex-nowrap">
+              <div className="relative flex-1 min-w-[min(100%,140px)] sm:flex-none sm:w-[160px] lg:w-[180px]">
+                <select
                 value={domainParam}
                 onChange={(e) => setDomain(e.target.value)}
                 className={selectBase}
@@ -221,11 +254,12 @@ export function ContentHubFilters({ content, type, title, pagination, availableT
               )}
             </div>
           </div>
+            </div>
         </div>
       </div>
 
       {displayList.length > 0 ? (
-        <>
+        <div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {displayList.map((item) => (
               <ContentCard key={item.id} content={item} />
@@ -241,7 +275,7 @@ export function ContentHubFilters({ content, type, title, pagination, availableT
               preserveParams
             />
           )}
-        </>
+        </div>
       ) : (
         <div className="text-center py-12 sm:py-20 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-dashed border-slate-300 dark:border-slate-600">
           <h3 className="text-lg font-medium text-slate-900 dark:text-slate-100">
