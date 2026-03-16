@@ -75,6 +75,12 @@ export default function RootLayout({
         {process.env.NEXT_PUBLIC_GA_ID && (
           <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="" />
         )}
+        {/* AdSense: 사이트 전체 자동 광고 */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7303610171129084"
+          crossOrigin="anonymous"
+        />
       </head>
       <body
         className="min-h-screen flex flex-col font-sans text-slate-900 bg-white dark:bg-slate-900 dark:text-slate-100 transition-colors"
