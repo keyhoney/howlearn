@@ -4,10 +4,11 @@ import { useState } from "react";
 import type { FAQItem } from "@/lib/faq";
 import { ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { useFaqFromContext } from "@/components/context/FaqContext";
 
 interface FAQProps {
-  /** FAQ 항목 배열. RSC/MDX에서는 items='[...]' 문자열로 넘기는 것을 권장합니다. */
-  items: FAQItem[] | string | null | undefined;
+  /** FAQ 항목 배열. RSC/MDX에서는 비워두고 frontmatter faq + FaqProvider 사용 권장. */
+  items?: FAQItem[] | string | null;
   /** 첫 번째 항목을 기본 열림으로 할지 (기본: true) */
   defaultOpenFirst?: boolean;
 }
@@ -27,7 +28,14 @@ function parseItems(items: FAQItem[] | string | null | undefined): FAQItem[] {
         .replace(/&quot;/g, '"')
         .replace(/&#x27;/g, "'");
       if (!trimmed) return [];
-      const parsed = JSON.parse(trimmed) as FAQItem[] | FAQItem;
+      // 속성값이 줄바꿈에서 잘렸을 수 있음: 줄바꿈/연속 공백 제거 후 재시도
+      let parsed: FAQItem[] | FAQItem;
+      try {
+        parsed = JSON.parse(trimmed) as FAQItem[] | FAQItem;
+      } catch {
+        const compact = trimmed.replace(/\s+/g, " ").trim();
+        parsed = JSON.parse(compact) as FAQItem[] | FAQItem;
+      }
       const arr = Array.isArray(parsed) ? parsed : [parsed];
       return arr.filter(
         (x): x is FAQItem =>
@@ -42,7 +50,9 @@ function parseItems(items: FAQItem[] | string | null | undefined): FAQItem[] {
 
 export function FAQ({ items, defaultOpenFirst = true }: FAQProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(defaultOpenFirst ? 0 : null);
-  const list = parseItems(items);
+  const fromContext = useFaqFromContext();
+  const parsed = parseItems(items);
+  const list = parsed.length > 0 ? parsed : (fromContext ?? []);
 
   if (list.length === 0) return null;
 

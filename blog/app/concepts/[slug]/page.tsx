@@ -5,7 +5,9 @@ import {
   getRelatedContent,
   getContentReferringToConcept,
   getAllContent,
+  getFaqFromFrontmatter,
 } from "@/lib/content";
+import type { FaqItem } from "@/lib/types";
 import { getMdxBySlug, getMdxSlugs } from "@/lib/content-files";
 import { ContentDetail } from "@/components/shared/ContentDetail";
 import { MarkdownRenderer } from "@/components/shared/MarkdownRenderer";
@@ -52,6 +54,11 @@ export default async function ConceptDetailPage({
   const mdxFile = getMdxBySlug("concept", slug);
   const tocHeadings = extractHeadings(mdxFile?.content ?? content.body ?? "");
   const references = content.references;
+  const faqFromFrontmatter = getFaqFromFrontmatter(mdxFile?.frontmatter);
+  const faqItems: FaqItem[] =
+    faqFromFrontmatter.length > 0
+      ? faqFromFrontmatter
+      : (content.type === "concept" ? content.faq ?? [] : []);
   const publishedConceptSlugs = getMdxSlugs("concept");
   const components = getMdxComponents(publishedConceptSlugs, slug);
 
@@ -73,6 +80,7 @@ export default async function ConceptDetailPage({
         referringContent={referringContent}
         tocHeadings={tocHeadings}
         references={references}
+        faqItems={faqItems}
       >
         {bodyContent}
       </ContentDetail>

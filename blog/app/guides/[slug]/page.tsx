@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { getContentBySlug, getRelatedContent, getAllContent } from "@/lib/content";
+import { getContentBySlug, getRelatedContent, getAllContent, getFaqFromFrontmatter } from "@/lib/content";
+import type { FaqItem } from "@/lib/types";
 import { getMdxBySlug, getMdxSlugs } from "@/lib/content-files";
 import { ContentDetail } from "@/components/shared/ContentDetail";
 import { MarkdownRenderer } from "@/components/shared/MarkdownRenderer";
@@ -44,6 +45,12 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
     mdxFile?.content ?? content.body ?? ""
   );
   const references = content.references;
+  // FAQ: frontmatter에서 먼저 추출, 비어 있으면 이미 빌드된 content.faq 사용 (경로/파싱 차이 대비)
+  const faqFromFrontmatter = getFaqFromFrontmatter(mdxFile?.frontmatter);
+  const faqItems: FaqItem[] =
+    faqFromFrontmatter.length > 0
+      ? faqFromFrontmatter
+      : (content.type === "guide" ? content.faq ?? [] : []);
   const components = getMdxComponents(getMdxSlugs("concept"));
 
   const bodyContent = mdxFile ? (
@@ -69,6 +76,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
         tocHeadings={tocHeadings}
         references={references}
         showDisclaimer
+        faqItems={faqItems}
       >
         {bodyContent}
       </ContentDetail>

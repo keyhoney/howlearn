@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AnyContent, ContentType } from "@/lib/types";
+import type { FaqItem } from "@/lib/types";
 import { DomainBadge, TagList } from "@/components/ui/badges";
 import { ContentCard } from "@/components/cards/ContentCard";
 import { format } from "date-fns";
@@ -11,6 +12,7 @@ import { ReferenceCard } from "@/components/ReferenceCard";
 import { DocCTA } from "@/components/DocCTA";
 import { Disclaimer } from "@/components/Disclaimer";
 import { CommentSectionDynamic } from "@/components/comments/CommentSectionDynamic";
+import { FaqProvider } from "@/components/context/FaqContext";
 import type { HeadingItem } from "@/lib/headings";
 import { author } from "@/lib/site";
 
@@ -28,6 +30,8 @@ interface ContentDetailProps {
   ctaText?: string;
   /** CTA 버튼 라벨 */
   ctaButtonLabel?: string;
+  /** 가이드/개념 FAQ: 있으면 children을 FaqProvider로 감싸서 MDX 내 <FaqSection />이 FAQ → BottomSummary 순으로 표시되게 함 */
+  faqItems?: FaqItem[];
 }
 
 const typeLabels: Record<ContentType, string> = {
@@ -54,7 +58,14 @@ export function ContentDetail({
   referringContent,
   ctaText = "나눌수록 더 깊이 이해됩니다.",
   ctaButtonLabel = "공유하기",
+  faqItems,
 }: ContentDetailProps) {
+  const hasFaq = Array.isArray(faqItems) && faqItems.length > 0;
+  const articleChildren = hasFaq ? (
+    <FaqProvider faq={faqItems}>{children ?? <MarkdownRenderer content={content.body || ""} />}</FaqProvider>
+  ) : (
+    children ?? <MarkdownRenderer content={content.body || ""} />
+  );
   const hubHref = typeLinks[content.type];
   const hubLabel = typeLabels[content.type];
   const refs = references ?? content.references;
@@ -120,9 +131,7 @@ export function ContentDetail({
           {/* 본문: 좌측 컬럼에 고정 */}
           <div className="min-w-0 lg:col-start-1 lg:row-start-1">
             <article className="prose prose-slate prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-slate-900 dark:prose-headings:text-slate-100 prose-headings:scroll-mt-24 prose-p:text-slate-600 dark:prose-p:text-slate-300 prose-a:text-indigo-600 dark:prose-a:text-indigo-400 hover:prose-a:text-indigo-500 dark:hover:prose-a:text-indigo-300 [&_a[href^='/concepts/']]:font-medium [&_a[href^='/concepts/']]:text-[#4F39F6] [&_a[href^='/concepts/']]:underline [&_a[href^='/concepts/']]:decoration-2 [&_a[href^='/concepts/']]:decoration-dotted [&_a[href^='/concepts/']]:underline-offset-2">
-              {children || (
-                <MarkdownRenderer content={content.body || ""} />
-              )}
+              {articleChildren}
             </article>
             {Array.isArray(refs) && refs.length > 0 && <ReferenceCard items={refs} />}
             <DocCTA text={ctaText} buttonLabel={ctaButtonLabel} />

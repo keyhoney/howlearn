@@ -1,5 +1,5 @@
 import { cache } from "react";
-import { AnyContent, ContentType, DomainSlug } from "./types";
+import { AnyContent, ContentType, DomainSlug, type FaqItem } from "./types";
 import { domainInfo } from "./domains";
 import { getMdxSlugs, getMdxBySlug } from "./content-files";
 
@@ -66,6 +66,24 @@ function normalizeReferences(fm: Record<string, unknown>): { title?: string; url
     }));
 }
 
+/** frontmatter faq → FaqItem[] (가이드 FAQ를 MDX 속성 대신 전달할 때 사용). 페이지에서 mdxFile.frontmatter로 직접 읽을 때 사용 */
+export function getFaqFromFrontmatter(fm: Record<string, unknown> | null | undefined): FaqItem[] {
+  if (!fm || typeof fm !== "object") return [];
+  const raw = fm.faq;
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .filter((r): r is Record<string, unknown> => typeof r === "object" && r !== null && "question" in r && "answer" in r)
+    .map((r) => ({
+      question: String(r.question ?? ""),
+      answer: String(r.answer ?? ""),
+    }))
+    .filter((x) => x.question.length > 0);
+}
+
+function normalizeFaq(fm: Record<string, unknown>): FaqItem[] {
+  return getFaqFromFrontmatter(fm);
+}
+
 /** MDX frontmatter → AnyContent (목록/메타용). body는 상세에서 MDX 파일로 채움. */
 function buildContentFromMdx(
   type: ContentType,
@@ -117,19 +135,23 @@ function buildContentFromMdx(
   };
 
   if (type === "guide") {
+    const faq = normalizeFaq(fm);
     return {
       ...base,
       type: "guide" as const,
       intro: (fm.intro as string) || "",
+      ...(faq.length > 0 && { faq }),
     };
   }
   if (type === "concept") {
     const shortDefinition = (fm.shortDefinition as string) || description || summary;
+    const faq = normalizeFaq(fm);
     return {
       ...base,
       type: "concept" as const,
       englishName: fm.englishName as string | undefined,
       shortDefinition,
+      ...(faq.length > 0 && { faq }),
     };
   }
   if (type === "toolkit") {

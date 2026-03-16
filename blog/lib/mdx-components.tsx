@@ -24,6 +24,7 @@ import { toImageUrl } from "@/lib/image-url";
 import { slugify, extractTextFromNode } from "@/lib/headings";
 import { MdxH2 } from "@/components/mdx/MdxH2";
 import { FAQ } from "@/components/FAQ";
+import { FaqSection } from "@/components/FaqSection";
 
 function createConceptAwareAnchor(
   publishedConceptSlugs: string[],
@@ -134,6 +135,7 @@ const baseMdxComponents: MDXComponents = {
   BookToc,
   Citation,
   FAQ,
+  FaqSection,
 };
 
 /** 발행된 개념 슬러그 목록을 받아, 개념 링크는 발행된 것만 <a>, 미작성은 <span>으로 렌더. currentConceptSlug를 주면 해당 개념 글에서는 자기 자신 링크는 평문으로 표시 */

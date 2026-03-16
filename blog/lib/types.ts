@@ -35,10 +35,14 @@ export type BaseContent = {
   lang?: string;
 };
 
+export type FaqItem = { question: string; answer: string };
+
 export type Guide = BaseContent & {
   type: "guide";
   intro?: string;
   body: string;
+  /** 자주 묻는 질문. frontmatter faq 또는 MDX <FAQ items="..." />에서 사용 */
+  faq?: FaqItem[];
 };
 
 export type Concept = BaseContent & {
@@ -46,6 +50,8 @@ export type Concept = BaseContent & {
   englishName?: string;
   shortDefinition: string;
   body: string;
+  /** 자주 묻는 질문. frontmatter faq에서 사용 */
+  faq?: FaqItem[];
 };
 
 export type Toolkit = BaseContent & {

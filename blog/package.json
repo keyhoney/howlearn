@@ -14,7 +14,8 @@
     "start": "next start",
     "lint": "eslint .",
     "clean": "next clean",
-    "analyze": "cross-env ANALYZE=true next build"
+    "analyze": "cross-env ANALYZE=true next build",
+    "move-faq-to-frontmatter": "node scripts/move-faq-to-frontmatter.js"
   },
   "dependencies": {
     "@formspree/react": "^3.0.0",
