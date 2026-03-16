@@ -96,6 +96,11 @@ export default function PrivacyPage() {
           <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-indigo-600 dark:text-indigo-400 hover:underline">Google 개인정보처리방침</a>
           을 참고하시기 바랍니다.
         </p>
+        <p className="text-slate-600 dark:text-slate-300">
+          EEA(유럽경제지역)·영국·스위스 등 법령상 맞춤형 광고에 동의가 필요한 지역의 이용자에게는, 광고 게재 시 Google이 요구하는 동의 절차(인증 CMP 또는 동의 모드 등)에 맞춰 본 사이트의 동의 배너 및{" "}
+          <a href="/cookies#settings" className="text-indigo-600 dark:text-indigo-400 hover:underline">쿠키 설정</a>
+          에서 선택을 받습니다. 현재 동의 배너와 쿠키 설정 페이지는 이미 해당 목적으로 운영 중이며, AdSense 승인 후 광고가 게재될 때 동일한 설정이 적용됩니다.
+        </p>
 
         <h2 className="text-slate-900 dark:text-slate-100">5-2. 댓글 서비스(Firebase)에 관한 안내</h2>
         <p className="text-slate-600 dark:text-slate-300">

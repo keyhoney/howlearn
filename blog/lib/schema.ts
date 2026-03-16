@@ -1,5 +1,5 @@
 import type { AnyContent, ContentType } from "@/lib/types";
-import { author, site } from "@/lib/site";
+import { author, authorByline, site } from "@/lib/site";
 import { toImageUrl } from "@/lib/image-url";
 
 /** 실제 App Router 경로와 동일한 canonical 경로 접두사 */
@@ -36,8 +36,10 @@ export function generateJsonLd(content: AnyContent) {
     datePublished: content.publishedAt,
     dateModified: content.updatedAt || content.publishedAt,
     author: {
-      "@type": "Organization",
-      name: author.name,
+      "@type": "Person",
+      name: authorByline.name,
+      jobTitle: authorByline.credentials,
+      url: `${site.url}/about#author`,
     },
     publisher: {
       "@type": "Organization",

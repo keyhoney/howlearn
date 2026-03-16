@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { constructMetadata } from "@/lib/seo";
+import { CookieSettingsBlock } from "@/components/CookieSettingsBlock";
 
 export const metadata: Metadata = constructMetadata({
   title: "쿠키 정책",
@@ -58,6 +59,7 @@ export default function CookiesPage() {
         </p>
         <p className="text-slate-600 dark:text-slate-300">
           이러한 광고·타기팅 쿠키는 이용자가 본 사이트 또는 다른 사이트에서 본 광고와 상호작용한 정보, 방문한 페이지, 기기 정보 등을 활용할 수 있으며, 적용 법령상 필요한 경우 사전 동의를 받은 후에만 활성화됩니다.
+          EEA·영국·스위스 등 법령상 맞춤형 광고에 동의가 필요한 지역의 이용자에게는, Google이 요구하는 동의 절차(인증 CMP 또는 동의 모드 등)에 맞춰 본 사이트의 동의 배너와 아래 쿠키 설정에서 선택을 받으며, AdSense 승인 후에도 동일한 동의 설정이 적용됩니다.
           이용자는{" "}
           <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" className="text-indigo-600 dark:text-indigo-400 hover:underline">Google 광고 설정</a>
           에서 맞춤 광고 사용 여부를 변경하거나, 브라우저에서 쿠키를 차단할 수 있습니다.
@@ -97,13 +99,17 @@ export default function CookiesPage() {
 
         <h2 className="text-slate-900 dark:text-slate-100">6. 쿠키 설정 및 철회 방법</h2>
         <p className="text-slate-600 dark:text-slate-300">
-          이용자는 사이트 내 동의 배너·쿠키 설정 페이지에서 선택을 변경하거나, 브라우저 설정에서 쿠키를 허용·거부·삭제할 수 있습니다.
+          이용자는 사이트 내 동의 배너·아래 쿠키 설정에서 선택을 변경하거나, 브라우저 설정에서 쿠키를 허용·거부·삭제할 수 있습니다.
           브라우저에서의 쿠키 차단과 사이트 내 동의 설정은 서로 별개로 동작할 수 있으므로, 원하시는 수준에 맞게 둘 다 확인하시는 것이 좋습니다.
           이미 부여한 동의는 언제든지 철회하거나 변경할 수 있습니다.
         </p>
         <p className="text-slate-600 dark:text-slate-300">
           다만 필수 쿠키를 차단하거나 브라우저 수준에서 모든 쿠키를 비활성화하는 경우, 설정 저장, 동의 기록, 테마 등 선호 설정, 일부 콘텐츠 표시 등 사이트의 일부 기능이 제한될 수 있습니다.
         </p>
+
+        <div className="my-8">
+          <CookieSettingsBlock />
+        </div>
 
         <h2 className="text-slate-900 dark:text-slate-100">7. 브라우저를 통한 관리</h2>
         <p className="text-slate-600 dark:text-slate-300">

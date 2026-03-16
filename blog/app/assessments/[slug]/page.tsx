@@ -27,6 +27,7 @@ export async function generateMetadata({ params }: AssessmentPageProps) {
     return constructMetadata({
       title: 'Assessment Not Found',
       description: 'The requested assessment could not be found.',
+      path: `/assessments/${slug}`,
       noindex: true,
     });
   }

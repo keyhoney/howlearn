@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { hasAnalyticsConsent } from "@/lib/consent";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 const FALLBACK_MS = 5000;
 
+const CONSENT_UPDATE_EVENT = "consent-update";
+
 /**
- * Loads gtag.js only after first user interaction (or after FALLBACK_MS).
- * Reduces unused JS on initial load and improves LCP/FCP.
+ * Loads gtag.js only when the user has consented to analytics, and after first interaction (or FALLBACK_MS).
+ * 동의 배너·쿠키 설정과 일치: 분석 동의가 있을 때만 GA를 로드합니다.
  */
 export function AnalyticsLoader() {
   const loaded = useRef(false);
@@ -17,6 +20,7 @@ export function AnalyticsLoader() {
 
     const loadGtag = () => {
       if (loaded.current) return;
+      if (!hasAnalyticsConsent()) return;
       loaded.current = true;
 
       const script = document.createElement("script");
@@ -42,16 +46,24 @@ export function AnalyticsLoader() {
       window.removeEventListener("keydown", onInteraction, { capture: true });
     };
 
-    window.addEventListener("scroll", onInteraction, { capture: true, once: true });
-    window.addEventListener("click", onInteraction, { capture: true, once: true });
-    window.addEventListener("keydown", onInteraction, { capture: true, once: true });
+    // 동의가 이미 있으면 상호작용 후 로드
+    if (hasAnalyticsConsent()) {
+      window.addEventListener("scroll", onInteraction, { capture: true, once: true });
+      window.addEventListener("click", onInteraction, { capture: true, once: true });
+      window.addEventListener("keydown", onInteraction, { capture: true, once: true });
+      const timeout = window.setTimeout(loadGtag, FALLBACK_MS);
+      return () => {
+        removeListeners();
+        window.clearTimeout(timeout);
+      };
+    }
 
-    const timeout = window.setTimeout(loadGtag, FALLBACK_MS);
-
-    return () => {
-      removeListeners();
-      window.clearTimeout(timeout);
+    // 동의가 없을 때: 배너에서 "전체 동의" 후 즉시 로드할 수 있도록 이벤트 구독
+    const onConsentUpdate = (e: CustomEvent<{ analytics?: boolean }>) => {
+      if (e.detail?.analytics) loadGtag();
     };
+    window.addEventListener(CONSENT_UPDATE_EVENT, onConsentUpdate as EventListener);
+    return () => window.removeEventListener(CONSENT_UPDATE_EVENT, onConsentUpdate as EventListener);
   }, []);
 
   return null;

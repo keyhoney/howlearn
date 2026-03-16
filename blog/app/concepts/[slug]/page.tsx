@@ -34,6 +34,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description: content.shortDefinition,
     path: `/concepts/${slug}`,
     image: content.ogImage ?? content.coverImage,
+    type: "article",
     ...(content.lang && { lang: content.lang }),
   });
 }

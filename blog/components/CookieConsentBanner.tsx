@@ -2,46 +2,32 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-
-const CONSENT_COOKIE_NAME = "cookie_consent";
-const CONSENT_EXPIRY_DAYS = 365;
-
-function setConsentCookie(accepted: boolean) {
-  const value = accepted ? "1" : "0";
-  const expires = new Date();
-  expires.setDate(expires.getDate() + CONSENT_EXPIRY_DAYS);
-  document.cookie = `${CONSENT_COOKIE_NAME}=${value}; path=/; expires=${expires.toUTCString()}; SameSite=Lax`;
-}
-
-function getConsentCookie(): string | null {
-  if (typeof document === "undefined") return null;
-  const match = document.cookie.match(
-    new RegExp(`(?:^|; )${CONSENT_COOKIE_NAME}=([^;]*)`)
-  );
-  return match ? decodeURIComponent(match[1]) : null;
-}
+import { getConsent, setConsent, type ConsentState } from "@/lib/consent";
 
 /**
- * Cookie consent banner (CMP). Uses cookies for storage.
+ * 쿠키 동의 배너 (CMP).
+ * - 정책과 일치: 분석·광고를 구분하여 저장하며, 쿠키 설정 페이지에서 변경 가능합니다.
+ * - AdSense 도입 시 EEA·영국·스위스 이용자 맞춤형 광고는 동일한 동의 값으로 Google 동의 모드 등에 연동할 수 있습니다.
  */
 export function CookieConsentBanner() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (getConsentCookie() === null) {
+    if (getConsent() === null) {
       queueMicrotask(() => setVisible(true));
     }
   }, []);
 
-  const accept = () => {
-    setConsentCookie(true);
+  const save = (state: ConsentState) => {
+    setConsent(state);
     setVisible(false);
+    if (typeof window !== "undefined" && state.analytics) {
+      window.dispatchEvent(new CustomEvent("consent-update", { detail: { analytics: true } }));
+    }
   };
 
-  const decline = () => {
-    setConsentCookie(false);
-    setVisible(false);
-  };
+  const acceptAll = () => save({ analytics: true, advertising: true });
+  const declineNonEssential = () => save({ analytics: false, advertising: false });
 
   if (!visible) return null;
 
@@ -53,25 +39,39 @@ export function CookieConsentBanner() {
     >
       <div className="mx-auto flex max-w-4xl flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-          이 사이트는 분석 및 서비스 편의를 위해 쿠키를 사용할 수 있습니다.{" "}
+          이 사이트는 필수 쿠키와 함께, 분석(Google Analytics) 및 광고(맞춤형 광고, 추후 적용 시)용 쿠키를 사용할 수 있습니다.{" "}
           <Link
             href="/privacy"
             className="font-medium text-indigo-600 dark:text-indigo-400 underline underline-offset-2 hover:text-indigo-700 dark:hover:text-indigo-300"
           >
             개인정보처리방침
           </Link>
+          ,{" "}
+          <Link
+            href="/cookies#settings"
+            className="font-medium text-indigo-600 dark:text-indigo-400 underline underline-offset-2 hover:text-indigo-700 dark:hover:text-indigo-300"
+          >
+            쿠키 설정
+          </Link>
+          에서 선택을 변경할 수 있습니다.
         </p>
         <div className="flex shrink-0 flex-wrap gap-3">
           <button
             type="button"
-            onClick={decline}
+            onClick={declineNonEssential}
             className="min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-5 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 transition hover:bg-slate-50 dark:hover:bg-slate-600 sm:min-h-0"
           >
             필수만
           </button>
+          <Link
+            href="/cookies#settings"
+            className="min-h-[44px] rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-5 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 transition hover:bg-slate-50 dark:hover:bg-slate-600 sm:min-h-0 inline-flex items-center justify-center"
+          >
+            선택 설정
+          </Link>
           <button
             type="button"
-            onClick={accept}
+            onClick={acceptAll}
             className="min-h-[44px] rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 sm:min-h-0"
           >
             전체 동의

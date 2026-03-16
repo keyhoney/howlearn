@@ -14,7 +14,7 @@ import { Disclaimer } from "@/components/Disclaimer";
 import { CommentSectionDynamic } from "@/components/comments/CommentSectionDynamic";
 import { FaqProvider } from "@/components/context/FaqContext";
 import type { HeadingItem } from "@/lib/headings";
-import { author } from "@/lib/site";
+import { author, authorByline } from "@/lib/site";
 
 export type ReferringItem = { type: ContentType; slug: string; title: string; path: string };
 
@@ -108,17 +108,32 @@ export function ContentDetail({
             {content.type === "concept" ? content.shortDefinition : content.summary}
           </p>
 
-          <div className="mt-6 sm:mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 dark:border-slate-700 pt-6 sm:pt-8">
-            <TagList tags={Array.isArray(content.tags) ? content.tags : []} />
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-500 dark:text-slate-400 font-mono shrink-0">
-              {content.publishedAt && (
-                <span>게시 {format(new Date(content.publishedAt), "yyyy.MM.dd")}</span>
-              )}
-              {content.reviewedAt && content.reviewedAt !== content.publishedAt && (
-                <span>검토 {format(new Date(content.reviewedAt), "yyyy.MM.dd")}</span>
-              )}
-              <Link href="/about#author" className="text-indigo-600 dark:text-indigo-400 hover:underline font-sans">
-                {content.author ?? author.name}
+          <div className="mt-6 sm:mt-8 border-t border-slate-200 dark:border-slate-700 pt-6 sm:pt-8 space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <TagList tags={Array.isArray(content.tags) ? content.tags : []} />
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-500 dark:text-slate-400 font-mono shrink-0">
+                {content.publishedAt && (
+                  <span>게시 {format(new Date(content.publishedAt), "yyyy.MM.dd")}</span>
+                )}
+                {content.reviewedAt && content.reviewedAt !== content.publishedAt && (
+                  <span>검토 {format(new Date(content.reviewedAt), "yyyy.MM.dd")}</span>
+                )}
+              </div>
+            </div>
+            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm text-slate-600 dark:text-slate-300">
+              <span className="font-medium text-slate-700 dark:text-slate-200">저자</span>
+              <Link href="/about#author" className="text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
+                {content.author ?? authorByline.name}
+              </Link>
+              <span className="text-slate-500 dark:text-slate-400">({authorByline.credentials})</span>
+              <span className="text-slate-400 dark:text-slate-500">·</span>
+              <span className="font-medium text-slate-700 dark:text-slate-200">검토</span>
+              <Link href="/about#review-policy" className="text-indigo-600 dark:text-indigo-400 hover:underline">
+                {authorByline.reviewerNote}
+              </Link>
+              <span className="text-slate-400 dark:text-slate-500">·</span>
+              <Link href="/about" className="text-indigo-600 dark:text-indigo-400 hover:underline">
+                소개
               </Link>
             </div>
           </div>

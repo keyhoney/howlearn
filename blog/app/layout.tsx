@@ -24,7 +24,7 @@ const jetbrainsMono = JetBrains_Mono({
 const defaultOgImage = "https://learninsight.pages.dev/ogprofile/opimage.png";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.howlearn.kr"),
+  metadataBase: new URL(site.url),
   title: site.name,
   description: site.description,
   icons: {
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: site.name,
     description: site.description,
-    url: "https://www.howlearn.kr",
+    url: site.url,
     siteName: site.name,
     type: "website",
     locale: "ko_KR",
