@@ -6,14 +6,43 @@ import { ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
 interface FAQProps {
-  items: FAQItem[];
+  /** FAQ 항목 배열. RSC/MDX에서는 items='[...]' 문자열로 넘기는 것을 권장합니다. */
+  items: FAQItem[] | string | null | undefined;
   /** 첫 번째 항목을 기본 열림으로 할지 (기본: true) */
   defaultOpenFirst?: boolean;
 }
 
+function parseItems(items: FAQItem[] | string | null | undefined): FAQItem[] {
+  if (items == null) return [];
+  if (Array.isArray(items)) {
+    return items.filter(
+      (x): x is FAQItem =>
+        x != null && typeof x === "object" && "question" in x && "answer" in x
+    );
+  }
+  if (typeof items === "string") {
+    try {
+      const trimmed = items
+        .trim()
+        .replace(/&quot;/g, '"')
+        .replace(/&#x27;/g, "'");
+      if (!trimmed) return [];
+      const parsed = JSON.parse(trimmed) as FAQItem[] | FAQItem;
+      const arr = Array.isArray(parsed) ? parsed : [parsed];
+      return arr.filter(
+        (x): x is FAQItem =>
+          x != null && typeof x === "object" && "question" in x && "answer" in x
+      );
+    } catch {
+      return [];
+    }
+  }
+  return [];
+}
+
 export function FAQ({ items, defaultOpenFirst = true }: FAQProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(defaultOpenFirst ? 0 : null);
-  const list = Array.isArray(items) ? items : [];
+  const list = parseItems(items);
 
   if (list.length === 0) return null;
 

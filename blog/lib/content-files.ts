@@ -49,7 +49,18 @@ export function getMdxSlugs(type: ContentType): string[] {
 }
 
 /**
+ * RSC/next-mdx-remote에서 number prop이 유실되는 문제 회피:
+ * <Citation number={n} /> → <Citation>n</Citation> 로 변환해 번호를 children으로 전달합니다.
+ */
+function normalizeCitationInMdx(content: string): string {
+  return content
+    .replace(/<Citation\s+number=\{\s*(\d+)\s*\}\s*\/>/g, "<Citation>$1</Citation>")
+    .replace(/<Citation\s+n=\{\s*(\d+)\s*\}\s*\/>/g, "<Citation>$1</Citation>");
+}
+
+/**
  * Reads content/{type}/{slug}.mdx and returns frontmatter + raw content, or null if not found.
+ * MDX 본문은 Citation 번호 전달 호환을 위해 정규화됩니다.
  */
 export function getMdxBySlug(
   type: ContentType,
@@ -69,5 +80,9 @@ export function getMdxBySlug(
   } catch {
     return null;
   }
-  return parseMdx(raw);
+  const { frontmatter, content } = parseMdx(raw);
+  return {
+    frontmatter,
+    content: normalizeCitationInMdx(content),
+  };
 }

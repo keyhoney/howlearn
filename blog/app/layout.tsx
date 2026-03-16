@@ -6,7 +6,7 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import { ScrollDepthTracker } from "@/components/ScrollDepthTracker";
-import { AnalyticsLoader } from "@/components/AnalyticsLoader";
+import { AnalyticsLoaderClient } from "@/components/AnalyticsLoaderClient";
 import { Inter, JetBrains_Mono } from "next/font/google";
 
 const inter = Inter({
@@ -101,7 +101,7 @@ export default function RootLayout({
                 __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}`,
               }}
             />
-            <AnalyticsLoader />
+            <AnalyticsLoaderClient />
           </>
         )}
       </body>
