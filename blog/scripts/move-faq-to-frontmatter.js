@@ -77,28 +77,37 @@ function extractFaqBlock(content) {
         i++;
         continue;
       }
-      if (c === "{") depth++;
-      else if (c === "}") depth--;
+      if (c === "{" || c === "[") depth++;
+      else if (c === "}" || c === "]") depth--;
       i++;
     }
     valueEnd = i - 1;
     rawValue = afterFaqOpen.slice(valueStart, valueEnd).trim();
   }
 
+  /** JS 스타일 question: '...', answer: '...' 단일 따옴표 값을 JSON으로 변환 */
+  function singleQuotedValuesToJson(str) {
+    return str.replace(/\b(question|answer)\s*:\s*'((?:[^'\\]|\\.)*)'/g, (_, key, val) => {
+      const escaped = val
+        .replace(/\\/g, "\\\\")
+        .replace(/"/g, '\\"')
+        .replace(/\n/g, "\\n")
+        .replace(/\r/g, "\\r");
+      return `"${key}": "${escaped}"`;
+    });
+  }
+
+  const quoteKeys = (s) => s.replace(/([,{\[])\s*(question|answer)(\s*):/g, '$1"$2"$3:');
   let faqArray;
   try {
     let normalizedValue = rawValue.trim();
     normalizedValue = normalizedValue.replace(/,\s*]/g, "]").replace(/,\s*}/g, "}");
-    const quoteKeys = (s) => s.replace(/([,{\[])\s*(question|answer)(\s*):/g, '$1"$2"$3:');
-    if (normalizedValue.startsWith("[")) {
-      const jsonStr = quoteKeys(normalizedValue);
-      faqArray = JSON.parse(jsonStr);
-    } else {
-      const jsToJson = quoteKeys(normalizedValue);
-      faqArray = JSON.parse(jsToJson.startsWith("[") ? jsToJson : "[" + jsToJson + "]");
-    }
+    const hasSingleQuotedValues = /\b(question|answer)\s*:\s*'/.test(normalizedValue);
+    let jsonStr = hasSingleQuotedValues ? singleQuotedValuesToJson(normalizedValue) : quoteKeys(normalizedValue);
+    if (!jsonStr.startsWith("[")) jsonStr = "[" + jsonStr + "]";
+    faqArray = JSON.parse(jsonStr);
   } catch (e) {
-    if (process.argv.includes("--dry-run") || process.env.DEBUG_FAQ) {
+    if (DRY_RUN || process.env.DEBUG_FAQ) {
       console.warn("  parse faq value failed:", e.message);
     }
     return null;
@@ -124,12 +133,12 @@ function extractFaqBlock(content) {
 
   let blockStart = faqStart;
   const beforeFaq = content.slice(0, faqStart);
-  const mdxH2Match = beforeFaq.match(/\n\s*<MdxH2[^>]*>\s*자주\s*묻는\s*질문\s*<\/MdxH2>\s*$/);
+  const mdxH2Match = beforeFaq.match(/\n\s*<MdxH2[^>]*>\s*자주\s*묻는\s*질문\s*<\/MdxH2>\s*$/m);
   if (mdxH2Match) {
-    blockStart = Math.max(0, beforeFaq.indexOf(mdxH2Match[0]));
+    blockStart = beforeFaq.indexOf(mdxH2Match[0]);
   }
 
-  return { faqArray: normalized, blockStart, blockEnd };
+  return { faqArray: normalized, blockStart, blockEnd, faqStart };
 }
 
 function processFile(filePath) {
@@ -142,9 +151,12 @@ function processFile(filePath) {
   const extracted = extractFaqBlock(content);
   if (!extracted) return { changed: false };
 
-  const { faqArray, blockStart, blockEnd } = extracted;
-
-  const newContent = content.slice(0, blockStart).replace(/\n{3,}/g, "\n\n").trimEnd() + "\n\n" + content.slice(blockEnd).replace(/^\n+/, "\n");
+  const { faqArray, blockStart, blockEnd, faqStart } = extracted;
+  const beforeBlock = content.slice(0, blockStart).replace(/\n{3,}/g, "\n\n").trimEnd();
+  const afterBlock = content.slice(blockEnd).replace(/^\n+/, "\n").replace(/\n*<FaqSection\s*\/>\n*/g, "\n");
+  const betweenStartAndFaq = content.slice(blockStart, faqStart).trim();
+  const faqOnly = betweenStartAndFaq ? betweenStartAndFaq + "\n\n<FAQ />" : "<FAQ />";
+  const newContent = beforeBlock + "\n\n" + faqOnly + "\n\n" + afterBlock;
   const newFm = { ...fm, faq: faqArray };
   const newRaw = matter.stringify(newContent, newFm, { lineWidth: -1 });
 
