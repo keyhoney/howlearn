@@ -4,6 +4,9 @@ import { site, authorByline } from "@/lib/site";
 
 /** 기본 OG 이미지 절대 URL (소셜 미리보기용) */
 const DEFAULT_OG_IMAGE_URL = "http://learninsight.pages.dev/ogprofile/opimage.png";
+const DEFAULT_ICONS = {
+  icon: ["/favicon.ico", "/favicon.png"],
+};
 
 interface SeoProps {
   title?: string;
@@ -58,6 +61,7 @@ export function constructMetadata({
   return {
     title: resolvedTitle,
     description: resolvedDescription,
+    icons: DEFAULT_ICONS,
     ...(type === "article" && {
       authors: articleAuthors,
       creator: authorByline.name,

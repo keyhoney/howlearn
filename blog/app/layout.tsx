@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   title: site.name,
   description: site.description,
   icons: {
-    icon: "/favicon.png",
+    icon: ["/favicon.ico", "/favicon.png"],
   },
   openGraph: {
     title: site.name,
@@ -75,6 +75,11 @@ export default function RootLayout({
         {process.env.NEXT_PUBLIC_GA_ID && (
           <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="" />
         )}
+        {/* 명시적 파비콘/매니페스트(검색/브라우저 초기 수집 안정화) */}
+        <link rel="icon" href={`${site.url}/favicon.ico`} sizes="any" />
+        <link rel="icon" href={`${site.url}/favicon.png`} type="image/png" />
+        <link rel="manifest" href={`${site.url}/site.webmanifest`} />
+        <meta name="application-name" content={site.name} />
         {/* AdSense: 사이트 전체 자동 광고 */}
         <script
           async
