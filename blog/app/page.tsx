@@ -26,7 +26,7 @@ export default async function Home() {
         <div className="absolute inset-0 opacity-30 dark:opacity-20" role="presentation" aria-hidden="true">
           <Image
             src="/opimage.png"
-            alt=""
+            alt="메인 페이지 히어로 섹션 배경 이미지"
             role="presentation"
             fill
             sizes="(max-width: 1280px) 100vw, 1280px"

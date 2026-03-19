@@ -87,9 +87,30 @@ function createHeading(level: 3) {
   return MdxHeading;
 }
 
+/** src URL에서 파일명을 추출해 alt 없을 때 쓸 기본 문구 생성 (예: /books/math-brain.png → "math-brain 이미지") */
+function getDefaultAltFromSrc(src: string): string {
+  if (!src) return "문서에 포함된 이미지";
+  try {
+    const pathname = src.includes("?") ? src.slice(0, src.indexOf("?")) : src;
+    const segment = pathname.split("/").filter(Boolean).pop() ?? "";
+    const name = segment.replace(/\.[a-zA-Z0-9]+$/, "").replace(/[-_]/g, " ");
+    if (name.length > 0) return `${name} 이미지`;
+  } catch {
+    // ignore
+  }
+  return "문서에 포함된 이미지";
+}
+
 function MdxImage(props: React.ImgHTMLAttributes<HTMLImageElement>) {
   const src = typeof props.src === "string" ? props.src : "";
-  const alt = props.alt ?? "";
+  const explicitAlt = props.alt;
+  const alt =
+    explicitAlt !== undefined && explicitAlt !== ""
+      ? explicitAlt
+      : explicitAlt === ""
+        ? ""
+        : getDefaultAltFromSrc(src);
+  const isDecorative = alt === "";
   const { width, height, className, style, ...rest } = props;
   const hasDimensions = width != null && height != null;
   const reservedStyle = hasDimensions ? style : { ...style, aspectRatio: "16/9" as const };
@@ -99,7 +120,7 @@ function MdxImage(props: React.ImgHTMLAttributes<HTMLImageElement>) {
       {...rest}
       src={toImageUrl(src)}
       alt={alt}
-      role={alt ? undefined : "presentation"}
+      role={isDecorative ? "presentation" : undefined}
       loading="lazy"
       decoding="async"
       width={width}
