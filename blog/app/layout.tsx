@@ -8,6 +8,7 @@ import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import { ScrollDepthTracker } from "@/components/ScrollDepthTracker";
 import { AnalyticsLoaderClient } from "@/components/AnalyticsLoaderClient";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import Script from "next/script";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -75,17 +76,12 @@ export default function RootLayout({
         {process.env.NEXT_PUBLIC_GA_ID && (
           <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="" />
         )}
+        <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="" />
         {/* 명시적 파비콘/매니페스트(검색/브라우저 초기 수집 안정화) */}
         <link rel="icon" href={`${site.url}/favicon.ico`} sizes="any" />
         <link rel="icon" href={`${site.url}/favicon.png`} type="image/png" />
         <link rel="manifest" href={`${site.url}/site.webmanifest`} />
         <meta name="application-name" content={site.name} />
-        {/* AdSense: 사이트 전체 자동 광고 */}
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7303610171129084"
-          crossOrigin="anonymous"
-        />
       </head>
       <body
         className="min-h-screen flex flex-col font-sans text-slate-900 bg-white dark:bg-slate-900 dark:text-slate-100 transition-colors"
@@ -115,6 +111,12 @@ export default function RootLayout({
             <AnalyticsLoaderClient />
           </>
         )}
+        {/* AdSense: window load 이후 로드해 초기 페인트·메인 스레드 경쟁 완화 (자동 광고 동일) */}
+        <Script
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7303610171129084"
+          strategy="lazyOnload"
+          crossOrigin="anonymous"
+        />
       </body>
     </html>
   );

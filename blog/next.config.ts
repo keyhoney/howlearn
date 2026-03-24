@@ -6,9 +6,18 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  /** 프로덕션에서 console.* 제거(오류·경고 제외) — 번들·실행 비용 소폭 절감 */
+  compiler:
+    process.env.NODE_ENV === "production"
+      ? { removeConsole: { exclude: ["error", "warn"] } }
+      : undefined,
   experimental: {
     // 크리티컬 요청 체인 완화: CSS를 HTML에 인라인해 별도 CSS 요청/워터폴 제거 → FCP·LCP 개선 (Tailwind 등 원자적 CSS에 적합)
     inlineCss: true,
+    // lucide/date-fns 등에서 실제 사용 모듈만 번들에 포함 → 미사용 JS·공유 청크 크기 완화
+    optimizePackageImports: ["lucide-react", "date-fns"],
+    // 브라우저 번들에 Node 코어 모듈 폴백 주입 생략(현대 브라우저·의존성 전제). 레거시 폴리필 일부 완화에 기여할 수 있음
+    fallbackNodePolyfills: false,
   },
   // turbopack 비활성: dev 중 Flight chunk.reason.enqueueModel 등 RSC 디코딩 이슈 완화
   // 필요 시 next dev --turbo 로만 터보팩 사용
