@@ -1,0 +1,20 @@
+# OpenNext (blog 루트 기준 로컬 작업 시)
+.open-next
+.next
+
+# Wrangler / Miniflare 로컬 상태
+.wrangler/
+
+# 로컬 전용(예시는 .dev.vars.example)
+.dev.vars
+
+# 로컬 환경(저장소 루트 .gitignore와 중복되어도 무방)
+.env
+.env.local
+.env*.local
+
+# 빌드 생성 RSS (루트 .gitignore에도 있음)
+public/rss.xml
+
+# wrangler types (npm run cf-typegen)
+cloudflare-env.d.ts
