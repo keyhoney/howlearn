@@ -6,6 +6,7 @@ import { site } from "@/lib/site";
 const PATHNAME = "/guides";
 const TITLE = "가이드";
 const DESCRIPTION = "학습과학의 핵심 개념을 체계적으로 정리한 에버그린 문서입니다.";
+export const dynamic = "force-static";
 
 type SearchParams = Promise<{ page?: string; perPage?: string; q?: string; domain?: string; tag?: string }>;
 

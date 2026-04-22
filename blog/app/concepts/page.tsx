@@ -6,6 +6,7 @@ import { site } from "@/lib/site";
 const PATHNAME = "/concepts";
 const TITLE = "개념 사전";
 const DESCRIPTION = "학습과학과 심리학에서 자주 쓰이는 핵심 용어들의 명확한 정의와 맥락을 제공합니다.";
+export const dynamic = "force-static";
 
 type SearchParams = Promise<{ page?: string; perPage?: string; q?: string; domain?: string; tag?: string }>;
 

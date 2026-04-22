@@ -2,6 +2,7 @@ import { cache } from "react";
 import { AnyContent, ContentType, DomainSlug, type FaqItem } from "./types";
 import { domainInfo } from "./domains";
 import { getMdxSlugs, getMdxBySlug } from "./content-files";
+import contentIndex from "@/data/content-index.json";
 
 /** 카테고리(한글) → 도메인 슬러그. MDX frontmatter category를 domains로 변환할 때 사용 */
 const CATEGORY_TO_DOMAIN: Record<string, DomainSlug> = Object.fromEntries(
@@ -201,7 +202,11 @@ const getContentFromMdxCached = cache(getContentFromMdx);
 
 /** content/*.mdx에서만 목록 로드. published만 반환. */
 export async function getAllContent(): Promise<AnyContent[]> {
-  return getContentFromMdxCached().filter((c) => c.status === "published");
+  const live = getContentFromMdxCached().filter((c) => c.status === "published");
+  if (live.length > 0) return live;
+  // OpenNext Workers 런타임에서는 content/ fs 접근이 불가할 수 있어
+  // 빌드 시 생성한 data/content-index.json 스냅샷으로 폴백합니다.
+  return (contentIndex as AnyContent[]).filter((c) => c.status === "published");
 }
 
 export async function getContentByType(type: ContentType): Promise<AnyContent[]> {
