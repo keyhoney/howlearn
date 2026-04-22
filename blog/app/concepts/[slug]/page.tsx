@@ -8,9 +8,8 @@ import {
   getFaqFromFrontmatter,
 } from "@/lib/content";
 import type { FaqItem } from "@/lib/types";
-import { getMdxBySlug, getMdxSlugs } from "@/lib/content-files";
+import { getMdxBySlug } from "@/lib/content-files";
 import { ContentDetail } from "@/components/shared/ContentDetail";
-import { MarkdownRenderer } from "@/components/shared/MarkdownRenderer";
 import { extractHeadings } from "@/lib/headings";
 import { getMdxComponents } from "@/lib/mdx-components";
 import { sharedMdxOptions } from "@/lib/mdx-options";
@@ -47,26 +46,30 @@ export default async function ConceptDetailPage({
 
   if (!content || content.type !== "concept") notFound();
 
-  const [relatedContent, referringContent] = await Promise.all([
+  const [relatedContent, referringContent, allContent] = await Promise.all([
     getRelatedContent(content),
     getContentReferringToConcept(content.slug, content.title),
+    getAllContent(),
   ]);
   const jsonLd = generateJsonLd(content);
   const mdxFile = getMdxBySlug("concept", slug);
-  const tocHeadings = extractHeadings(mdxFile?.content ?? content.body ?? "");
+  const source = mdxFile?.content ?? content.body ?? "";
+  const tocHeadings = extractHeadings(source);
   const references = content.references;
   const faqFromFrontmatter = getFaqFromFrontmatter(mdxFile?.frontmatter);
   const faqItems: FaqItem[] =
     faqFromFrontmatter.length > 0
       ? faqFromFrontmatter
       : (content.type === "concept" ? content.faq ?? [] : []);
-  const publishedConceptSlugs = getMdxSlugs("concept");
+  const publishedConceptSlugs = allContent
+    .filter((c) => c.type === "concept")
+    .map((c) => c.slug);
   const components = getMdxComponents(publishedConceptSlugs, slug);
 
-  const bodyContent = mdxFile ? (
-    <MDXRemote source={mdxFile.content} components={components} options={sharedMdxOptions} />
+  const bodyContent = source ? (
+    <MDXRemote source={source} components={components} options={sharedMdxOptions} />
   ) : (
-    <MarkdownRenderer content={content.body ?? ""} />
+    null
   );
 
   return (

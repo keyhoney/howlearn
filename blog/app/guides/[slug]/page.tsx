@@ -2,9 +2,8 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getContentBySlug, getRelatedContent, getAllContent, getFaqFromFrontmatter } from "@/lib/content";
 import type { FaqItem } from "@/lib/types";
-import { getMdxBySlug, getMdxSlugs } from "@/lib/content-files";
+import { getMdxBySlug } from "@/lib/content-files";
 import { ContentDetail } from "@/components/shared/ContentDetail";
-import { MarkdownRenderer } from "@/components/shared/MarkdownRenderer";
 import { extractHeadings } from "@/lib/headings";
 import { getMdxComponents } from "@/lib/mdx-components";
 import { sharedMdxOptions } from "@/lib/mdx-options";
@@ -38,12 +37,14 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
     notFound();
   }
 
-  const relatedContent = await getRelatedContent(content);
+  const [relatedContent, allContent] = await Promise.all([
+    getRelatedContent(content),
+    getAllContent(),
+  ]);
   const jsonLd = generateJsonLd(content);
   const mdxFile = getMdxBySlug("guide", slug);
-  const tocHeadings = extractHeadings(
-    mdxFile?.content ?? content.body ?? ""
-  );
+  const source = mdxFile?.content ?? content.body ?? "";
+  const tocHeadings = extractHeadings(source);
   const references = content.references;
   // FAQ: frontmatter에서 먼저 추출, 비어 있으면 이미 빌드된 content.faq 사용 (경로/파싱 차이 대비)
   const faqFromFrontmatter = getFaqFromFrontmatter(mdxFile?.frontmatter);
@@ -51,17 +52,15 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
     faqFromFrontmatter.length > 0
       ? faqFromFrontmatter
       : (content.type === "guide" ? content.faq ?? [] : []);
-  const components = getMdxComponents(getMdxSlugs("concept"));
+  const publishedConceptSlugs = allContent
+    .filter((c) => c.type === "concept")
+    .map((c) => c.slug);
+  const components = getMdxComponents(publishedConceptSlugs);
 
-  const bodyContent = mdxFile ? (
-    <MDXRemote source={mdxFile.content} components={components} options={sharedMdxOptions} />
+  const bodyContent = source ? (
+    <MDXRemote source={source} components={components} options={sharedMdxOptions} />
   ) : (
-    <>
-      {content.intro && (
-        <div className="lead text-xl text-slate-600 mb-12">{content.intro}</div>
-      )}
-      <MarkdownRenderer content={content.body} />
-    </>
+    content.intro ? <div className="lead text-xl text-slate-600 mb-12">{content.intro}</div> : null
   );
 
   return (
