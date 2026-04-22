@@ -20,8 +20,8 @@ export default async function AllContentPage() {
         전체 목록
       </h1>
       <p className="text-slate-600 dark:text-slate-400 mb-10">
-        가이드와 개념 글 전체 목록입니다. <Link href="/guides" className="text-indigo-600 dark:text-indigo-400 underline">가이드</Link>,{" "}
-        <Link href="/concepts" className="text-indigo-600 dark:text-indigo-400 underline">개념 사전</Link>에서 필터와 함께 볼 수 있습니다.
+        가이드와 개념 글 전체 목록입니다. <Link href="/guides" prefetch={false} className="text-indigo-600 dark:text-indigo-400 underline">가이드</Link>,{" "}
+        <Link href="/concepts" prefetch={false} className="text-indigo-600 dark:text-indigo-400 underline">개념 사전</Link>에서 필터와 함께 볼 수 있습니다.
       </p>
 
       <section className="mb-12" aria-labelledby="guides-heading">
@@ -33,6 +33,7 @@ export default async function AllContentPage() {
             <li key={g.id}>
               <Link
                 href={`/guides/${encodeURIComponent(g.slug)}`}
+                prefetch={false}
                 className="text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:underline"
               >
                 {g.title}
@@ -51,6 +52,7 @@ export default async function AllContentPage() {
             <li key={c.id}>
               <Link
                 href={`/concepts/${encodeURIComponent(c.slug)}`}
+                prefetch={false}
                 className="text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:underline"
               >
                 {c.title}

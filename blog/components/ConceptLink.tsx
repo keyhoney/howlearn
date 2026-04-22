@@ -18,6 +18,7 @@ export function ConceptLink({
   return (
     <Link
       href={href}
+      prefetch={false}
       className={className}
       onClick={() => trackConceptClick(conceptSlug, href)}
     >

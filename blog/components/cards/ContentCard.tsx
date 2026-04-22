@@ -52,7 +52,7 @@ function CardLink({
       </ConceptLink>
     );
   }
-  return <Link href={href} className="block mt-2 no-underline">{children}</Link>;
+  return <Link href={href} prefetch={false} className="block mt-2 no-underline">{children}</Link>;
 }
 
 function CardFooterLink({
@@ -71,7 +71,7 @@ function CardFooterLink({
     );
   }
   return (
-    <Link href={href} className="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors no-underline">
+    <Link href={href} prefetch={false} className="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors no-underline">
       {children}
     </Link>
   );

@@ -81,6 +81,7 @@ export function MobileNavDrawer() {
                     <li key={href}>
                       <Link
                         href={href}
+                        prefetch={false}
                         className={`block py-3 px-4 min-h-[44px] flex items-center text-base font-medium rounded-lg ${
                           pathname === href || pathname.startsWith(href + "/")
                             ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300"

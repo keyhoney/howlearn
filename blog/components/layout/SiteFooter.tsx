@@ -15,29 +15,29 @@ export function SiteFooter() {
           <div>
             <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-3 sm:mb-4 text-sm sm:text-base">탐색</h3>
             <ul className="space-y-2 sm:space-y-3 text-sm text-slate-600 dark:text-slate-400">
-              <li><Link href="/domains" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">학문별</Link></li>
-              <li><Link href="/guides" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">가이드</Link></li>
-              <li><Link href="/concepts" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">개념</Link></li>
+              <li><Link href="/domains" prefetch={false} className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">학문별</Link></li>
+              <li><Link href="/guides" prefetch={false} className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">가이드</Link></li>
+              <li><Link href="/concepts" prefetch={false} className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">개념</Link></li>
             </ul>
           </div>
           <div>
             <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-3 sm:mb-4 text-sm sm:text-base">자료</h3>
             <ul className="space-y-2 sm:space-y-3 text-sm text-slate-600 dark:text-slate-400">
-              <li><Link href="/books" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">도서</Link></li>
-              <li><Link href="/toolkit" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">툴킷</Link></li>
-              <li><Link href="/search" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">검색</Link></li>
+              <li><Link href="/books" prefetch={false} className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">도서</Link></li>
+              <li><Link href="/toolkit" prefetch={false} className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">툴킷</Link></li>
+              <li><Link href="/search" prefetch={false} className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">검색</Link></li>
               <li><Link href="/rss.xml" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">RSS 피드</Link></li>
             </ul>
           </div>
           <div>
             <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-3 sm:mb-4 text-sm sm:text-base">이용 안내</h3>
             <ul className="space-y-2 sm:space-y-3 text-sm text-slate-600 dark:text-slate-400">
-              <li><Link href="/about" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">소개</Link></li>
-              <li><Link href="/privacy" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">개인정보처리방침</Link></li>
-              <li><Link href="/terms" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">이용약관</Link></li>
-              <li><Link href="/cookies" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">쿠키 정책</Link></li>
-              <li><Link href="/disclaimer" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">면책 조항</Link></li>
-              <li><Link href="/contact" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">문의</Link></li>
+              <li><Link href="/about" prefetch={false} className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">소개</Link></li>
+              <li><Link href="/privacy" prefetch={false} className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">개인정보처리방침</Link></li>
+              <li><Link href="/terms" prefetch={false} className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">이용약관</Link></li>
+              <li><Link href="/cookies" prefetch={false} className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">쿠키 정책</Link></li>
+              <li><Link href="/disclaimer" prefetch={false} className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">면책 조항</Link></li>
+              <li><Link href="/contact" prefetch={false} className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">문의</Link></li>
             </ul>
           </div>
         </div>

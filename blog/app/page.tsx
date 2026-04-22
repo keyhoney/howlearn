@@ -102,7 +102,7 @@ export default async function Home() {
               <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-3xl">최신 업데이트</h2>
               <p className="mt-2 text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed">새롭게 추가된 가이드와 실천 자료입니다.</p>
             </div>
-            <Link href="/guides" className="hidden sm:flex items-center text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300">
+            <Link href="/guides" prefetch={false} className="hidden sm:flex items-center text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300">
               가이드 전체 보기 <ArrowRight className="ml-1 w-4 h-4" aria-hidden />
             </Link>
           </div>
@@ -112,7 +112,7 @@ export default async function Home() {
             ))}
           </div>
           <div className="mt-10 sm:hidden flex justify-center">
-            <Link href="/guides" className="inline-flex items-center text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300">
+            <Link href="/guides" prefetch={false} className="inline-flex items-center text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300">
               가이드 전체 보기 <ArrowRight className="ml-1 w-4 h-4" aria-hidden />
             </Link>
           </div>

@@ -23,7 +23,7 @@ const components: Components = {
   a: ({ href, children, ...props }) => {
     if (href?.startsWith('/')) {
       return (
-        <Link href={href} {...props}>
+        <Link href={href} prefetch={false} {...props}>
           {children}
         </Link>
       );
