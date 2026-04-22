@@ -8,7 +8,6 @@ import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import { ScrollDepthTracker } from "@/components/ScrollDepthTracker";
 import { AnalyticsLoaderClient } from "@/components/AnalyticsLoaderClient";
 import { Inter, JetBrains_Mono } from "next/font/google";
-import Script from "next/script";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -113,9 +112,9 @@ export default function RootLayout({
           </>
         )}
         {/* AdSense: window load 이후 로드해 초기 페인트·메인 스레드 경쟁 완화 (자동 광고 동일) */}
-        <Script
+        <script
+          async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7303610171129084"
-          strategy="lazyOnload"
           crossOrigin="anonymous"
         />
       </body>

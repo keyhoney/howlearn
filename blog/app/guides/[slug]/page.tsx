@@ -1,6 +1,12 @@
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { getContentBySlug, getRelatedContent, getAllContent, getFaqFromFrontmatter } from "@/lib/content";
+import {
+  getAllContent,
+  getContentBySlug,
+  getRelatedContent,
+  getPublishedConceptSlugs,
+  getFaqFromFrontmatter,
+} from "@/lib/content";
 import type { FaqItem } from "@/lib/types";
 import { getMdxBySlug } from "@/lib/content-files";
 import { ContentDetail } from "@/components/shared/ContentDetail";
@@ -37,9 +43,9 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
     notFound();
   }
 
-  const [relatedContent, allContent] = await Promise.all([
+  const [relatedContent, publishedConceptSlugs] = await Promise.all([
     getRelatedContent(content),
-    getAllContent(),
+    getPublishedConceptSlugs(),
   ]);
   const jsonLd = generateJsonLd(content);
   const mdxFile = getMdxBySlug("guide", slug);
@@ -52,9 +58,6 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
     faqFromFrontmatter.length > 0
       ? faqFromFrontmatter
       : (content.type === "guide" ? content.faq ?? [] : []);
-  const publishedConceptSlugs = allContent
-    .filter((c) => c.type === "concept")
-    .map((c) => c.slug);
   const components = getMdxComponents(publishedConceptSlugs);
 
   const bodyContent = source ? (

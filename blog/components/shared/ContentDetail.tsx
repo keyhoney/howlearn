@@ -18,6 +18,17 @@ import { author, authorByline } from "@/lib/site";
 
 export type ReferringItem = { type: ContentType; slug: string; title: string; path: string };
 
+function formatDateSafe(value?: string): string | null {
+  if (!value) return null;
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return null;
+  try {
+    return format(parsed, "yyyy.MM.dd");
+  } catch {
+    return null;
+  }
+}
+
 interface ContentDetailProps {
   content: AnyContent;
   relatedContent: AnyContent[];
@@ -61,6 +72,8 @@ export function ContentDetail({
   faqItems,
 }: ContentDetailProps) {
   const hasFaq = Array.isArray(faqItems) && faqItems.length > 0;
+  const publishedDateText = formatDateSafe(content.publishedAt);
+  const reviewedDateText = formatDateSafe(content.reviewedAt);
   const articleChildren = hasFaq ? (
     <FaqProvider faq={faqItems}>{children ?? <MarkdownRenderer content={content.body || ""} />}</FaqProvider>
   ) : (
@@ -113,10 +126,10 @@ export function ContentDetail({
               <TagList tags={Array.isArray(content.tags) ? content.tags : []} />
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-500 dark:text-slate-400 font-mono shrink-0">
                 {content.publishedAt && (
-                  <span>게시 {format(new Date(content.publishedAt), "yyyy.MM.dd")}</span>
+                  publishedDateText ? <span>게시 {publishedDateText}</span> : null
                 )}
                 {content.reviewedAt && content.reviewedAt !== content.publishedAt && (
-                  <span>검토 {format(new Date(content.reviewedAt), "yyyy.MM.dd")}</span>
+                  reviewedDateText ? <span>검토 {reviewedDateText}</span> : null
                 )}
               </div>
             </div>

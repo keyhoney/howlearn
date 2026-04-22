@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import {
+  getAllContent,
   getContentBySlug,
   getRelatedContent,
   getContentReferringToConcept,
-  getAllContent,
+  getPublishedConceptSlugs,
   getFaqFromFrontmatter,
 } from "@/lib/content";
 import type { FaqItem } from "@/lib/types";
@@ -16,8 +17,8 @@ import { sharedMdxOptions } from "@/lib/mdx-options";
 import { constructMetadata } from "@/lib/seo";
 import { generateJsonLd } from "@/lib/schema";
 
-/** 정적 경로 외 슬러그도 런타임 해석 허용(배포 캐시/프리페치 404 완화) */
-export const dynamicParams = true;
+/** 개념 상세는 generateStaticParams로 생성된 슬러그만 허용해 런타임 CPU 사용을 줄입니다. */
+export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const content = await getAllContent();
@@ -46,10 +47,10 @@ export default async function ConceptDetailPage({
 
   if (!content || content.type !== "concept") notFound();
 
-  const [relatedContent, referringContent, allContent] = await Promise.all([
+  const [relatedContent, referringContent, publishedConceptSlugs] = await Promise.all([
     getRelatedContent(content),
     getContentReferringToConcept(content.slug, content.title),
-    getAllContent(),
+    getPublishedConceptSlugs(),
   ]);
   const jsonLd = generateJsonLd(content);
   const mdxFile = getMdxBySlug("concept", slug);
@@ -61,9 +62,6 @@ export default async function ConceptDetailPage({
     faqFromFrontmatter.length > 0
       ? faqFromFrontmatter
       : (content.type === "concept" ? content.faq ?? [] : []);
-  const publishedConceptSlugs = allContent
-    .filter((c) => c.type === "concept")
-    .map((c) => c.slug);
   const components = getMdxComponents(publishedConceptSlugs, slug);
 
   const bodyContent = source ? (

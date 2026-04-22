@@ -201,13 +201,32 @@ function getContentFromMdx(): AnyContent[] {
  */
 const getContentFromMdxCached = cache(getContentFromMdx);
 
+type ContentIndexes = {
+  all: AnyContent[];
+  byTypeSlug: Map<string, AnyContent>;
+  conceptSlugs: string[];
+};
+
+const getContentIndexesCached = cache((): ContentIndexes => {
+  const live = getContentFromMdxCached().filter((c) => c.status === "published");
+  const all = live.length > 0 ? live : (contentIndex as AnyContent[]).filter((c) => c.status === "published");
+  const byTypeSlug = new Map<string, AnyContent>();
+  const conceptSlugs: string[] = [];
+  for (const item of all) {
+    byTypeSlug.set(`${item.type}:${item.slug}`, item);
+    if (item.type === "concept") conceptSlugs.push(item.slug);
+  }
+  return { all, byTypeSlug, conceptSlugs };
+});
+
 /** content/*.mdx에서만 목록 로드. published만 반환. */
 export async function getAllContent(): Promise<AnyContent[]> {
-  const live = getContentFromMdxCached().filter((c) => c.status === "published");
-  if (live.length > 0) return live;
-  // OpenNext Workers 런타임에서는 content/ fs 접근이 불가할 수 있어
-  // 빌드 시 생성한 data/content-index.json 스냅샷으로 폴백합니다.
-  return (contentIndex as AnyContent[]).filter((c) => c.status === "published");
+  return getContentIndexesCached().all;
+}
+
+/** 발행된 개념 슬러그 목록(링크 가드/MDX 컴포넌트용) */
+export async function getPublishedConceptSlugs(): Promise<string[]> {
+  return getContentIndexesCached().conceptSlugs;
 }
 
 export async function getContentByType(type: ContentType): Promise<AnyContent[]> {
@@ -281,8 +300,8 @@ export async function getContentByDomain(domain: DomainSlug): Promise<AnyContent
 }
 
 export async function getContentBySlug(type: ContentType, slug: string): Promise<AnyContent | null> {
-  const content = await getAllContent();
-  return content.find(c => c.type === type && c.slug === slug) || null;
+  const { byTypeSlug } = getContentIndexesCached();
+  return byTypeSlug.get(`${type}:${slug}`) ?? null;
 }
 
 /** "type:slug" 또는 "type-slug" 문자열로 콘텐츠 목록 조회 (프로그램matic 연결용) */
@@ -308,7 +327,7 @@ function parseContentId(id: string): { type: ContentType; slug: string } | null 
 
 /** 관련 콘텐츠: MDX frontmatter related(수동) 있으면 우선 사용, 부족분은 태그·도메인 자동 보강 */
 export async function getRelatedContent(content: AnyContent, limit = 6): Promise<AnyContent[]> {
-  const all = await getAllContent();
+  const { all, byTypeSlug } = getContentIndexesCached();
   const related: AnyContent[] = [];
   const seen = new Set<string>([content.id]);
 
@@ -318,7 +337,7 @@ export async function getRelatedContent(content: AnyContent, limit = 6): Promise
     if (related.length >= limit) break;
     const parsed = parseContentId(id);
     if (!parsed) continue;
-    const item = await getContentBySlug(parsed.type, parsed.slug);
+    const item = byTypeSlug.get(`${parsed.type}:${parsed.slug}`) ?? null;
     if (item && !seen.has(item.id)) {
       related.push(item);
       seen.add(item.id);
