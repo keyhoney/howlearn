@@ -33,8 +33,8 @@ OpenNext CLI는 **Windows에서 비공식 지원**이며, `opennextjs-cloudflare
 **Framework preset:** `Next.js` + **next-on-pages** 가 아닌, **None**(또는 Workers용 안내)에 가깝게 두고 빌드만 맞춥니다.
 
 - **Root directory:** `blog`
-- **Build command:** `npx opennextjs-cloudflare build`  
-  (또는 `npm run build`만으로는 `.open-next` Worker 번들이 나오지 않으므로 **배포용은 OpenNext 빌드**가 필요합니다.)
+- **Build command:** `npm run cf:build`  
+  (`npx opennextjs-cloudflare build` 는 패키지 이름이 `@opennextjs/cloudflare` 라서 CI에서 *could not determine executable to run* 으로 실패할 수 있음. `npm ci` 이후 로컬 바이너리를 쓰는 스크립트가 안전합니다.)
 - **Build output directory:** Git 기반 Workers 배포 UI는 제품 업데이트에 따라 다를 수 있습니다. 최신 [OpenNext Cloudflare](https://opennext.js.org/cloudflare/get-started) · [Workers CI/CD](https://developers.cloudflare.com/workers/ci-cd/) 를 확인하세요.
 
 CLI 배포: 연결 후 `npm run deploy` (저장소 루트가 `blog`인 터미널에서).
