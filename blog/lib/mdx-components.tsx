@@ -31,6 +31,13 @@ function createConceptAwareAnchor(
   currentConceptSlug?: string | null
 ) {
   const slugSet = new Set(publishedConceptSlugs);
+  const normalizeInternalHref = (value: string): string => {
+    const normalized = value.replace(/^\/|\/$/g, "");
+    if (normalized.startsWith("concept/")) {
+      return `/${normalized.replace(/^concept\//, "concepts/")}`;
+    }
+    return value;
+  };
   return function MdxA({
     href,
     children,
@@ -60,10 +67,16 @@ function createConceptAwareAnchor(
       }
     }
 
-    const isInternal = href.startsWith("/") && !href.startsWith("//");
+    const normalizedHref = normalizeInternalHref(href);
+    const isInternal = normalizedHref.startsWith("/") && !normalizedHref.startsWith("//");
     if (isInternal) {
       return (
-        <Link href={href} prefetch={false} {...props} className="text-indigo-600 hover:underline dark:text-indigo-400">
+        <Link
+          href={normalizedHref}
+          prefetch={false}
+          {...props}
+          className="text-indigo-600 hover:underline dark:text-indigo-400"
+        >
           {children}
         </Link>
       );
