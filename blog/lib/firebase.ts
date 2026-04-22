@@ -1,13 +1,20 @@
 import { getApps, initializeApp, type FirebaseApp } from "firebase/app";
 import { getFirestore, type Firestore } from "firebase/firestore";
 
+function readPublicEnv(key: string): string | undefined {
+  // OpenNext/Workers 클라이언트 번들에서 process/env 객체가 없을 수 있으므로 안전 가드
+  if (typeof process === "undefined" || !process?.env) return undefined;
+  const value = process.env[key];
+  return typeof value === "string" && value.length > 0 ? value : undefined;
+}
+
 function getFirebaseConfig() {
-  const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
-  const authDomain = process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN;
-  const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
-  const storageBucket = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
-  const messagingSenderId = process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID;
-  const appId = process.env.NEXT_PUBLIC_FIREBASE_APP_ID;
+  const apiKey = readPublicEnv("NEXT_PUBLIC_FIREBASE_API_KEY");
+  const authDomain = readPublicEnv("NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN");
+  const projectId = readPublicEnv("NEXT_PUBLIC_FIREBASE_PROJECT_ID");
+  const storageBucket = readPublicEnv("NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET");
+  const messagingSenderId = readPublicEnv("NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID");
+  const appId = readPublicEnv("NEXT_PUBLIC_FIREBASE_APP_ID");
   if (!apiKey || !authDomain || !projectId || !appId) return null;
   return {
     apiKey,
