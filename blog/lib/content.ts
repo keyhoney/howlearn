@@ -85,11 +85,12 @@ function normalizeFaq(fm: Record<string, unknown>): FaqItem[] {
   return getFaqFromFrontmatter(fm);
 }
 
-/** MDX frontmatter → AnyContent (목록/메타용). body는 상세에서 MDX 파일로 채움. */
+/** MDX frontmatter + body → AnyContent */
 function buildContentFromMdx(
   type: ContentType,
   slug: string,
-  fm: Record<string, unknown>
+  fm: Record<string, unknown>,
+  body: string
 ): AnyContent {
   const id = `${type}-${slug}`;
   const title = (fm.title as string) || slug;
@@ -123,7 +124,7 @@ function buildContentFromMdx(
     domains: safeDomains.length ? safeDomains : (["educational-psychology"] as DomainSlug[]),
     categories: safeCategories,
     tags: safeTags,
-    body: "",
+    body,
     ...(coverImage && { coverImage }),
     ...(ogImage && { ogImage }),
     ...(relatedIds.length > 0 && { relatedContentIds: relatedIds }),
@@ -188,7 +189,7 @@ function getContentFromMdx(): AnyContent[] {
       if (!file) continue;
       const status = getStatus(file.frontmatter);
       if (status === "draft") continue;
-      out.push(buildContentFromMdx(type, slug, file.frontmatter));
+      out.push(buildContentFromMdx(type, slug, file.frontmatter, file.content));
     }
   }
   return out;

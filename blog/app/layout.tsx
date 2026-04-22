@@ -81,7 +81,7 @@ export default function RootLayout({
         {/* 명시적 파비콘/매니페스트(검색/브라우저 초기 수집 안정화) */}
         <link rel="icon" href={`${site.url}/favicon.ico`} sizes="any" />
         <link rel="icon" href={`${site.url}/favicon.png`} type="image/png" />
-        <link rel="manifest" href={`${site.url}/site.webmanifest`} />
+        <link rel="manifest" href="/site.webmanifest" />
         <meta name="application-name" content={site.name} />
       </head>
       <body

@@ -17,8 +17,8 @@ import { sharedMdxOptions } from "@/lib/mdx-options";
 import { constructMetadata } from "@/lib/seo";
 import { generateJsonLd } from "@/lib/schema";
 
-/** 미작성 개념 슬러그는 404로 처리(스텁 페이지 없음) */
-export const dynamicParams = false;
+/** 정적 경로 외 슬러그도 런타임 해석 허용(배포 캐시/프리페치 404 완화) */
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   const content = await getAllContent();
