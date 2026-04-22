@@ -7,6 +7,6 @@ const AnalyticsLoader = dynamic(
   { ssr: false }
 );
 
-export function AnalyticsLoaderClient() {
-  return <AnalyticsLoader />;
+export function AnalyticsLoaderClient({ gaId }: { gaId?: string }) {
+  return <AnalyticsLoader gaId={gaId} />;
 }

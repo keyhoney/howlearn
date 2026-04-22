@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import { hasAnalyticsConsent } from "@/lib/consent";
 
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 const FALLBACK_MS = 5000;
 
 const CONSENT_UPDATE_EVENT = "consent-update";
@@ -12,11 +11,11 @@ const CONSENT_UPDATE_EVENT = "consent-update";
  * Loads gtag.js only when the user has consented to analytics, and after first interaction (or FALLBACK_MS).
  * 동의 배너·쿠키 설정과 일치: 분석 동의가 있을 때만 GA를 로드합니다.
  */
-export function AnalyticsLoader() {
+export function AnalyticsLoader({ gaId }: { gaId?: string }) {
   const loaded = useRef(false);
 
   useEffect(() => {
-    if (!GA_ID || typeof window === "undefined") return;
+    if (!gaId || typeof window === "undefined") return;
 
     const loadGtag = () => {
       if (loaded.current) return;
@@ -25,11 +24,11 @@ export function AnalyticsLoader() {
 
       const script = document.createElement("script");
       script.async = true;
-      script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
       script.onload = () => {
         if (typeof window.gtag === "function") {
           (window.gtag as (c: string, ...args: unknown[]) => void)("js", new Date());
-          (window.gtag as (c: string, ...args: unknown[]) => void)("config", GA_ID);
+          (window.gtag as (c: string, ...args: unknown[]) => void)("config", gaId);
         }
       };
       document.head.appendChild(script);
@@ -64,7 +63,7 @@ export function AnalyticsLoader() {
     };
     window.addEventListener(CONSENT_UPDATE_EVENT, onConsentUpdate as EventListener);
     return () => window.removeEventListener(CONSENT_UPDATE_EVENT, onConsentUpdate as EventListener);
-  }, []);
+  }, [gaId]);
 
   return null;
 }

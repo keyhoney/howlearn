@@ -20,6 +20,7 @@ export function SiteHeader() {
               height={36}
               sizes="(max-width: 640px) 120px, 144px"
               quality={70}
+              unoptimized
               className="h-[29px] w-auto sm:h-[34px] object-contain object-left"
               priority
             />

@@ -22,6 +22,7 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 const defaultOgImage = "https://learninsight.pages.dev/ogprofile/opimage.png";
 
 export const metadata: Metadata = {
@@ -73,7 +74,7 @@ export default function RootLayout({
     <html lang="ko" className={`${inter.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
       <head>
         {/* GA만 사용 시 preconnect(폰트는 next/font로 셀프호스팅해 gstatic 미사용) */}
-        {process.env.NEXT_PUBLIC_GA_ID && (
+        {GA_ID && (
           <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="" />
         )}
         <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="" />
@@ -99,16 +100,16 @@ export default function RootLayout({
           <PageTransition>{children}</PageTransition>
         </main>
         <SiteFooter />
-        {process.env.NEXT_PUBLIC_GA_ID && <ScrollDepthTracker />}
+        {GA_ID && <ScrollDepthTracker />}
         <CookieConsentBanner />
-        {process.env.NEXT_PUBLIC_GA_ID && (
+        {GA_ID && (
           <>
             <script
               dangerouslySetInnerHTML={{
                 __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}`,
               }}
             />
-            <AnalyticsLoaderClient />
+            <AnalyticsLoaderClient gaId={GA_ID} />
           </>
         )}
         {/* AdSense: window load 이후 로드해 초기 페인트·메인 스레드 경쟁 완화 (자동 광고 동일) */}
