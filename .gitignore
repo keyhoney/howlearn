@@ -1,4 +1,9 @@
 node_modules/
+# 빌드 시 scripts/generate-rss.ts가 생성 (Cloudflare·정적 서빙용)
+blog/public/rss.xml
+# OpenNext for Cloudflare 빌드 산출물
+blog/.open-next
+.open-next
 .next/
 coverage/
 .DS_Store

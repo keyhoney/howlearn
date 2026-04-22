@@ -9,12 +9,18 @@ const CANONICAL_HOST = "www.howlearn.kr";
  * 프로덕션에서는 NEXT_PUBLIC_SITE_URL=https://www.howlearn.kr 로 설정하는 것을 권장합니다.
  * howlearn.kr(비-www)로 설정해도 내부적으로 www로 정규화됩니다.
  */
-function getSiteUrl(): string {
+export function getSiteUrl(): string {
   let base: string;
   if (process.env.NEXT_PUBLIC_SITE_URL) {
     base = process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
   } else if (process.env.APP_URL) {
     base = process.env.APP_URL.replace(/\/$/, "");
+  } else if (process.env.CF_PAGES_URL) {
+    // Cloudflare Pages: 배포 URL(프로덕션·프리뷰 공통, 문서상 자동 주입)
+    base = process.env.CF_PAGES_URL.replace(/\/$/, "");
+  } else if (process.env.CF_PAGES_BRANCH_URL) {
+    // 브랜치 프리뷰 전용 URL(설정·버전에 따라 제공)
+    base = process.env.CF_PAGES_BRANCH_URL.replace(/\/$/, "");
   } else if (process.env.VERCEL_URL) {
     base = `https://${process.env.VERCEL_URL.replace(/\/$/, "")}`;
   } else {
