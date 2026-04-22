@@ -6,19 +6,14 @@ import {
   getRelatedContent,
   getContentReferringToConcept,
   getPublishedConceptSlugs,
-  getFaqFromFrontmatter,
 } from "@/lib/content";
 import type { FaqItem } from "@/lib/types";
-import { getMdxBySlug } from "@/lib/content-files";
 import { ContentDetail } from "@/components/shared/ContentDetail";
 import { extractHeadings } from "@/lib/headings";
 import { getMdxComponents } from "@/lib/mdx-components";
 import { sharedMdxOptions } from "@/lib/mdx-options";
 import { constructMetadata } from "@/lib/seo";
 import { generateJsonLd } from "@/lib/schema";
-
-/** 개념 상세는 generateStaticParams로 생성된 슬러그만 허용해 런타임 CPU 사용을 줄입니다. */
-export const dynamicParams = false;
 
 export async function generateStaticParams() {
   const content = await getAllContent();
@@ -53,15 +48,10 @@ export default async function ConceptDetailPage({
     getPublishedConceptSlugs(),
   ]);
   const jsonLd = generateJsonLd(content);
-  const mdxFile = getMdxBySlug("concept", slug);
-  const source = mdxFile?.content ?? content.body ?? "";
+  const source = content.body ?? "";
   const tocHeadings = extractHeadings(source);
   const references = content.references;
-  const faqFromFrontmatter = getFaqFromFrontmatter(mdxFile?.frontmatter);
-  const faqItems: FaqItem[] =
-    faqFromFrontmatter.length > 0
-      ? faqFromFrontmatter
-      : (content.type === "concept" ? content.faq ?? [] : []);
+  const faqItems: FaqItem[] = content.type === "concept" ? content.faq ?? [] : [];
   const components = getMdxComponents(publishedConceptSlugs, slug);
 
   const bodyContent = source ? (

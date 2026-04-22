@@ -5,10 +5,8 @@ import {
   getContentBySlug,
   getRelatedContent,
   getPublishedConceptSlugs,
-  getFaqFromFrontmatter,
 } from "@/lib/content";
 import type { FaqItem } from "@/lib/types";
-import { getMdxBySlug } from "@/lib/content-files";
 import { ContentDetail } from "@/components/shared/ContentDetail";
 import { extractHeadings } from "@/lib/headings";
 import { getMdxComponents } from "@/lib/mdx-components";
@@ -48,16 +46,10 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
     getPublishedConceptSlugs(),
   ]);
   const jsonLd = generateJsonLd(content);
-  const mdxFile = getMdxBySlug("guide", slug);
-  const source = mdxFile?.content ?? content.body ?? "";
+  const source = content.body ?? "";
   const tocHeadings = extractHeadings(source);
   const references = content.references;
-  // FAQ: frontmatter에서 먼저 추출, 비어 있으면 이미 빌드된 content.faq 사용 (경로/파싱 차이 대비)
-  const faqFromFrontmatter = getFaqFromFrontmatter(mdxFile?.frontmatter);
-  const faqItems: FaqItem[] =
-    faqFromFrontmatter.length > 0
-      ? faqFromFrontmatter
-      : (content.type === "guide" ? content.faq ?? [] : []);
+  const faqItems: FaqItem[] = content.type === "guide" ? content.faq ?? [] : [];
   const components = getMdxComponents(publishedConceptSlugs);
 
   const bodyContent = source ? (
