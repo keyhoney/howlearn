@@ -7,6 +7,7 @@ import {
   getPublishedConceptSlugs,
 } from "@/lib/content";
 import { ContentDetail } from "@/components/shared/ContentDetail";
+import { MarkdownRenderer } from "@/components/shared/MarkdownRenderer";
 import { extractHeadings } from "@/lib/headings";
 import { getMdxComponents } from "@/lib/mdx-components";
 import { sharedMdxOptions } from "@/lib/mdx-options";
@@ -48,12 +49,13 @@ export default async function BookDetailPage({ params }: { params: Promise<{ slu
   const source = content.body ?? "";
   const tocHeadings = extractHeadings(source);
   const components = getMdxComponents(publishedConceptSlugs);
+  const shouldBypassMdxRemote = process.env.DISABLE_MDX_REMOTE === "1";
 
-  const bodyContent = source ? (
-    <MDXRemote source={source} components={components} options={sharedMdxOptions} />
-  ) : (
-    null
-  );
+  const bodyContent = source
+    ? shouldBypassMdxRemote
+      ? <MarkdownRenderer content={source} />
+      : <MDXRemote source={source} components={components} options={sharedMdxOptions} />
+    : null;
 
   return (
     <>

@@ -9,6 +9,7 @@ import {
 } from "@/lib/content";
 import type { FaqItem } from "@/lib/types";
 import { ContentDetail } from "@/components/shared/ContentDetail";
+import { MarkdownRenderer } from "@/components/shared/MarkdownRenderer";
 import { extractHeadings } from "@/lib/headings";
 import { getMdxComponents } from "@/lib/mdx-components";
 import { sharedMdxOptions } from "@/lib/mdx-options";
@@ -53,12 +54,13 @@ export default async function ConceptDetailPage({
   const references = content.references;
   const faqItems: FaqItem[] = content.type === "concept" ? content.faq ?? [] : [];
   const components = getMdxComponents(publishedConceptSlugs, slug);
+  const shouldBypassMdxRemote = process.env.DISABLE_MDX_REMOTE === "1";
 
-  const bodyContent = source ? (
-    <MDXRemote source={source} components={components} options={sharedMdxOptions} />
-  ) : (
-    null
-  );
+  const bodyContent = source
+    ? shouldBypassMdxRemote
+      ? <MarkdownRenderer content={source} />
+      : <MDXRemote source={source} components={components} options={sharedMdxOptions} />
+    : null;
 
   return (
     <>

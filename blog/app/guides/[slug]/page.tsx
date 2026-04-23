@@ -8,6 +8,7 @@ import {
 } from "@/lib/content";
 import type { FaqItem } from "@/lib/types";
 import { ContentDetail } from "@/components/shared/ContentDetail";
+import { MarkdownRenderer } from "@/components/shared/MarkdownRenderer";
 import { extractHeadings } from "@/lib/headings";
 import { getMdxComponents } from "@/lib/mdx-components";
 import { sharedMdxOptions } from "@/lib/mdx-options";
@@ -51,12 +52,13 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
   const references = content.references;
   const faqItems: FaqItem[] = content.type === "guide" ? content.faq ?? [] : [];
   const components = getMdxComponents(publishedConceptSlugs);
+  const shouldBypassMdxRemote = process.env.DISABLE_MDX_REMOTE === "1";
 
-  const bodyContent = source ? (
-    <MDXRemote source={source} components={components} options={sharedMdxOptions} />
-  ) : (
-    content.intro ? <div className="lead text-xl text-slate-600 mb-12">{content.intro}</div> : null
-  );
+  const bodyContent = source
+    ? shouldBypassMdxRemote
+      ? <MarkdownRenderer content={source} />
+      : <MDXRemote source={source} components={components} options={sharedMdxOptions} />
+    : (content.intro ? <div className="lead text-xl text-slate-600 mb-12">{content.intro}</div> : null);
 
   return (
     <>
