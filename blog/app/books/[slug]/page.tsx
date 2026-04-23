@@ -1,9 +1,12 @@
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { getContentBySlug, getRelatedContent, getAllContent } from "@/lib/content";
-import { getMdxBySlug, getMdxSlugs } from "@/lib/content-files";
+import {
+  getContentBySlug,
+  getRelatedContent,
+  getAllContent,
+  getPublishedConceptSlugs,
+} from "@/lib/content";
 import { ContentDetail } from "@/components/shared/ContentDetail";
-import { MarkdownRenderer } from "@/components/shared/MarkdownRenderer";
 import { extractHeadings } from "@/lib/headings";
 import { getMdxComponents } from "@/lib/mdx-components";
 import { sharedMdxOptions } from "@/lib/mdx-options";
@@ -37,16 +40,19 @@ export default async function BookDetailPage({ params }: { params: Promise<{ slu
     notFound();
   }
 
-  const relatedContent = await getRelatedContent(content);
+  const [relatedContent, publishedConceptSlugs] = await Promise.all([
+    getRelatedContent(content),
+    getPublishedConceptSlugs(),
+  ]);
   const jsonLd = generateJsonLd(content);
-  const mdxFile = getMdxBySlug("book", slug);
-  const tocHeadings = extractHeadings(mdxFile?.content ?? content.body ?? "");
-  const components = getMdxComponents(getMdxSlugs("concept"));
+  const source = content.body ?? "";
+  const tocHeadings = extractHeadings(source);
+  const components = getMdxComponents(publishedConceptSlugs);
 
-  const bodyContent = mdxFile ? (
-    <MDXRemote source={mdxFile.content} components={components} options={sharedMdxOptions} />
+  const bodyContent = source ? (
+    <MDXRemote source={source} components={components} options={sharedMdxOptions} />
   ) : (
-    <MarkdownRenderer content={content.body ?? ""} />
+    null
   );
 
   return (

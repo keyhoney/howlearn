@@ -1,7 +1,6 @@
 import { cache } from "react";
 import { AnyContent, ContentType, DomainSlug, type FaqItem } from "./types";
 import { domainInfo } from "./domains";
-import { getMdxSlugs, getMdxBySlug } from "./content-files";
 import contentIndex from "@/data/content-index.json";
 
 /** 카테고리(한글) → 도메인 슬러그. MDX frontmatter category를 domains로 변환할 때 사용 */
@@ -178,29 +177,6 @@ function buildContentFromMdx(
   throw new Error(`buildContentFromMdx: unsupported type ${type} for slug ${slug}`);
 }
 
-/** content/*.mdx 파일만 읽어서 AnyContent[] 생성. draft 제외. */
-function getContentFromMdx(): AnyContent[] {
-  const types: ContentType[] = ["guide", "concept", "toolkit", "book"];
-  const out: AnyContent[] = [];
-  for (const type of types) {
-    const slugs = getMdxSlugs(type);
-    for (const slug of slugs) {
-      const file = getMdxBySlug(type, slug);
-      if (!file) continue;
-      const status = getStatus(file.frontmatter);
-      if (status === "draft") continue;
-      out.push(buildContentFromMdx(type, slug, file.frontmatter, file.content));
-    }
-  }
-  return out;
-}
-
-/**
- * 동기 FS 전체 스캔을 요청당 1회로 메모이제이션.
- * getAllContent 및 내부 호출이 같은 렌더 패스에서 반복되어도 디스크는 한 번만 읽습니다.
- */
-const getContentFromMdxCached = cache(getContentFromMdx);
-
 type ContentIndexes = {
   all: AnyContent[];
   byTypeSlug: Map<string, AnyContent>;
@@ -208,8 +184,9 @@ type ContentIndexes = {
 };
 
 const getContentIndexesCached = cache((): ContentIndexes => {
-  const live = getContentFromMdxCached().filter((c) => c.status === "published");
-  const all = live.length > 0 ? live : (contentIndex as AnyContent[]).filter((c) => c.status === "published");
+  // Cloudflare Workers 런타임 호환성을 위해 런타임 fs 스캔 대신
+  // 빌드 산출물(data/content-index.json)만 단일 소스로 사용합니다.
+  const all = (contentIndex as AnyContent[]).filter((c) => c.status === "published");
   const byTypeSlug = new Map<string, AnyContent>();
   const conceptSlugs: string[] = [];
   for (const item of all) {

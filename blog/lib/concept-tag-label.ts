@@ -1,5 +1,4 @@
-import { readFileSync, existsSync } from "fs";
-import { join } from "path";
+import conceptSlugLabels from "@/data/concept-slug-labels.json";
 
 /**
  * 개념 스텁 페이지 제목용 슬러그 → 한글/영문 라벨.
@@ -11,72 +10,23 @@ import { join } from "path";
  * 둘 다 없으면 슬러그 휴먼라이즈로 폴백.
  */
 
-const TAG_TABLE_FILENAME = "1. 하우런_태그체계표.json";
-const SLIM_FILENAME = "concept-slug-labels.json";
-
-type TagRow = { 태그명?: string; "영문 내용"?: string; 슬러그?: string };
-type TagJson = { rows?: TagRow[] };
 type SlugLabelsFile = Record<string, { tagName: string; english?: string }>;
 
 let cachedMap: Map<string, { tagName: string; english: string }> | null = null;
 
-function dataDir(): string {
-  return join(process.cwd(), "data");
-}
-
-function buildMapFromRows(rows: TagRow[]): Map<string, { tagName: string; english: string }> {
-  const map = new Map<string, { tagName: string; english: string }>();
-  for (const row of rows) {
-    const slug = row.슬러그?.trim();
-    const tagName = row.태그명?.trim();
-    if (!slug || !tagName) continue;
-    const english = (row["영문 내용"] ?? "").trim();
-    if (!map.has(slug)) map.set(slug, { tagName, english });
-  }
-  return map;
-}
-
 function loadSlugMap(): Map<string, { tagName: string; english: string }> | null {
   if (cachedMap) return cachedMap;
-
-  const dir = dataDir();
-
-  // 1) 원본 태그체계표 JSON (개발 노트 파일을 blog/data/에 복사한 경우)
-  const tagTablePath = join(dir, TAG_TABLE_FILENAME);
-  if (existsSync(tagTablePath)) {
-    try {
-      const raw = readFileSync(tagTablePath, "utf8");
-      const data = JSON.parse(raw) as TagJson;
-      const rows = data.rows ?? [];
-      cachedMap = buildMapFromRows(rows);
-      return cachedMap;
-    } catch {
-      // fall through
-    }
+  const data = conceptSlugLabels as SlugLabelsFile;
+  const map = new Map<string, { tagName: string; english: string }>();
+  for (const [slug, v] of Object.entries(data)) {
+    if (!slug || !v?.tagName) continue;
+    map.set(slug, {
+      tagName: String(v.tagName).trim(),
+      english: String(v.english ?? "").trim(),
+    });
   }
-
-  // 2) 경량 맵만 있는 경우
-  const slimPath = join(dir, SLIM_FILENAME);
-  if (existsSync(slimPath)) {
-    try {
-      const raw = readFileSync(slimPath, "utf8");
-      const data = JSON.parse(raw) as SlugLabelsFile;
-      const map = new Map<string, { tagName: string; english: string }>();
-      for (const [slug, v] of Object.entries(data)) {
-        if (!slug || !v?.tagName) continue;
-        map.set(slug, {
-          tagName: String(v.tagName).trim(),
-          english: String(v.english ?? "").trim(),
-        });
-      }
-      cachedMap = map;
-      return cachedMap;
-    } catch {
-      // fall through
-    }
-  }
-
-  return null;
+  cachedMap = map;
+  return cachedMap;
 }
 
 /** 슬러그로 한글 태그명·영문 조회. 없으면 null */
