@@ -20,6 +20,21 @@ npm run tina:dev
 - Astro 개발 서버: `http://localhost:4321`
 - Tina 에디터 UI: `http://localhost:4321/admin`
 
+### TinaCloud용 `tina/tina-lock.json`
+
+TinaCloud가 저장소 브랜치에서 스키마를 인덱싱하려면 **`tina/tina-lock.json`이 Git에 올라가 있어야** 합니다. ([공식 안내: 업그레이드 후 dev로 lock 갱신·커밋](https://tina.io/docs/guides/upgrade-to-latest-version))
+
+- 이미 `tina/config.ts`가 있으면 `tinacms init`은 생략해도 됩니다.
+- lock만 갱신할 때(예: Astro만 띄우기 싫을 때):
+
+```bash
+npx tinacms dev --no-server --datalayer-port 9010
+```
+
+(`9000` 포트가 다른 Tina 프로세스에 잡혀 있으면 `--datalayer-port`를 바꿉니다.)
+
+`tina/config.ts`를 수정한 뒤에는 위 명령으로 lock을 다시 만들고, **변경분을 커밋·푸시**하세요.
+
 ---
 
 ## 2. 콘텐츠 편집 흐름
