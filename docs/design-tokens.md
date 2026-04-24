@@ -112,3 +112,37 @@ HowLearn 1차 네비 구성(본 프로젝트 기준):
 - 홈: `src/pages/index.astro`
 
 이후 단계에서 이 문서를 기준으로 컴포넌트/라우트 UI를 작성한다.
+
+---
+
+## 10. 공통 UI 클래스 (Stage 1)
+
+`src/styles/global.css`에 아래 공통 클래스가 추가되어, 이후 단계에서 재사용한다.
+
+- **레이아웃/섹션**
+  - `.app-shell`
+  - `.app-content-wrap`
+  - `.app-section-title`
+- **카드**
+  - `.app-card`
+  - `.app-card-header`
+  - `.app-card-body`
+  - `.app-kpi-grid`, `.app-kpi-label`, `.app-kpi-value`, `.app-kpi-meta`
+- **버튼**
+  - `.app-btn-primary`
+  - `.app-btn-secondary`
+  - `.app-btn-outline-primary`
+  - `.app-btn-ghost`
+  - `.app-btn-danger`
+- **폼**
+  - `.app-input`
+  - `.app-select`
+  - `.app-textarea`
+- **상태/태그**
+  - `.app-chip`
+  - `.app-badge`, `.app-badge-success`, `.app-badge-warning`, `.app-badge-danger`, `.app-badge-info`, `.app-badge-neutral`
+
+토큰 확장 항목:
+- `--surface-1`, `--surface-2`, `--surface-3`
+- `--card-border`
+- `--success`, `--warning`, `--danger`, `--info`

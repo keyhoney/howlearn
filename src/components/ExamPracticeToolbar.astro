@@ -1,0 +1,36 @@
+---
+import { STORAGE_KEYS } from '../lib/storage-keys';
+
+interface Props {
+  problemId: string;
+}
+
+const { problemId } = Astro.props;
+---
+
+<section
+  class="not-prose mb-6 rounded-sm border border-[var(--card-border)] bg-[var(--surface-2)] p-4"
+  data-focus-toolbar
+  data-problem-id={problemId}
+  data-focus-key={STORAGE_KEYS.FOCUS_STATE}
+  data-bookmark-key={STORAGE_KEYS.BOOKMARK}
+>
+  <div class="flex flex-wrap items-center gap-2">
+    <strong class="mr-2 text-sm text-[var(--fg)]">집중 모드</strong>
+    <button type="button" class="app-btn-primary" data-focus-start>시작</button>
+    <button type="button" class="app-btn-secondary" data-focus-pause>일시정지</button>
+    <button type="button" class="app-btn-secondary" data-focus-resume>재개</button>
+    <button type="button" class="app-btn-danger" data-focus-stop>종료</button>
+    <button type="button" class="app-btn-outline-primary" data-bookmark-toggle aria-pressed="false">
+      스크랩
+    </button>
+    <a href="/problems/wrong-note" class="app-btn-secondary">오답노트</a>
+    <a href="/problems/bookmarks" class="app-btn-secondary">스크랩 모음</a>
+    <span class="app-badge app-badge-neutral ml-auto" data-focus-status>대기</span>
+    <span class="rounded-sm border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] px-2 py-1 font-mono text-xs text-[var(--accent)]" data-focus-timer role="status" aria-live="polite">00:00</span>
+  </div>
+</section>
+
+<script type="module">
+  import '../lib/client/focus-toolbar';
+</script>

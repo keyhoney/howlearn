@@ -1,0 +1,46 @@
+{
+  "generatedAt": "2026-04-24T06:20:39.718Z",
+  "count": 2,
+  "items": [
+    {
+      "id": "guide-spaced-repetition",
+      "type": "guide",
+      "slug": "spaced-repetition",
+      "title": "분산 학습 완벽 가이드",
+      "summary": "간격 반복(Spaced Repetition)의 원리와 실전 적용법을 소개합니다.",
+      "status": "published",
+      "body": "\r\n## 왜 분산 학습인가?\r\n\r\n에빙하우스(Ebbinghaus)의 **망각 곡선**에 따르면, 학습 후 24시간이 지나면 기억의 약 60%가 사라집니다.\r\n분산 학습은 이 망각 곡선에 맞서 **적절한 시점에 반복 복습**하여 기억을 강화하는 전략입니다.\r\n\r\n## 핵심 원리\r\n\r\n1. **인출 연습(Retrieval Practice)**: 이미 알고 있는 내용을 떠올리는 행위 자체가 기억을 강화합니다.\r\n2. **간격 효과(Spacing Effect)**: 복습 간격이 길어질수록 장기 기억 형성에 유리합니다.\r\n3. **시험 효과(Testing Effect)**: 단순 재독보다 자가 테스트가 기억 유지에 훨씬 효과적입니다.\r\n\r\n## 실천 방법\r\n\r\n- **플래시카드** 앱(Anki 등)을 활용해 간격 반복 알고리즘을 자동화하세요.\r\n- 학습 당일, 다음날, 3일 후, 1주일 후 순서로 복습 일정을 잡으세요.\r\n- 복습 시에는 반드시 **자신의 말로 설명**하거나 문제를 풀어보세요.\r\n",
+      "tags": [
+        "분산학습",
+        "기억",
+        "에빙하우스"
+      ],
+      "domains": [
+        "cognitive-psychology"
+      ],
+      "categories": [
+        "기억",
+        "복습 전략"
+      ],
+      "relatedContentIds": [],
+      "publishedAt": "2024-03-01T00:00:00.000Z"
+    },
+    {
+      "id": "guide-_draft-test",
+      "type": "guide",
+      "slug": "_draft-test",
+      "title": "초안 테스트 (이 글은 목록에 안 보여야 함)",
+      "summary": "draft 상태 필터 검증용. 목록과 빌드 라우트에서 제외되어야 한다.",
+      "status": "draft",
+      "body": "\r\n이 글은 status: draft 이므로 getPublishedGuides()에서 제외되어야 합니다.\r\n",
+      "tags": [
+        "테스트"
+      ],
+      "domains": [
+        "cognitive-psychology"
+      ],
+      "categories": [],
+      "relatedContentIds": []
+    }
+  ]
+}

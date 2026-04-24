@@ -2,40 +2,129 @@
 import BaseHead from '../components/BaseHead.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import AppSidebar from '../components/ui/AppSidebar.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 interface Props {
   title?: string;
   description?: string;
   image?: string;
+  jsonLd?: Record<string, unknown>[];
 }
 
 const {
   title = SITE_TITLE,
   description = SITE_DESCRIPTION,
   image,
+  jsonLd = [],
 } = Astro.props;
 const pageTitle = title === SITE_TITLE ? SITE_TITLE : `${title} | ${SITE_TITLE}`;
+const pathname = Astro.url.pathname;
 ---
 
 <!doctype html>
 <html lang="ko">
   <head>
     <BaseHead title={pageTitle} description={description} image={image} />
+    {jsonLd.map((schema) => <script type="application/ld+json" set:html={JSON.stringify(schema)} />)}
   </head>
-  <body
-    class="flex min-h-screen flex-col bg-white text-slate-900 antialiased dark:bg-slate-900 dark:text-slate-100"
-  >
+  <body class="app-shell antialiased">
     <a
       href="#main-content"
-      class="fixed left-4 top-4 z-[100] -translate-y-[200%] rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-lg focus:translate-y-0 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:bg-indigo-500 dark:focus:ring-offset-slate-900"
+      class="fixed left-4 top-4 z-[100] -translate-y-[200%] rounded-sm bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white shadow-lg focus:translate-y-0 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2"
     >
       본문으로 건너뛰기
     </a>
-    <SiteHeader />
-    <main id="main-content" class="flex-1" tabindex="-1">
-      <slot />
-    </main>
-    <SiteFooter />
+
+    <div class="flex min-h-screen">
+      <div id="app-site-sidebar" class="hidden lg:block">
+        <AppSidebar pathname={pathname} />
+      </div>
+
+      <div class="flex min-w-0 flex-1 flex-col">
+        <SiteHeader />
+        <main
+          id="main-content"
+          class="flex-1 px-4 pt-6 pb-10 md:px-6 2xl:px-10 mx-auto w-full max-w-[1400px]"
+          tabindex="-1"
+        >
+          <slot />
+        </main>
+        <SiteFooter />
+      </div>
+    </div>
+
+    <div
+      data-sidebar-overlay
+      class="fixed inset-0 z-40 hidden bg-black/40 backdrop-blur-[2px] opacity-0 transition-opacity lg:hidden"
+      aria-hidden="true"
+    ></div>
+    <div
+      data-sidebar-drawer
+      class="fixed left-0 top-0 z-50 h-full w-80 max-w-[85vw] -translate-x-full transition-transform duration-200 ease-out lg:hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-label="모바일 사이드바"
+    >
+      <AppSidebar pathname={pathname} compact />
+    </div>
+
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        const toggleButton = document.querySelector('[data-theme-toggle]');
+        const toggleLabel = document.querySelector('[data-theme-toggle-label]');
+        const toggleThumb = document.querySelector('[data-theme-toggle-thumb]');
+        const iconLight = document.querySelector('[data-theme-icon-light]');
+        const iconDark = document.querySelector('[data-theme-icon-dark]');
+
+        const applyTheme = (isDark) => {
+          root.classList.toggle('dark', isDark);
+          if (toggleButton) toggleButton.setAttribute('aria-pressed', String(isDark));
+          if (toggleLabel) toggleLabel.textContent = isDark ? '라이트 모드' : '다크 모드';
+          if (toggleThumb) toggleThumb.style.transform = isDark
+            ? 'translate(28px, -50%)'
+            : 'translate(0, -50%)';
+          if (iconLight) iconLight.classList.toggle('hidden', isDark);
+          if (iconDark) iconDark.classList.toggle('hidden', !isDark);
+        };
+
+        const saved = localStorage.getItem('darkMode');
+        const initial =
+          saved === null
+            ? window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+            : saved === 'true';
+        applyTheme(initial);
+
+        toggleButton?.addEventListener('click', () => {
+          const next = !root.classList.contains('dark');
+          localStorage.setItem('darkMode', String(next));
+          applyTheme(next);
+        });
+
+        const drawer = document.querySelector('[data-sidebar-drawer]');
+        const overlay = document.querySelector('[data-sidebar-overlay]');
+        const openButtons = document.querySelectorAll('[data-sidebar-open]');
+
+        const closeSidebar = () => {
+          drawer?.classList.add('-translate-x-full');
+          overlay?.classList.add('hidden');
+          requestAnimationFrame(() => overlay?.classList.add('opacity-0'));
+        };
+
+        const openSidebar = () => {
+          overlay?.classList.remove('hidden');
+          requestAnimationFrame(() => overlay?.classList.remove('opacity-0'));
+          drawer?.classList.remove('-translate-x-full');
+        };
+
+        openButtons.forEach((button) => button.addEventListener('click', openSidebar));
+        overlay?.addEventListener('click', closeSidebar);
+        drawer?.addEventListener('click', (event) => {
+          const target = event.target;
+          if (target instanceof HTMLAnchorElement) closeSidebar();
+        });
+      })();
+    </script>
   </body>
 </html>

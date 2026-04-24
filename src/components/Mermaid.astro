@@ -1,0 +1,29 @@
+---
+interface Props {
+  code: string;
+  caption?: string;
+}
+
+const { code, caption } = Astro.props;
+const id = `mermaid-${Math.random().toString(36).slice(2, 10)}`;
+---
+
+<figure class="my-6 app-card p-4">
+  {caption && (
+    <figcaption class="mb-3 text-sm font-medium text-[var(--fg-muted)]">{caption}</figcaption>
+  )}
+  <div id={id} class="mermaid overflow-x-auto text-center">{code}</div>
+</figure>
+
+<script type="module" is:inline define:vars={{ id }}>
+  import mermaid from 'mermaid';
+  mermaid.initialize({ startOnLoad: false, securityLevel: 'loose', theme: 'default' });
+  const el = document.getElementById(id);
+  if (el) {
+    try {
+      await mermaid.run({ nodes: [el] });
+    } catch (error) {
+      console.error('Mermaid render failed', error);
+    }
+  }
+</script>

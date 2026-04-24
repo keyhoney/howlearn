@@ -1,0 +1,135 @@
+---
+/**
+ * 페이지네이션 컴포넌트
+ *
+ * - 첫/이전/숫자(주변 + 생략)/다음/마지막 버튼을 항상 노출
+ * - 현재 페이지 주변 ±1 + 가장자리 1개만 숫자로 보여주고 나머지는 …
+ * - href 빌더는 호출자가 주입 (검색/필터 쿼리 보존을 위해)
+ *
+ * 디자인 토큰 기반 스타일을 사용하며, design_ref(직각/낮은 라운드) 톤을 따른다.
+ * (howlearn/blog의 PaginationBar 패턴을 Astro/SSG 환경에 맞게 차용)
+ */
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  buildHref: (page: number) => string;
+  className?: string;
+}
+
+const { currentPage, totalPages, buildHref, className = '' } = Astro.props as Props;
+
+function getPageNumbers(current: number, total: number): Array<number | 'ellipsis'> {
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+  const result: Array<number | 'ellipsis'> = [];
+  const showEdge = 1;
+  const showAround = 1;
+
+  if (current <= showEdge + showAround + 1) {
+    for (let i = 1; i <= Math.min(4, total); i++) result.push(i);
+    result.push('ellipsis');
+    result.push(total);
+    return result;
+  }
+  if (current >= total - showAround - showEdge) {
+    result.push(1);
+    result.push('ellipsis');
+    for (let i = Math.max(1, total - 3); i <= total; i++) result.push(i);
+    return result;
+  }
+  result.push(1);
+  result.push('ellipsis');
+  for (let i = current - showAround; i <= current + showAround; i++) result.push(i);
+  result.push('ellipsis');
+  result.push(total);
+  return result;
+}
+
+const pageNumbers = getPageNumbers(currentPage, totalPages);
+const isFirst = currentPage <= 1;
+const isLast = currentPage >= totalPages;
+const prevPage = Math.max(1, currentPage - 1);
+const nextPage = Math.min(totalPages, currentPage + 1);
+---
+
+{totalPages > 1 && (
+  <nav
+    class:list={[
+      'mt-8 flex flex-wrap items-center justify-center gap-1 text-sm sm:gap-2',
+      className,
+    ]}
+    aria-label="페이지 네비게이션"
+  >
+    <a
+      href={buildHref(1)}
+      class="app-page-nav"
+      aria-label="첫 페이지"
+      title="첫 페이지"
+      aria-disabled={isFirst}
+      tabindex={isFirst ? -1 : 0}
+    >
+      <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4" aria-hidden="true">
+        <path fill-rule="evenodd" d="M9.78 4.22a.75.75 0 0 1 0 1.06L5.06 10l4.72 4.72a.75.75 0 0 1-1.06 1.06l-5.25-5.25a.75.75 0 0 1 0-1.06l5.25-5.25a.75.75 0 0 1 1.06 0Zm6 0a.75.75 0 0 1 0 1.06L11.06 10l4.72 4.72a.75.75 0 1 1-1.06 1.06l-5.25-5.25a.75.75 0 0 1 0-1.06l5.25-5.25a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" />
+      </svg>
+    </a>
+    <a
+      href={buildHref(prevPage)}
+      class="app-page-nav"
+      aria-label="이전 페이지"
+      title="이전 페이지"
+      aria-disabled={isFirst}
+      tabindex={isFirst ? -1 : 0}
+    >
+      <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4" aria-hidden="true">
+        <path fill-rule="evenodd" d="M12.78 4.22a.75.75 0 0 1 0 1.06L8.06 10l4.72 4.72a.75.75 0 1 1-1.06 1.06l-5.25-5.25a.75.75 0 0 1 0-1.06l5.25-5.25a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" />
+      </svg>
+    </a>
+
+    {pageNumbers.map((p, i) =>
+      p === 'ellipsis' ? (
+        <span
+          class="inline-flex min-h-[36px] min-w-[28px] items-center justify-center px-1 text-[var(--fg-muted)]"
+          aria-hidden="true"
+          data-ellipsis-index={i}
+        >
+          …
+        </span>
+      ) : (
+        <a
+          href={buildHref(p)}
+          class="app-page-link"
+          aria-current={p === currentPage ? 'page' : undefined}
+          aria-label={p === currentPage ? `현재 페이지 ${p}` : `페이지 ${p}`}
+        >
+          {p}
+        </a>
+      )
+    )}
+
+    <a
+      href={buildHref(nextPage)}
+      class="app-page-nav"
+      aria-label="다음 페이지"
+      title="다음 페이지"
+      aria-disabled={isLast}
+      tabindex={isLast ? -1 : 0}
+    >
+      <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4" aria-hidden="true">
+        <path fill-rule="evenodd" d="M7.22 4.22a.75.75 0 0 1 1.06 0l5.25 5.25a.75.75 0 0 1 0 1.06l-5.25 5.25a.75.75 0 0 1-1.06-1.06L11.94 10 7.22 5.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+      </svg>
+    </a>
+    <a
+      href={buildHref(totalPages)}
+      class="app-page-nav"
+      aria-label="마지막 페이지"
+      title="마지막 페이지"
+      aria-disabled={isLast}
+      tabindex={isLast ? -1 : 0}
+    >
+      <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4" aria-hidden="true">
+        <path fill-rule="evenodd" d="M10.22 4.22a.75.75 0 0 1 1.06 0l5.25 5.25a.75.75 0 0 1 0 1.06l-5.25 5.25a.75.75 0 0 1-1.06-1.06L14.94 10l-4.72-4.72a.75.75 0 0 1 0-1.06Zm-6 0a.75.75 0 0 1 1.06 0l5.25 5.25a.75.75 0 0 1 0 1.06l-5.25 5.25a.75.75 0 1 1-1.06-1.06L8.94 10 4.22 5.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+      </svg>
+    </a>
+  </nav>
+)}

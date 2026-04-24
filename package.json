@@ -7,7 +7,11 @@
   },
   "scripts": {
     "dev": "astro dev",
+    "quality:gate": "npm run cms:sync && npm run content:validate && npm run problem:validate",
+    "prebuild": "npm run quality:gate",
+    "pretina:build": "npm run quality:gate",
     "build": "astro build",
+    "postbuild": "pagefind --site dist/client",
     "preview": "astro preview",
     "astro": "astro",
     "generate-types": "wrangler types",
@@ -15,7 +19,8 @@
     "tina:build": "tinacms build && astro build",
     "cms:sync": "tsx scripts/cms-sync.ts",
     "content:validate": "tsx scripts/validate-content-index.ts",
-    "problem:validate": "tsx scripts/validate-problems.ts"
+    "problem:validate": "tsx scripts/validate-problems.ts",
+    "smoke:check": "tsx scripts/smoke-check.ts"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^13.2.0",
@@ -25,13 +30,20 @@
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.2.4",
     "astro": "^6.1.9",
+    "gray-matter": "^4.0.3",
+    "mermaid": "^11.14.0",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
     "sharp": "^0.34.3",
     "tailwindcss": "^4.2.4",
     "tinacms": "^3.7.3",
+    "unist-util-visit": "^5.1.0",
+    "util": "^0.12.5",
     "wrangler": "^4.84.1"
   },
   "devDependencies": {
     "@tinacms/cli": "^2.2.3",
+    "pagefind": "^1.5.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "tsx": "^4.19.3"

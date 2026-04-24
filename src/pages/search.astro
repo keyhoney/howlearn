@@ -1,0 +1,150 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="검색" description="HowLearn 통합 검색">
+  <section class="container mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+    <h1 class="app-section-title">검색</h1>
+    <p class="mt-3 text-sm text-[var(--fg-muted)]">
+      가이드/개념/도서/칼럼/문제 콘텐츠를 한 번에 검색할 수 있습니다.
+    </p>
+
+    <div class="app-card mt-6 p-4">
+      <div class="grid gap-3 sm:grid-cols-[minmax(0,1fr)_180px]">
+      <input
+        id="search-input"
+        type="search"
+        placeholder="검색어를 입력하세요"
+          class="app-input"
+      />
+        <select id="search-sort" class="app-select">
+          <option value="relevance">관련도</option>
+          <option value="title">제목순</option>
+        </select>
+      </div>
+      <div class="mt-3 flex flex-wrap gap-2" id="search-domain-tabs">
+        <button type="button" data-domain="all" class="app-btn-primary">전체</button>
+        <button type="button" data-domain="guides" class="app-btn-secondary">가이드</button>
+        <button type="button" data-domain="concepts" class="app-btn-secondary">개념</button>
+        <button type="button" data-domain="books" class="app-btn-secondary">도서</button>
+        <button type="button" data-domain="columns" class="app-btn-secondary">칼럼</button>
+        <button type="button" data-domain="problems" class="app-btn-secondary">문제</button>
+      </div>
+    </div>
+
+    <ul id="search-results" class="mt-6 grid gap-3 sm:grid-cols-2"></ul>
+    <p id="search-empty" class="mt-6 text-sm text-[var(--fg-muted)]">검색어를 입력해 주세요.</p>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  const input = document.getElementById('search-input');
+  const sort = document.getElementById('search-sort');
+  const domainTabs = document.getElementById('search-domain-tabs');
+  const resultList = document.getElementById('search-results');
+  const emptyEl = document.getElementById('search-empty');
+  let currentDomain = 'all';
+  let pagefind = null;
+
+  async function ensurePagefind() {
+    if (pagefind) return pagefind;
+    const mod = await import('/pagefind/pagefind.js');
+    pagefind = mod;
+    return pagefind;
+  }
+
+  function escapeHtml(text) {
+    return String(text)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;');
+  }
+
+  function inferDomain(url) {
+    if (url.startsWith('/guides/')) return 'guides';
+    if (url.startsWith('/concepts/')) return 'concepts';
+    if (url.startsWith('/books/')) return 'books';
+    if (url.startsWith('/columns/')) return 'columns';
+    if (url.startsWith('/problems/') || url.startsWith('/essay-problems/')) return 'problems';
+    return 'other';
+  }
+
+  function formatDomainLabel(domain) {
+    if (domain === 'guides') return '가이드';
+    if (domain === 'concepts') return '개념';
+    if (domain === 'books') return '도서';
+    if (domain === 'columns') return '칼럼';
+    if (domain === 'problems') return '문제';
+    return '기타';
+  }
+
+  function renderResults(records) {
+    if (records.length === 0) {
+      if (resultList) resultList.innerHTML = '';
+      if (emptyEl) emptyEl.textContent = '검색 결과가 없습니다.';
+      return;
+    }
+    if (emptyEl) emptyEl.textContent = `검색 결과 ${records.length}건`;
+    if (!resultList) return;
+    resultList.innerHTML = records
+      .map((item) => {
+        const domain = inferDomain(item.url || '');
+        const badgeTone = domain === 'problems' ? 'app-badge-warning' : 'app-badge-info';
+        return `
+          <li class="app-card p-4">
+            <a href="${item.url}" class="block">
+              <div class="mb-2 flex items-center justify-between gap-2">
+                <span class="app-badge ${badgeTone}">${formatDomainLabel(domain)}</span>
+              </div>
+              <h2 class="text-base font-semibold text-[var(--fg)]">${escapeHtml(item.meta.title || item.url)}</h2>
+              <p class="mt-2 text-sm text-[var(--fg-muted)]">${escapeHtml(item.excerpt || '')}</p>
+            </a>
+          </li>
+        `;
+      })
+      .join('');
+  }
+
+  async function runSearch() {
+    const q = input?.value?.trim() || '';
+    if (!q) {
+      if (resultList) resultList.innerHTML = '';
+      if (emptyEl) emptyEl.textContent = '검색어를 입력해 주세요.';
+      return;
+    }
+
+    const pf = await ensurePagefind();
+    const searched = await pf.search(q);
+    let records = await Promise.all(searched.results.slice(0, 30).map((r) => r.data()));
+
+    if (currentDomain !== 'all') {
+      records = records.filter((item) => inferDomain(item.url || '') === currentDomain);
+    }
+
+    if ((sort?.value || 'relevance') === 'title') {
+      records = records.sort((a, b) => (a.meta.title || '').localeCompare(b.meta.title || '', 'ko'));
+    }
+
+    renderResults(records.slice(0, 20));
+  }
+
+  input?.addEventListener('input', () => {
+    runSearch();
+  });
+
+  sort?.addEventListener('change', () => {
+    runSearch();
+  });
+
+  domainTabs?.addEventListener('click', (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLButtonElement)) return;
+    const domain = target.getAttribute('data-domain') || 'all';
+    currentDomain = domain;
+    domainTabs.querySelectorAll('button').forEach((btn) => {
+      btn.className = btn.getAttribute('data-domain') === domain ? 'app-btn-primary' : 'app-btn-secondary';
+    });
+    runSearch();
+  });
+</script>

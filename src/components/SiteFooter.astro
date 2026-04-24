@@ -1,19 +1,49 @@
 ---
-import { SITE_TITLE } from '../consts';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 const year = new Date().getFullYear();
 ---
 
-<footer
-  class="mt-16 border-t border-slate-200 bg-slate-50/60 py-10 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-400"
->
-  <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <div class="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-      <p>&copy; {year} {SITE_TITLE}. All rights reserved.</p>
-      <nav class="flex gap-4" aria-label="보조 메뉴">
-        <a href="/about" class="hover:text-indigo-600 dark:hover:text-indigo-400">소개</a>
-        <a href="/contact" class="hover:text-indigo-600 dark:hover:text-indigo-400">문의</a>
-        <a href="/rss.xml" class="hover:text-indigo-600 dark:hover:text-indigo-400">RSS</a>
-      </nav>
+<footer id="app-site-footer" class="border-t border-[var(--card-border)] bg-[var(--surface-1)] py-10 sm:py-12 text-sm text-[var(--fg-muted)]">
+  <div class="px-4 sm:px-6 2xl:px-10 mx-auto w-full max-w-[1400px]">
+    <div class="grid grid-cols-2 gap-6 sm:gap-8 md:grid-cols-4">
+      <div class="col-span-2 min-w-0 md:col-span-1">
+        <span class="font-bold tracking-tight text-base sm:text-lg text-[var(--fg)]">{SITE_TITLE}</span>
+        <p class="mt-3 sm:mt-4 leading-relaxed">{SITE_DESCRIPTION}</p>
+      </div>
+
+      <div>
+        <h3 class="mb-3 sm:mb-4 text-sm sm:text-base font-semibold text-[var(--fg)]">탐색</h3>
+        <ul class="space-y-2 sm:space-y-3">
+          <li><a href="/guides" class="hover:text-[var(--accent)] transition-colors">가이드</a></li>
+          <li><a href="/concepts" class="hover:text-[var(--accent)] transition-colors">개념</a></li>
+          <li><a href="/columns" class="hover:text-[var(--accent)] transition-colors">칼럼</a></li>
+          <li><a href="/books" class="hover:text-[var(--accent)] transition-colors">도서</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="mb-3 sm:mb-4 text-sm sm:text-base font-semibold text-[var(--fg)]">학습</h3>
+        <ul class="space-y-2 sm:space-y-3">
+          <li><a href="/problems" class="hover:text-[var(--accent)] transition-colors">기출 문제</a></li>
+          <li><a href="/essay-problems" class="hover:text-[var(--accent)] transition-colors">논술 문제</a></li>
+          <li><a href="/problems/wrong-note" class="hover:text-[var(--accent)] transition-colors">오답 노트</a></li>
+          <li><a href="/problems/bookmarks" class="hover:text-[var(--accent)] transition-colors">스크랩 모음</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="mb-3 sm:mb-4 text-sm sm:text-base font-semibold text-[var(--fg)]">이용 안내</h3>
+        <ul class="space-y-2 sm:space-y-3">
+          <li><a href="/about" class="hover:text-[var(--accent)] transition-colors">소개</a></li>
+          <li><a href="/contact" class="hover:text-[var(--accent)] transition-colors">문의</a></li>
+          <li><a href="/search" class="hover:text-[var(--accent)] transition-colors">검색</a></li>
+          <li><a href="/rss.xml" class="hover:text-[var(--accent)] transition-colors">RSS 피드</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-8 sm:mt-10 pt-6 sm:pt-8 border-t border-[var(--card-border)] text-center">
+      © {year} {SITE_TITLE}. 저작권 소유.
     </div>
   </div>
 </footer>

@@ -20,6 +20,7 @@ Tina 에디터: `npm run tina:dev` 후 `/admin`.
 
 - 사이트만: `npm run build`
 - Tina + 사이트(배포·CI): `TINA_*` 환경 변수 설정 후 `npm run tina:build`
+- 스모크 체크: `npm run smoke:check`
 
 ## 배포
 
@@ -27,3 +28,5 @@ Tina 에디터: `npm run tina:dev` 후 `/admin`.
 - Pages 빌드 명령 예: `npm run tina:build` (또는 `npm run build` — Tina 미사용 시)
 
 자세한 편집 절차는 `docs/cms-editing-guide.md`를 참고하세요.
+런치/운영 체크리스트는 `docs/launch-checklist.md`, `docs/incident-response.md`를 참고하세요.
+Cloudflare 배포/롤백 절차는 `docs/deploy-cloudflare-pages.md`, `docs/rollback-guide.md`를 참고하세요.

@@ -1,0 +1,34 @@
+{
+  "sample-essay": {
+    "source": "예시대학 2026 논술 기출",
+    "year": 2026,
+    "month": 11,
+    "examType": "논술",
+    "subject": "수학",
+    "chapter": "확률과 통계",
+    "concept": "조건부 확률",
+    "difficulty": 4,
+    "answerType": "short",
+    "answer": 0,
+    "university": "예시대학",
+    "examYear": 2026,
+    "tags": ["조건부확률", "베이즈"],
+    "relatedProblemIds": []
+  },
+  "2026-example-essay": {
+    "source": "2026년 예시대학 논술",
+    "year": 2026,
+    "month": 11,
+    "examType": "논술",
+    "subject": "수학",
+    "chapter": "미적분",
+    "concept": "연속·미분가능",
+    "difficulty": 4,
+    "answerType": "short",
+    "answer": 0,
+    "university": "예시대학",
+    "examYear": 2026,
+    "tags": ["연속", "미분가능"],
+    "relatedProblemIds": []
+  }
+}

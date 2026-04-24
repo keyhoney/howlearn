@@ -94,6 +94,42 @@ const relatedContentIdsField = {
   description: '형식: guide-slug, concept-slug 등 (type-slug)',
 };
 
+/** 관련 문제 ID 필드 */
+const relatedProblemIdsField = {
+  type: 'string' as const,
+  name: 'relatedProblemIds',
+  label: '관련 문제 ID',
+  list: true,
+};
+
+/** 문제 공통 필드 묶음 */
+const problemFields = [
+  { type: 'string' as const, name: 'source', label: '출처', required: true },
+  { type: 'number' as const, name: 'year', label: '연도', required: true },
+  { type: 'number' as const, name: 'month', label: '월', required: true },
+  {
+    type: 'string' as const,
+    name: 'examType',
+    label: '시험 구분',
+    required: true,
+    options: ['수능', '모의평가', '교육청', '논술'],
+  },
+  { type: 'string' as const, name: 'subject', label: '과목', required: true },
+  { type: 'string' as const, name: 'chapter', label: '단원', required: true },
+  { type: 'string' as const, name: 'concept', label: '핵심 개념', required: true },
+  { type: 'number' as const, name: 'difficulty', label: '난이도(1~5)', required: true },
+  {
+    type: 'string' as const,
+    name: 'answerType',
+    label: '정답 타입',
+    required: true,
+    options: ['mcq', 'short'],
+  },
+  { type: 'number' as const, name: 'answer', label: '정답값', required: true },
+  tagsField,
+  relatedProblemIdsField,
+];
+
 // ─── Tina CMS 설정 ───────────────────────────────────────────────
 
 export default defineConfig({
@@ -244,6 +280,39 @@ export default defineConfig({
           ...seoFields,
           { type: 'boolean', name: 'featured', label: '추천 콘텐츠' },
           { type: 'rich-text', name: 'body', label: '본문', isBody: true },
+        ],
+      },
+
+      // ─── 5. 문제 컬렉션 ─────────────────────────────────────────
+      {
+        name: 'problems',
+        label: '문제',
+        path: 'src/content/problems',
+        format: 'mdx',
+        ui: {
+          router: ({ document }) => `/problems/${document._sys.filename}`,
+        },
+        fields: [
+          ...problemFields,
+          { type: 'rich-text', name: 'body', label: '문제 본문', isBody: true },
+        ],
+      },
+
+      // ─── 6. 논술 문제 컬렉션 ────────────────────────────────────
+      {
+        name: 'essay_problems',
+        nameOverride: 'essay-problems',
+        label: '논술 문제',
+        path: 'src/content/essay-problems',
+        format: 'mdx',
+        ui: {
+          router: ({ document }) => `/essay-problems/${document._sys.filename}`,
+        },
+        fields: [
+          ...problemFields,
+          { type: 'string', name: 'university', label: '대학', required: true },
+          { type: 'number', name: 'examYear', label: '논술 시행 연도 (선택)' },
+          { type: 'rich-text', name: 'body', label: '문제 본문', isBody: true },
         ],
       },
     ],

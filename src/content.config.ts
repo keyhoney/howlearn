@@ -1,5 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { problemMdxRegistryLoader } from './content/loaders/problemMdxRegistryLoader';
 
 // ─── 공통 기본 스키마 ────────────────────────────────────────────
 const domainEnum = z.enum([
@@ -120,15 +121,21 @@ const problemBaseSchema = z.object({
   relatedProblemIds: z.array(z.string()).default([]),
 });
 
-/** 수능/모의평가 수학 기출 문제 */
+/** 수능/모의평가 수학 기출 문제 — 메타는 `_metadata.json`, 본문만 `.mdx` */
 const problems = defineCollection({
-  loader: glob({ base: './src/content/problems', pattern: '**/*.{md,mdx}' }),
+  loader: problemMdxRegistryLoader({
+    collectionDir: 'src/content/problems',
+    registryFile: '_metadata.json',
+  }),
   schema: problemBaseSchema,
 });
 
-/** 논술 수학 기출 문제 */
+/** 논술 수학 기출 문제 — 메타는 `_metadata.json`, 본문만 `.mdx` */
 const essayProblems = defineCollection({
-  loader: glob({ base: './src/content/essay-problems', pattern: '**/*.{md,mdx}' }),
+  loader: problemMdxRegistryLoader({
+    collectionDir: 'src/content/essay-problems',
+    registryFile: '_metadata.json',
+  }),
   schema: problemBaseSchema.extend({
     university: z.string(),
     examYear: z.coerce.number().int().optional(),

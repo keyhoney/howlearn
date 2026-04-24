@@ -1,0 +1,161 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, getEntry, render } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import { getContentReferringToConcept, getRelatedContent } from '../../lib/content-utils';
+import {
+  buildArticleJsonLd,
+  buildBreadcrumbJsonLd,
+  buildFaqJsonLd,
+  buildLearningResourceJsonLd,
+} from '../../lib/seo';
+import { SITE_URL } from '../../consts';
+
+export const getStaticPaths = (async () => {
+  const items = await getCollection('concepts');
+  const list = import.meta.env.DEV
+    ? items
+    : items.filter((e) => e.data.status === 'published');
+  return list.map((entry) => ({
+    params: { slug: entry.id },
+  }));
+}) satisfies GetStaticPaths;
+export const prerender = true;
+
+const slug = Astro.params.slug;
+if (!slug) {
+  return Astro.redirect('/concepts');
+}
+const entry = await getEntry('concepts', slug);
+if (!entry) {
+  return Astro.redirect('/concepts');
+}
+const { Content } = await render(entry);
+const {
+  title,
+  summary,
+  shortDefinition,
+  englishName,
+  publishedAt,
+  faq,
+  references,
+  coverImage,
+  seoDescription,
+} = entry.data;
+const description = seoDescription ?? summary;
+const relatedItems = await getRelatedContent(entry, 4);
+const referringItems = await getContentReferringToConcept(entry.id, 8);
+const pagePath = `/concepts/${entry.id}`;
+const jsonLd = [
+  buildArticleJsonLd({
+    title,
+    description,
+    path: pagePath,
+    image: coverImage,
+    datePublished: publishedAt,
+  }),
+  buildBreadcrumbJsonLd([
+    { name: '홈', item: SITE_URL },
+    { name: '개념', item: new URL('/concepts', SITE_URL).toString() },
+    { name: title, item: new URL(pagePath, SITE_URL).toString() },
+  ]),
+  buildLearningResourceJsonLd({
+    title,
+    description,
+    path: pagePath,
+    keywords: entry.data.tags,
+  }),
+  ...(faq && faq.length > 0 ? [buildFaqJsonLd(faq)] : []),
+];
+---
+
+<BaseLayout title={title} description={description} image={coverImage} jsonLd={jsonLd}>
+  <article class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px]">
+      <div>
+        <header class="app-card mb-8 p-6">
+          <p class="text-sm font-medium text-[var(--accent)]">
+            <a href="/concepts" class="hover:underline">개념</a>
+            <span class="mx-2 text-[var(--fg-muted)] opacity-50">/</span>
+            <span class="text-[var(--fg-muted)]">{entry.id}</span>
+          </p>
+          <h1 class="mt-3 text-3xl font-bold tracking-tight text-[var(--fg)]">{title}</h1>
+          {englishName && <p class="mt-1 text-sm italic text-[var(--fg-muted)]">{englishName}</p>}
+          <div class="mt-4 flex flex-wrap gap-2">
+            {publishedAt && <span class="app-chip">{publishedAt.toLocaleDateString('ko-KR')}</span>}
+            {entry.data.tags?.slice(0, 3).map((t) => <span class="app-chip">#{t}</span>)}
+          </div>
+          <p class="mt-5 rounded-sm border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] bg-[color-mix(in_srgb,var(--accent)_8%,var(--surface-2))] px-4 py-3 text-base leading-relaxed text-[var(--fg)]">
+            <span class="font-semibold text-[var(--accent)]">짧은 정의</span>
+            <span class="mt-1 block whitespace-pre-wrap">{shortDefinition}</span>
+          </p>
+          <p class="mt-4 text-base leading-relaxed text-[var(--fg-muted)]">{summary}</p>
+        </header>
+
+        <div class="prose prose-book dark:prose-invert prose-headings:tracking-tight max-w-none app-card p-6">
+          <Content />
+        </div>
+
+        {faq && faq.length > 0 && (
+          <section class="app-card mt-8 p-6">
+            <h2 class="text-xl font-bold text-[var(--fg)]">FAQ</h2>
+            <div class="mt-4 space-y-3">
+              {faq.map((item) => (
+                <details class="rounded-sm border border-[var(--card-border)] bg-[var(--surface-2)] p-4">
+                  <summary class="cursor-pointer list-none font-semibold text-[var(--fg)]">{item.question}</summary>
+                  <p class="mt-2 whitespace-pre-wrap text-sm text-[var(--fg-muted)]">{item.answer}</p>
+                </details>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {references && references.length > 0 && (
+          <section class="app-card mt-8 p-6">
+          <h2 class="text-xl font-bold text-[var(--fg)]">참고</h2>
+          <ul class="mt-4 space-y-2">
+            {references.map((ref) => (
+              <li>
+                <a href={ref.url} class="text-[var(--accent)] hover:underline" target="_blank" rel="noopener noreferrer">
+                  {ref.title ?? ref.url}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+        )}
+      </div>
+
+      <aside class="space-y-4 lg:sticky lg:top-20 lg:h-max">
+        {referringItems.length > 0 && (
+          <section class="app-card p-4">
+            <h2 class="text-sm font-semibold text-[var(--fg)]">이 개념을 다룬 콘텐츠</h2>
+            <ul class="mt-3 space-y-2">
+              {referringItems.map((item) => (
+                <li>
+                  <a class="text-sm text-[var(--accent)] hover:underline" href={`/${item.collection}/${item.id}`}>
+                    {item.data.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+        {relatedItems.length > 0 && (
+          <section class="app-card p-4">
+            <h2 class="text-sm font-semibold text-[var(--fg)]">관련 콘텐츠</h2>
+            <ul class="mt-3 space-y-2">
+              {relatedItems.map((item) => (
+                <li>
+                  <a class="text-sm text-[var(--accent)] hover:underline" href={`/${item.collection}/${item.id}`}>
+                    {item.data.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+      </aside>
+    </div>
+  </article>
+</BaseLayout>

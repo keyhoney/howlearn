@@ -1,0 +1,114 @@
+{
+  "generatedAt": "2026-04-24T06:20:39.721Z",
+  "count": 5,
+  "items": [
+    {
+      "id": "guide-spaced-repetition",
+      "type": "guide",
+      "slug": "spaced-repetition",
+      "title": "분산 학습 완벽 가이드",
+      "summary": "간격 반복(Spaced Repetition)의 원리와 실전 적용법을 소개합니다.",
+      "status": "published",
+      "body": "\r\n## 왜 분산 학습인가?\r\n\r\n에빙하우스(Ebbinghaus)의 **망각 곡선**에 따르면, 학습 후 24시간이 지나면 기억의 약 60%가 사라집니다.\r\n분산 학습은 이 망각 곡선에 맞서 **적절한 시점에 반복 복습**하여 기억을 강화하는 전략입니다.\r\n\r\n## 핵심 원리\r\n\r\n1. **인출 연습(Retrieval Practice)**: 이미 알고 있는 내용을 떠올리는 행위 자체가 기억을 강화합니다.\r\n2. **간격 효과(Spacing Effect)**: 복습 간격이 길어질수록 장기 기억 형성에 유리합니다.\r\n3. **시험 효과(Testing Effect)**: 단순 재독보다 자가 테스트가 기억 유지에 훨씬 효과적입니다.\r\n\r\n## 실천 방법\r\n\r\n- **플래시카드** 앱(Anki 등)을 활용해 간격 반복 알고리즘을 자동화하세요.\r\n- 학습 당일, 다음날, 3일 후, 1주일 후 순서로 복습 일정을 잡으세요.\r\n- 복습 시에는 반드시 **자신의 말로 설명**하거나 문제를 풀어보세요.\r\n",
+      "tags": [
+        "분산학습",
+        "기억",
+        "에빙하우스"
+      ],
+      "domains": [
+        "cognitive-psychology"
+      ],
+      "categories": [
+        "기억",
+        "복습 전략"
+      ],
+      "relatedContentIds": [],
+      "publishedAt": "2024-03-01T00:00:00.000Z"
+    },
+    {
+      "id": "guide-_draft-test",
+      "type": "guide",
+      "slug": "_draft-test",
+      "title": "초안 테스트 (이 글은 목록에 안 보여야 함)",
+      "summary": "draft 상태 필터 검증용. 목록과 빌드 라우트에서 제외되어야 한다.",
+      "status": "draft",
+      "body": "\r\n이 글은 status: draft 이므로 getPublishedGuides()에서 제외되어야 합니다.\r\n",
+      "tags": [
+        "테스트"
+      ],
+      "domains": [
+        "cognitive-psychology"
+      ],
+      "categories": [],
+      "relatedContentIds": []
+    },
+    {
+      "id": "concept-cognitive-load",
+      "type": "concept",
+      "slug": "cognitive-load",
+      "title": "인지 부하 이론",
+      "summary": "작업 기억의 한계를 이해하고 학습 설계에 적용하는 인지 부하 이론을 설명합니다.",
+      "status": "published",
+      "body": "\r\nimport Mermaid from '../../components/Mermaid.astro';\r\n\r\n## 개념 정의\r\n\r\n**인지 부하 이론(Cognitive Load Theory)**은 존 스웰러(John Sweller)가 1988년 제안한 이론으로,\r\n학습 과정에서 **작업 기억(working memory)** 이 처리할 수 있는 정보량에 한계가 있다는 전제에서 출발합니다.\r\n\r\n## 세 가지 인지 부하 유형\r\n\r\n| 유형 | 설명 | 관리 방법 |\r\n|---|---|---|\r\n| **내재적 부하** | 학습 내용 자체의 복잡도 | 사전 지식 활성화, 단계적 제시 |\r\n| **외재적 부하** | 불필요한 설계 요소에 의한 부담 | 군더더기 제거, 명확한 레이아웃 |\r\n| **본질적 부하** | 스키마 형성에 필요한 처리 | 정교화 질문, 자기 설명 유도 |\r\n\r\n## 교육 설계 원칙\r\n\r\n1. **분할 효과**: 복잡한 내용을 작은 단위로 나눠 순차 제시합니다.\r\n2. **중복 효과**: 동일 정보를 텍스트와 그림으로 동시에 제공하는 것을 피하세요.\r\n3. **양식 효과**: 시각 + 청각 채널을 함께 활용하면 처리 용량이 늘어납니다.\r\n\r\n## 개념 관계 다이어그램\r\n\r\n<Mermaid\r\n  caption=\"인지 부하 유형 간 관계\"\r\n  code={`\r\ngraph TD\r\n  A[인지 부하] --> B[내재적 부하]\r\n  A --> C[외재적 부하]\r\n  A --> D[본질적 부하]\r\n  C --> E[학습 설계 개선으로 감소]\r\n  D --> F[학습 성과 향상에 기여]\r\n  `}\r\n/>\r\n",
+      "tags": [
+        "인지부하",
+        "작업기억",
+        "스웰러"
+      ],
+      "domains": [
+        "cognitive-psychology",
+        "educational-psychology"
+      ],
+      "categories": [
+        "인지과학"
+      ],
+      "relatedContentIds": [],
+      "publishedAt": "2024-02-15T00:00:00.000Z"
+    },
+    {
+      "id": "book-make-it-stick",
+      "type": "book",
+      "slug": "make-it-stick",
+      "title": "어떻게 공부할 것인가",
+      "summary": "인지 과학 연구를 바탕으로 효과적인 학습 전략을 제시하는 필독서.",
+      "status": "published",
+      "body": "\r\n## 책 소개\r\n\r\n피터 브라운, 헨리 뢰디거, 마크 맥대니얼이 쓴 이 책은\r\n**인지 과학 40년의 연구 성과**를 일반 독자도 이해하기 쉽게 풀어냅니다.\r\n\r\n## 핵심 메시지\r\n\r\n- 힘든 학습이 더 오래 기억된다 (**바람직한 어려움**).\r\n- 반복 읽기보다 **자가 테스트**가 훨씬 효과적입니다.\r\n- **교차 학습(Interleaving)**은 불편하지만 장기 기억을 강화합니다.\r\n\r\n## 추천 대상\r\n\r\n수능·논술을 준비하는 학생, 자녀 학습법을 고민하는 부모, 효과적인 강의 설계를 원하는 교사 모두에게 권합니다.\r\n",
+      "tags": [
+        "인출연습",
+        "교차학습",
+        "분산학습"
+      ],
+      "domains": [
+        "cognitive-psychology"
+      ],
+      "categories": [
+        "학습법",
+        "도서 리뷰"
+      ],
+      "relatedContentIds": [],
+      "publishedAt": "2024-01-10T00:00:00.000Z"
+    },
+    {
+      "id": "column-interleaving-practice",
+      "type": "column",
+      "slug": "interleaving-practice",
+      "title": "교차 학습이 불편한 이유, 그리고 그게 좋은 신호인 이유",
+      "summary": "섞어서 공부하는 것이 왜 더 힘들고, 왜 더 효과적인지 설명합니다.",
+      "status": "published",
+      "body": "\r\n## 덩어리 학습 vs 교차 학습\r\n\r\n대부분의 학생은 같은 유형의 문제를 한꺼번에 몰아서 풀고 (**덩어리 학습, Blocked Practice**) 넘어갑니다.\r\n하지만 인지 과학 연구는 **다른 유형을 섞어 푸는 교차 학습**이 장기적으로 훨씬 높은 성취를 낳는다고 말합니다.\r\n\r\n## 왜 불편한가?\r\n\r\n교차 학습은 매 문제마다 어떤 전략을 써야 하는지 **스스로 판단**해야 합니다.\r\n이 판단 과정이 작업 기억을 더 많이 쓰게 만들어, 공부 중에는 느리고 어렵게 느껴집니다.\r\n\r\n## 왜 효과적인가?\r\n\r\n바로 그 **어려움** 덕분에 뇌는 개념을 더 깊이 처리하고, 각 유형의 차이를 구분하는 능력이 향상됩니다.\r\n이를 **바람직한 어려움(Desirable Difficulty)**이라고 합니다.\r\n\r\n## 실천 팁\r\n\r\n- 단원이 끝날 때마다 **이전 단원 문제를 섞어서** 복습하세요.\r\n- 오늘 배운 개념 + 지난주 개념을 한 세션에 같이 다루세요.\r\n- 처음에는 느리더라도 포기하지 마세요. 불편함이 성장의 신호입니다.\r\n",
+      "tags": [
+        "교차학습",
+        "인출연습",
+        "기억"
+      ],
+      "domains": [
+        "cognitive-psychology"
+      ],
+      "categories": [
+        "학습 전략"
+      ],
+      "relatedContentIds": [],
+      "publishedAt": "2024-04-01T00:00:00.000Z"
+    }
+  ]
+}

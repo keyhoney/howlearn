@@ -1,0 +1,276 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const [problems, essayProblems] = await Promise.all([
+  getCollection('problems'),
+  getCollection('essay-problems'),
+]);
+
+const candidates = [
+  ...problems.map((p) => ({
+    id: p.id,
+    href: `/problems/${p.id}`,
+    title: p.data.source,
+    meta: `${p.data.year}년 ${p.data.month}월 · ${p.data.examType}`,
+    type: 'problem',
+    typeLabel: '기출',
+    year: p.data.year,
+    month: p.data.month,
+    examType: p.data.examType,
+    subject: p.data.subject,
+    chapter: p.data.chapter,
+    concept: p.data.concept,
+    difficulty: p.data.difficulty,
+  })),
+  ...essayProblems.map((p) => ({
+    id: p.id,
+    href: `/essay-problems/${p.id}`,
+    title: p.data.source,
+    meta: `${p.data.year}년 ${p.data.month}월 · ${p.data.university}`,
+    type: 'essay',
+    typeLabel: '논술',
+    year: p.data.year,
+    month: p.data.month,
+    examType: p.data.examType,
+    subject: p.data.subject,
+    chapter: p.data.chapter,
+    concept: p.data.concept,
+    difficulty: p.data.difficulty,
+  })),
+];
+---
+
+<BaseLayout title="오답 노트" description="로컬 오답 기록 기반 복습 페이지">
+  <section class="container mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+    <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <h1 class="app-section-title">오답 노트</h1>
+        <p class="mt-2 text-sm text-[var(--fg-muted)]">최근 오답순으로 정렬된 개인 복습 목록입니다.</p>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="app-badge app-badge-neutral" id="wrong-note-total">0건</span>
+        <button type="button" class="app-btn-secondary" id="wrong-note-clear">전체 비우기</button>
+      </div>
+    </div>
+
+    <div class="app-card p-4 sm:p-5">
+      <p class="text-sm text-[var(--fg-muted)] leading-relaxed">
+        오답 횟수와 최근 시각을 기준으로 복습 우선순위를 잡아보세요.
+      </p>
+      <div class="mt-4 grid gap-3 sm:grid-cols-3">
+        <div class="rounded-sm border border-[var(--card-border)] bg-[var(--surface-2)] p-3">
+          <p class="text-xs text-[var(--fg-muted)]">최근 7일 Top 개념</p>
+          <p class="mt-1 text-sm font-semibold text-[var(--fg)]" id="wrong-note-top-concepts">-</p>
+        </div>
+        <div class="rounded-sm border border-[var(--card-border)] bg-[var(--surface-2)] p-3">
+          <p class="text-xs text-[var(--fg-muted)]">반복 오답 문제</p>
+          <p class="mt-1 text-sm font-semibold text-[var(--fg)]" id="wrong-note-repeat-count">0문항</p>
+        </div>
+        <div class="rounded-sm border border-[var(--card-border)] bg-[var(--surface-2)] p-3">
+          <p class="text-xs text-[var(--fg-muted)]">정답 전환율</p>
+          <p class="mt-1 text-sm font-semibold text-[var(--fg)]" id="wrong-note-conversion-rate">0%</p>
+        </div>
+      </div>
+      <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <input
+          id="wrong-note-keyword"
+          type="search"
+          placeholder="키워드 검색"
+          class="app-input min-h-10 w-full"
+        />
+        <select id="wrong-note-type" class="app-select min-h-10 w-full">
+          <option value="all">전체 유형</option>
+          <option value="problem">기출</option>
+          <option value="essay">논술</option>
+        </select>
+        <select id="wrong-note-sort" class="app-select min-h-10 w-full">
+          <option value="recent">최근순</option>
+          <option value="name">이름순</option>
+          <option value="attempts">횟수순</option>
+        </select>
+      </div>
+    </div>
+
+    <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" id="wrong-note-list" aria-live="polite"></ul>
+    <div
+      class="mt-8 hidden rounded-xl border-2 border-dashed border-[var(--card-border)] bg-[var(--surface-2)] px-6 py-10 text-center sm:px-10"
+      id="wrong-note-empty"
+    >
+      <p class="text-sm font-medium text-[var(--fg)]">아직 저장된 오답이 없습니다.</p>
+      <p class="mt-2 text-sm text-[var(--fg-muted)] leading-relaxed">
+        문제를 풀고 오답이 발생하면 자동으로 오답 노트에 쌓입니다.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<script is:inline define:vars={{ candidates }}>
+  const listEl = document.getElementById('wrong-note-list');
+  const emptyEl = document.getElementById('wrong-note-empty');
+  const totalEl = document.getElementById('wrong-note-total');
+  const clearBtn = document.getElementById('wrong-note-clear');
+  const keywordInput = document.getElementById('wrong-note-keyword');
+  const typeSelect = document.getElementById('wrong-note-type');
+  const sortSelect = document.getElementById('wrong-note-sort');
+  const topConceptsEl = document.getElementById('wrong-note-top-concepts');
+  const repeatCountEl = document.getElementById('wrong-note-repeat-count');
+  const conversionRateEl = document.getElementById('wrong-note-conversion-rate');
+  const byId = new Map(candidates.map((v) => [v.id, v]));
+
+  const STAR_PATH =
+    'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z';
+
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function difficultyStarsHtml(value) {
+    const n = Math.min(5, Math.max(0, Math.round(Number(value) || 0)));
+    let svgs = '';
+    for (let i = 0; i < 5; i++) {
+      const filled = i < n;
+      const cls = filled
+        ? 'fill-amber-700 text-amber-700 dark:fill-amber-400 dark:text-amber-400'
+        : 'fill-slate-300 text-slate-300 dark:fill-slate-600 dark:text-slate-600';
+      svgs += `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-3 w-3 shrink-0 ${cls}" aria-hidden="true"><path d="${STAR_PATH}" /></svg>`;
+    }
+    return `<span class="inline-flex items-center gap-0.5 rounded-md border border-amber-200/90 bg-amber-50 px-2 py-0.5 text-[0.6875rem] font-bold text-amber-950 dark:border-amber-700/60 dark:bg-amber-950/55 dark:text-amber-100 normal-case tracking-normal" aria-label="난이도 ${n}단계, 최대 5단계"><span>난이도</span><span class="ml-0.5 flex items-center gap-px" aria-hidden="true">${svgs}</span></span>`;
+  }
+
+  function parse(raw, fallback) {
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return fallback;
+    }
+  }
+
+  function readRows() {
+    const raw = localStorage.getItem('howlearn-wrong-note');
+    const store = raw ? parse(raw, { v: 1, byId: {} }) : { v: 1, byId: {} };
+    return Object.entries(store.byId || {})
+      .map(([id, bucket]) => {
+        const last = Array.isArray(bucket.entries) && bucket.entries.length > 0 ? bucket.entries[0] : null;
+        return { id, ts: last?.ts ?? 0, attempts: bucket.entries?.length ?? 0 };
+      })
+      .filter((row) => row.ts > 0);
+  }
+
+  function render() {
+    const keyword = String(keywordInput?.value || '').trim().toLowerCase();
+    const selectedType = String(typeSelect?.value || 'all');
+    const sortBy = String(sortSelect?.value || 'recent');
+
+    let rows = readRows()
+      .map((row) => {
+        const item = byId.get(row.id);
+        return { ...row, item };
+      })
+      .filter((row) => row.item);
+
+    const progress = parse(localStorage.getItem('howlearn-problem-progress') || '', { v: 1, byId: {} });
+    const fullWrong = parse(localStorage.getItem('howlearn-wrong-note') || '', { v: 1, byId: {} });
+    const last7d = Date.now() - 1000 * 60 * 60 * 24 * 7;
+    const conceptCount = new Map();
+    let repeatCount = 0;
+    let converted = 0;
+    rows.forEach((row) => {
+      const concept = row.item?.concept;
+      if (concept) {
+        const entries = fullWrong.byId?.[row.id]?.entries || [];
+        entries.forEach((entry) => {
+          if ((entry?.ts || 0) >= last7d) conceptCount.set(concept, (conceptCount.get(concept) || 0) + 1);
+        });
+      }
+      if ((row.attempts || 0) >= 2) repeatCount += 1;
+      const p = progress.byId?.[row.id];
+      const status = typeof p === 'string' ? p : p?.status;
+      if (status === 'done') converted += 1;
+    });
+    const topConcepts = Array.from(conceptCount.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([name]) => name)
+      .join(', ');
+    if (topConceptsEl) topConceptsEl.textContent = topConcepts || '-';
+    if (repeatCountEl) repeatCountEl.textContent = `${repeatCount}문항`;
+    if (conversionRateEl) conversionRateEl.textContent = rows.length > 0 ? `${Math.round((converted / rows.length) * 100)}%` : '0%';
+
+    if (selectedType !== 'all') {
+      rows = rows.filter((row) => row.item.type === selectedType);
+    }
+    if (keyword) {
+      rows = rows.filter((row) => {
+        const target = `${row.item.title} ${row.item.meta} ${row.item.chapter} ${row.item.concept}`.toLowerCase();
+        return target.includes(keyword);
+      });
+    }
+    rows.sort((a, b) => {
+      if (sortBy === 'name') return a.item.title.localeCompare(b.item.title, 'ko');
+      if (sortBy === 'attempts') return b.attempts - a.attempts || b.ts - a.ts;
+      return b.ts - a.ts;
+    });
+
+    if (totalEl) totalEl.textContent = `${rows.length}건`;
+
+    if (!listEl) return;
+    if (rows.length === 0) {
+      listEl.innerHTML = '';
+      emptyEl?.classList.remove('hidden');
+      return;
+    }
+
+    emptyEl?.classList.add('hidden');
+
+    listEl.innerHTML = rows
+      .map((row) => {
+        const it = row.item;
+        const when = new Date(row.ts).toLocaleString();
+        const ym = `${it.year}.${String(it.month).padStart(2, '0')}`;
+        const badgeCls = it.type === 'essay' ? 'app-badge-type-essay' : 'app-badge-type-problem';
+        const subtitle = `${it.chapter} · ${it.concept}`;
+        return `
+          <li>
+            <a href="${it.href}" class="app-card app-card-interactive flex h-full flex-col p-5 text-[var(--fg)]">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="app-badge ${badgeCls}">${escapeHtml(it.examType)}</span>
+                <span class="font-mono text-xs text-[var(--fg-muted)]">${ym}</span>
+              </div>
+              <h2 class="mt-3 text-lg font-semibold text-[var(--fg)]">${escapeHtml(it.title)}</h2>
+              <p class="mt-2 text-sm text-[var(--fg-muted)] line-clamp-2 leading-relaxed">${escapeHtml(subtitle)}</p>
+              <div class="mt-3 flex flex-wrap gap-1.5">
+                <span class="app-badge app-badge-warning">누적 오답 ${row.attempts}회</span>
+              </div>
+              <div class="mt-3">${difficultyStarsHtml(it.difficulty)}</div>
+              <p class="mt-2 text-xs text-[var(--fg-muted)]">최근 오답: ${escapeHtml(when)}</p>
+              <div class="mt-auto flex items-center justify-between gap-2 pt-4">
+                <span class="text-xs font-medium uppercase tracking-wider text-[var(--accent)]">${escapeHtml(it.subject)}</span>
+                <span class="inline-flex items-center gap-1 text-sm font-semibold text-[var(--accent)]">
+                  복습하기
+                  <svg class="app-card-arrow h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd"/>
+                  </svg>
+                </span>
+              </div>
+            </a>
+          </li>
+        `;
+      })
+      .join('');
+  }
+
+  clearBtn?.addEventListener('click', () => {
+    localStorage.removeItem('howlearn-wrong-note');
+    render();
+  });
+  keywordInput?.addEventListener('input', render);
+  typeSelect?.addEventListener('change', render);
+  sortSelect?.addEventListener('change', render);
+
+  render();
+</script>

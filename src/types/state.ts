@@ -16,7 +16,16 @@ export const PROBLEM_PROGRESS_STORAGE_KEY = 'howlearn:problem-progress' as const
 
 export interface ProblemProgressStoreV1 {
   v: 1;
-  byId: Record<string, ProblemProgressStatus>;
+  byId: Record<string, ProblemProgressStatus | ProblemProgressDetailV2>;
+}
+
+export interface ProblemProgressDetailV2 {
+  status: ProblemProgressStatus;
+  hintRevealedCount: number;
+  solutionRevealed: boolean;
+  lastAnswer: string;
+  attemptCount: number;
+  lastSeenAt: number;
 }
 
 // ────────────────────────────────────────────────────────────────────────────

@@ -1,0 +1,16 @@
+{
+  "2026-csat-02": {
+    "source": "2026년 수능 수학",
+    "year": 2026,
+    "month": 11,
+    "examType": "수능",
+    "subject": "수학",
+    "chapter": "미분",
+    "concept": "도함수의 정의",
+    "difficulty": 1,
+    "answerType": "mcq",
+    "answer": 4,
+    "tags": ["도함수", "극한"],
+    "relatedProblemIds": []
+  }
+}
