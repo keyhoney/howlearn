@@ -1,5 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const formId = String(import.meta.env.PUBLIC_FORMSPREE_FORM_ID || import.meta.env.FORMSPREE_FORM_ID || '').trim();
+const formspreeEndpoint = formId ? `https://formspree.io/f/${formId}` : '';
 ---
 
 <BaseLayout title="문의" description="문의/제안 접수 페이지">
@@ -74,7 +77,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   </section>
 </BaseLayout>
 
-<script is:inline>
+<script is:inline define:vars={{ formspreeEndpoint }}>
   const form = document.getElementById('contact-form');
   const feedback = document.getElementById('contact-feedback');
 
@@ -107,15 +110,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       setFeedback('문의 내용은 10자 이상 입력해 주세요.', false);
       return;
     }
+    if (!formspreeEndpoint) {
+      setFeedback('문의 설정이 누락되었습니다. 관리자에게 문의해 주세요.', false);
+      return;
+    }
 
     try {
-      const response = await fetch('/api/contact', {
+      const response = await fetch(formspreeEndpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
         body: JSON.stringify({ type, email, message }),
       });
       const result = await response.json();
-      if (!response.ok || !result?.ok) {
+      if (!response.ok) {
         setFeedback(result?.error || '문의 전송에 실패했습니다. 다시 시도해 주세요.', false);
         return;
       }

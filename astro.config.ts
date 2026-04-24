@@ -3,7 +3,6 @@ import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
-import cloudflare from '@astrojs/cloudflare';
 import tailwindcss from '@tailwindcss/vite';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
@@ -12,11 +11,12 @@ import { rehypeKatexSafeOptions } from './src/lib/katex-shared';
 import { mathMdxHowlearnPlugin } from './src/vite-plugins/math-mdx-howlearn';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const site =
+  (process.env.PUBLIC_SITE_URL || 'https://howlearn.pages.dev').replace(/\/+$/, '');
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://howlearn.pages.dev',
-  output: 'server',
+  site,
   integrations: [
     mdx({
       remarkPlugins: [remarkMath, remarkDfrac],
@@ -34,5 +34,4 @@ export default defineConfig({
     },
     plugins: [tailwindcss(), mathMdxHowlearnPlugin()],
   },
-  adapter: cloudflare(),
 });

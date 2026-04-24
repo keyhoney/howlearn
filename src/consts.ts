@@ -1,7 +1,10 @@
 export const SITE_TITLE = 'HowLearn';
 export const SITE_DESCRIPTION =
   '학습 과학 기반 가이드와 수학 문제 풀이를 통합한 학습 플랫폼';
-export const SITE_URL = 'https://howlearn.pages.dev';
+export const SITE_URL = (import.meta.env.PUBLIC_SITE_URL || 'https://howlearn.pages.dev').replace(
+  /\/+$/,
+  '',
+);
 
 export const NAV_LINKS = [
   { href: '/guides', label: '가이드' },
