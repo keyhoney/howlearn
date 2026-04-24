@@ -1,0 +1,39 @@
+{
+  "name": "howlearn-astro",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "generate-types": "wrangler types",
+    "tina:dev": "tinacms dev -c \"astro dev\"",
+    "tina:build": "tinacms build && astro build",
+    "cms:sync": "tsx scripts/cms-sync.ts",
+    "content:validate": "tsx scripts/validate-content-index.ts",
+    "problem:validate": "tsx scripts/validate-problems.ts"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^13.2.0",
+    "@astrojs/mdx": "^5.0.4",
+    "@astrojs/rss": "^4.0.18",
+    "@astrojs/sitemap": "^3.7.2",
+    "@tailwindcss/typography": "^0.5.19",
+    "@tailwindcss/vite": "^4.2.4",
+    "astro": "^6.1.9",
+    "sharp": "^0.34.3",
+    "tailwindcss": "^4.2.4",
+    "tinacms": "^3.7.3",
+    "wrangler": "^4.84.1"
+  },
+  "devDependencies": {
+    "@tinacms/cli": "^2.2.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tsx": "^4.19.3"
+  }
+}

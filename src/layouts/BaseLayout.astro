@@ -1,0 +1,41 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title = SITE_TITLE,
+  description = SITE_DESCRIPTION,
+  image,
+} = Astro.props;
+const pageTitle = title === SITE_TITLE ? SITE_TITLE : `${title} | ${SITE_TITLE}`;
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <BaseHead title={pageTitle} description={description} image={image} />
+  </head>
+  <body
+    class="flex min-h-screen flex-col bg-white text-slate-900 antialiased dark:bg-slate-900 dark:text-slate-100"
+  >
+    <a
+      href="#main-content"
+      class="fixed left-4 top-4 z-[100] -translate-y-[200%] rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-lg focus:translate-y-0 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:bg-indigo-500 dark:focus:ring-offset-slate-900"
+    >
+      본문으로 건너뛰기
+    </a>
+    <SiteHeader />
+    <main id="main-content" class="flex-1" tabindex="-1">
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>
