@@ -8,6 +8,7 @@ export const STORAGE_KEYS = {
   WRONG_NOTE: 'howlearn-wrong-note',
   BOOKMARK: 'howlearn-bookmark',
   FOCUS_STATE: 'howlearn-focus-state',
+  FOCUS_HISTORY: 'howlearn-focus-history',
   THEME: 'theme',
 } as const;
 

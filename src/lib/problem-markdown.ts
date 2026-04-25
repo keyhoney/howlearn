@@ -47,6 +47,35 @@ export function extractProblemStatementMarkdown(body: string): string {
   return b.slice(0, Math.min(...cuts)).trim();
 }
 
+/** 객관식 선지(①, ②...)를 파싱해 문제 본문/선지로 분리한다. */
+export function extractMcqChoices(problemMarkdown: string): {
+  statement: string;
+  choices: string[];
+} {
+  const lines = problemMarkdown
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean);
+  const choiceLine = [...lines].reverse().find((line) => /①|②|③|④|⑤/.test(line));
+
+  if (!choiceLine) {
+    return { statement: problemMarkdown.trim(), choices: [] };
+  }
+
+  const parts = choiceLine
+    .split(/\s*(?=①|②|③|④|⑤)\s*/)
+    .map((part) => part.replace(/&nbsp;/g, ' ').trim())
+    .filter(Boolean)
+    .map((part) => part.replace(/^[①②③④⑤]\s*/, '').trim());
+
+  const statement = problemMarkdown
+    .replace(choiceLine, '')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+
+  return { statement, choices: parts };
+}
+
 export function extractSection(body: string, headings: string[]): string {
   for (const heading of headings) {
     const marker = `## ${heading}`;
@@ -59,15 +88,46 @@ export function extractSection(body: string, headings: string[]): string {
   return '';
 }
 
+/** 같은 제목(예: `## 힌트`)이 여러 번 등장할 때 순서대로 모두 추출. */
+export function extractSections(body: string, headings: string[]): string[] {
+  const wanted = new Set(headings.map((h) => h.trim()));
+  const headingRegex = /^##\s+(.+)$/gm;
+  const matches: Array<{ title: string; start: number; end: number }> = [];
+
+  let match: RegExpExecArray | null;
+  while ((match = headingRegex.exec(body))) {
+    matches.push({
+      title: match[1].trim(),
+      start: match.index,
+      end: headingRegex.lastIndex,
+    });
+  }
+
+  const chunks: string[] = [];
+  for (let i = 0; i < matches.length; i += 1) {
+    const current = matches[i];
+    if (!wanted.has(current.title)) continue;
+    const nextStart = i + 1 < matches.length ? matches[i + 1].start : body.length;
+    const chunk = body.slice(current.end, nextStart).trim();
+    if (chunk) chunks.push(chunk);
+  }
+
+  return chunks;
+}
+
 export function buildHintSteps(hintText: string): string[] {
   if (!hintText) return [];
+  const stripStepPrefix = (value: string) =>
+    value.replace(/^STEP\s*\d+[:.)\-\s]*/i, '').trim();
+
   const byStepHeading = hintText
     .split(/\n(?=STEP\s*\d+[:.)\-\s])/i)
     .map((v) => v.trim())
     .filter(Boolean);
-  if (byStepHeading.length > 1) return byStepHeading;
+  if (byStepHeading.length > 1) return byStepHeading.map(stripStepPrefix).filter(Boolean);
   return hintText
     .split(/\n{2,}/)
     .map((v) => v.trim())
+    .map(stripStepPrefix)
     .filter(Boolean);
 }

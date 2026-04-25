@@ -42,7 +42,7 @@ function initProblemInteraction(root: Element): void {
 
   let revealedHintCount = 0;
   const restore = getProgressDetail(readProgressStore(progressKey), problemId);
-  const initialHintCount = Math.max(restore.hintRevealedCount || 1, hintEls.length > 0 ? 1 : 0);
+  const initialHintCount = Math.max(restore.hintRevealedCount || 0, 0);
   revealedHintCount = Math.min(initialHintCount, hintEls.length);
   hintEls.forEach((el, idx) => {
     const content = el.querySelector<HTMLElement>('[data-hint-content]');
@@ -52,12 +52,6 @@ function initProblemInteraction(root: Element): void {
     if (content) content.classList.toggle('hidden', !visible);
     if (label) label.textContent = visible ? '접기' : '펼치기';
   });
-  if (restore.solutionRevealed && solutionEl && revealSolutionBtn) {
-    solutionEl.classList.remove('hidden');
-    revealSolutionBtn.textContent = '풀이 공개됨';
-    revealSolutionBtn.setAttribute('disabled', 'true');
-  }
-
   const showResult = (message: string, tone: 'warning' | 'success' | 'danger') => {
     if (!resultEl) return;
     resultEl.classList.remove('hidden');
@@ -94,7 +88,6 @@ function initProblemInteraction(root: Element): void {
       status: isCorrect ? 'done' : 'progress',
       lastAnswer: userValue,
       attemptCount: latest.attemptCount + 1,
-      solutionRevealed: latest.solutionRevealed,
       hintRevealedCount: revealedHintCount,
     });
 
@@ -138,14 +131,20 @@ function initProblemInteraction(root: Element): void {
 
   revealSolutionBtn?.addEventListener('click', () => {
     if (!solutionEl) return;
-    solutionEl.classList.remove('hidden');
-    solutionEl.classList.add('motion-block-reveal');
-    revealSolutionBtn.textContent = '풀이 공개됨';
-    revealSolutionBtn.setAttribute('disabled', 'true');
-    persist({ status: 'done', solutionRevealed: true, hintRevealedCount: revealedHintCount });
+    const isHidden = solutionEl.classList.contains('hidden');
+    if (isHidden) {
+      solutionEl.classList.remove('hidden');
+      solutionEl.classList.add('motion-block-reveal');
+      revealSolutionBtn.textContent = '풀이 닫기';
+      persist({ status: 'done', hintRevealedCount: revealedHintCount });
+      return;
+    }
+
+    solutionEl.classList.add('hidden');
+    revealSolutionBtn.textContent = '풀이 공개';
   });
 
-  persist({ hintRevealedCount: revealedHintCount, solutionRevealed: restore.solutionRevealed });
+  persist({ hintRevealedCount: revealedHintCount });
 }
 
 document.querySelectorAll('[data-problem-interaction]').forEach((root) => {

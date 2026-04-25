@@ -9,28 +9,60 @@ const { problemId } = Astro.props;
 ---
 
 <section
-  class="not-prose mb-6 rounded-sm border border-[var(--card-border)] bg-[var(--surface-2)] p-4"
+  class="not-prose mb-4 app-card app-exam-focus-bar"
   data-focus-toolbar
   data-problem-id={problemId}
   data-focus-key={STORAGE_KEYS.FOCUS_STATE}
+  data-focus-history-key={STORAGE_KEYS.FOCUS_HISTORY}
   data-bookmark-key={STORAGE_KEYS.BOOKMARK}
 >
-  <div class="flex flex-wrap items-center gap-2">
-    <strong class="mr-2 text-sm text-[var(--fg)]">집중 모드</strong>
-    <button type="button" class="app-btn-primary" data-focus-start>시작</button>
-    <button type="button" class="app-btn-secondary" data-focus-pause>일시정지</button>
-    <button type="button" class="app-btn-secondary" data-focus-resume>재개</button>
-    <button type="button" class="app-btn-danger" data-focus-stop>종료</button>
-    <button type="button" class="app-btn-outline-primary" data-bookmark-toggle aria-pressed="false">
-      스크랩
-    </button>
-    <a href="/problems/wrong-note" class="app-btn-secondary">오답노트</a>
-    <a href="/problems/bookmarks" class="app-btn-secondary">스크랩 모음</a>
-    <span class="app-badge app-badge-neutral ml-auto" data-focus-status>대기</span>
-    <span class="rounded-sm border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] px-2 py-1 font-mono text-xs text-[var(--accent)]" data-focus-timer role="status" aria-live="polite">00:00</span>
+  <div class="app-exam-focus-inner">
+    <p class="app-exam-focus-copy">
+      시험처럼 방해 요소를 줄이고 경과 시간만 보려면 모드를 켜세요.
+    </p>
+    <div class="app-exam-focus-actions">
+      <button type="button" class="exam-focus-btn exam-focus-btn-primary exam-focus-idle-only" data-focus-toggle>
+        <svg viewBox="0 0 20 20" aria-hidden="true">
+          <path fill="currentColor" d="M10 3a1 1 0 0 1 1 1v1.09a4.99 4.99 0 0 1 3.91 3.91H16a1 1 0 1 1 0 2h-1.09a4.99 4.99 0 0 1-3.91 3.91V16a1 1 0 1 1-2 0v-1.09A4.99 4.99 0 0 1 5.09 11H4a1 1 0 1 1 0-2h1.09A4.99 4.99 0 0 1 9 5.09V4a1 1 0 0 1 1-1Zm0 4a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/>
+        </svg>
+        <span data-focus-toggle-label>집중 모드 켜기</span>
+      </button>
+      <button type="button" class="exam-focus-btn exam-focus-btn-ghost exam-focus-optional" data-focus-pause>
+        <svg viewBox="0 0 20 20" aria-hidden="true">
+          <path fill="currentColor" d="M6.75 4.5a.75.75 0 0 1 .75.75v9.5a.75.75 0 0 1-1.5 0v-9.5a.75.75 0 0 1 .75-.75Zm6.5 0a.75.75 0 0 1 .75.75v9.5a.75.75 0 0 1-1.5 0v-9.5a.75.75 0 0 1 .75-.75Z"/>
+        </svg>
+        <span>일시정지</span>
+      </button>
+      <button type="button" class="exam-focus-btn exam-focus-btn-ghost exam-focus-optional" data-focus-resume>
+        <svg viewBox="0 0 20 20" aria-hidden="true">
+          <path fill="currentColor" d="M6.5 4.75A.75.75 0 0 1 7.67 4.1l7 5.25a.75.75 0 0 1 0 1.2l-7 5.25A.75.75 0 0 1 6.5 15.2V4.75Z"/>
+        </svg>
+        <span>재개</span>
+      </button>
+      <button type="button" class="exam-focus-btn exam-focus-btn-ghost exam-focus-optional" data-focus-stop>
+        <span>모드 끄기</span>
+      </button>
+      <button type="button" class="exam-focus-btn exam-focus-btn-outline exam-focus-idle-only" data-bookmark-toggle aria-pressed="false">
+        <svg viewBox="0 0 20 20" aria-hidden="true">
+          <path fill="currentColor" d="M6 3.75A1.75 1.75 0 0 0 4.25 5.5v10.56c0 .57.65.9 1.12.58L10 13.65l4.63 2.99c.47.31 1.12-.02 1.12-.58V5.5A1.75 1.75 0 0 0 14 3.75H6Zm-.25 1.75c0-.14.11-.25.25-.25h8c.14 0 .25.11.25.25v9.18l-3.84-2.48a.75.75 0 0 0-.82 0l-3.84 2.48V5.5Z"/>
+        </svg>
+        <span>스크랩</span>
+      </button>
+      <span class="exam-focus-status exam-focus-optional" data-focus-status>대기</span>
+      <span
+        class="exam-focus-timer exam-focus-optional"
+        role="status"
+        aria-live="polite"
+      >
+        <svg viewBox="0 0 20 20" aria-hidden="true">
+          <path fill="currentColor" d="M10 4a6 6 0 1 0 6 6 6.01 6.01 0 0 0-6-6Zm0-2a8 8 0 1 1-8 8 8 8 0 0 1 8-8Zm0 2a1 1 0 0 1 1 1v4.38l2.24 1.49a1 1 0 1 1-1.1 1.66l-2.68-1.8A1 1 0 0 1 9 10V5a1 1 0 0 1 1-1Zm-3.5-.75a.75.75 0 0 1 .75-.75h5.5a.75.75 0 0 1 0 1.5h-5.5a.75.75 0 0 1-.75-.75Z"/>
+        </svg>
+        <span data-focus-timer>00:00</span>
+      </span>
+    </div>
   </div>
 </section>
 
-<script type="module">
+<script>
   import '../lib/client/focus-toolbar';
 </script>

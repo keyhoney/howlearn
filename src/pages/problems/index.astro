@@ -67,12 +67,12 @@ const buildPageHref = (targetPage: number) => {
 };
 ---
 
-<BaseLayout title="문제" description="수학 기출 문제 목록">
+<BaseLayout title="수능·모평 수학 문제" description="수능/모의평가 기출 문제 및 단계별 힌트·해설">
   <section class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
     <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
       <div>
-        <h1 class="app-section-title">문제</h1>
-        <p class="mt-2 text-sm text-[var(--fg-muted)]">수능/모의평가 문제 {filtered.length}문항</p>
+        <h1 class="app-section-title">수능·모평 수학 문제</h1>
+        <p class="mt-2 text-sm text-[var(--fg-muted)]">수능/모의평가 기출 {filtered.length}문항</p>
       </div>
       <div class="flex flex-wrap gap-2">
         <span class="app-badge app-badge-info">전체 {allProblems.length}</span>

@@ -7,10 +7,11 @@ export const SITE_URL = (import.meta.env.PUBLIC_SITE_URL || 'https://howlearn.pa
 );
 
 export const NAV_LINKS = [
-  { href: '/guides', label: '가이드' },
-  { href: '/concepts', label: '개념' },
-  { href: '/books', label: '도서' },
-  { href: '/columns', label: '칼럼' },
-  { href: '/problems', label: '문제' },
-  { href: '/essay-problems', label: '논술' },
+  { href: '/dashboard', label: '학습 대시보드' },
+  { href: '/guides', label: '학부모 가이드' },
+  { href: '/columns', label: '수학 학습 칼럼' },
+  { href: '/concepts', label: '학습 과학 개념' },
+  { href: '/books', label: '도서 추천' },
+  { href: '/problems', label: '수능모평 수학 문제' },
+  { href: '/essay-problems', label: '대학별 고사 수학 문제' },
 ] as const;

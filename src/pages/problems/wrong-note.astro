@@ -42,10 +42,10 @@ const candidates = [
 ---
 
 <BaseLayout title="오답 노트" description="로컬 오답 기록 기반 복습 페이지">
-  <section class="container mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
-    <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
+  <section class="app-content-wrap py-8 sm:py-10">
+    <div class="app-card book-card--compact mb-6 flex flex-wrap items-end justify-between gap-3">
       <div>
-        <h1 class="app-section-title">오답 노트</h1>
+        <h1 class="type-article-title">오답 노트</h1>
         <p class="mt-2 text-sm text-[var(--fg-muted)]">최근 오답순으로 정렬된 개인 복습 목록입니다.</p>
       </div>
       <div class="flex flex-wrap items-center gap-2">
@@ -54,7 +54,7 @@ const candidates = [
       </div>
     </div>
 
-    <div class="app-card p-4 sm:p-5">
+    <div class="app-card book-card--compact">
       <p class="text-sm text-[var(--fg-muted)] leading-relaxed">
         오답 횟수와 최근 시각을 기준으로 복습 우선순위를 잡아보세요.
       </p>

@@ -1,6 +1,6 @@
 {
   "2026-csat-02": {
-    "source": "2026년 수능 수학",
+    "source": "2026년 수능 수학 13번",
     "year": 2026,
     "month": 11,
     "examType": "수능",
@@ -10,7 +10,6 @@
     "difficulty": 1,
     "answerType": "mcq",
     "answer": 4,
-    "tags": ["도함수", "극한"],
     "relatedProblemIds": []
   }
 }

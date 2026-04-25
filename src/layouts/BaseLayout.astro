@@ -37,7 +37,11 @@ const pathname = Astro.url.pathname;
     </a>
 
     <div class="flex min-h-screen">
-      <div id="app-site-sidebar" class="hidden lg:block">
+      <div id="app-site-sidebar-rail" class="block lg:hidden sticky top-0 h-screen self-start">
+        <AppSidebar pathname={pathname} iconOnly />
+      </div>
+
+      <div id="app-site-sidebar" class="hidden lg:block sticky top-0 h-screen self-start">
         <AppSidebar pathname={pathname} />
       </div>
 
@@ -82,9 +86,12 @@ const pathname = Astro.url.pathname;
           root.classList.toggle('dark', isDark);
           if (toggleButton) toggleButton.setAttribute('aria-pressed', String(isDark));
           if (toggleLabel) toggleLabel.textContent = isDark ? '라이트 모드' : '다크 모드';
-          if (toggleThumb) toggleThumb.style.transform = isDark
-            ? 'translate(28px, -50%)'
-            : 'translate(0, -50%)';
+          if (toggleThumb && toggleButton) {
+            const maxOffset = Math.max(0, toggleButton.clientWidth - toggleThumb.clientWidth - 6);
+            toggleThumb.style.transform = isDark
+              ? `translate(${maxOffset}px, -50%)`
+              : 'translate(0, -50%)';
+          }
           if (iconLight) iconLight.classList.toggle('hidden', isDark);
           if (iconDark) iconDark.classList.toggle('hidden', !isDark);
         };

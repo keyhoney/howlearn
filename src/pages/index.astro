@@ -1,87 +1,54 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
-import { STORAGE_KEYS } from '../lib/storage-keys';
-
-const guides = await getCollection('guides');
-const [problems, essayProblems] = await Promise.all([
-  getCollection('problems'),
-  getCollection('essay-problems'),
-]);
-const totalProblemCount = problems.length + essayProblems.length;
-const kpis = [
-  {
-    key: 'study-time',
-    href: '/problems',
-    label: '누적 집중 학습 시간',
-    value: '--',
-    meta: '집중 모드 기록 기준',
-  },
-  {
-    key: 'done-count',
-    href: '/problems',
-    label: '완료 문제 수',
-    value: '--',
-    meta: '풀이 완료 상태 기준',
-  },
-  {
-    key: 'wrong-count',
-    href: '/problems/wrong-note',
-    label: '오답 복습 필요',
-    value: '--',
-    meta: '오답 노트 기록 기준',
-  },
-  {
-    key: 'guide-count',
-    href: '/guides',
-    label: '등록 가이드',
-    value: String(guides.length),
-    meta: '콘텐츠 컬렉션 기준',
-  },
-];
-
 const sections = [
   {
-    href: '/guides',
-    title: '가이드',
-    desc: '학습 과학 기반 학습법/교육 전략 가이드',
+    href: '/dashboard',
+    title: '학습 대시보드',
+    desc: '누적 집중 시간, 문제 진행률, 오답 복습 우선순위를 한눈에 확인할 수 있습니다.',
     badgeClass: 'app-badge-type-guide',
-    badgeLabel: '가이드',
+    badgeLabel: '대시보드',
+  },
+  {
+    href: '/guides',
+    title: '학부모 가이드',
+    desc: '학습 과학 이론을 바탕으로, 가정에서 아이의 공부를 돕는 지도 원칙과 실천 방법을 안내합니다.',
+    badgeClass: 'app-badge-type-guide',
+    badgeLabel: '학부모',
+  },
+  {
+    href: '/columns',
+    title: '수학 학습 칼럼',
+    desc: '학생이 수학을 더 효율적으로 공부할 수 있도록, 학습 과학 기반의 전략과 루틴을 제안합니다.',
+    badgeClass: 'app-badge-type-column',
+    badgeLabel: '칼럼',
   },
   {
     href: '/concepts',
-    title: '개념',
-    desc: '인지 부하, 분산 학습 등 핵심 개념 사전',
+    title: '학습 과학 개념',
+    desc: '학습 과학의 핵심 이론 및 개념을 쉽게 설명합니다.',
     badgeClass: 'app-badge-type-concept',
     badgeLabel: '개념',
   },
   {
     href: '/books',
-    title: '도서',
-    desc: '부모·학습자에게 도움이 되는 도서 리뷰',
+    title: '도서 추천',
+    desc: '학습 과학 관점에서 엄선한 도서를 소개하고, 지금 상황에 맞는 실천 포인트를 빠르게 찾도록 돕습니다.',
     badgeClass: 'app-badge-type-book',
     badgeLabel: '도서',
   },
   {
-    href: '/columns',
-    title: '칼럼',
-    desc: '장기 학습을 돕는 에세이 콘텐츠',
-    badgeClass: 'app-badge-type-column',
-    badgeLabel: '칼럼',
-  },
-  {
     href: '/problems',
-    title: '수학 문제',
-    desc: '객관식/단답형 정답 체크 + 단계별 힌트',
+    title: '수능·모평 수학 문제',
+    desc: '수능/모의평가 기출 문제를 단계별 힌트·해설과 함께 제공하고, 개념별 빈출도·중요도까지 확인할 수 있습니다.',
     badgeClass: 'app-badge-type-problem',
-    badgeLabel: '문제',
+    badgeLabel: '수능·모평',
   },
   {
     href: '/essay-problems',
-    title: '논술 수학',
-    desc: '기출 기반 논술 문제 풀이 학습',
+    title: '대학별 고사 수학 문제',
+    desc: '대학별 고사 대비를 위한 논술 문제 풀이 전략과 실전 학습 자료를 제공합니다.',
     badgeClass: 'app-badge-type-essay',
-    badgeLabel: '논술',
+    badgeLabel: '대학별 고사',
   },
 ];
 ---
@@ -90,44 +57,20 @@ const sections = [
   title="HowLearn"
   description="학습 과학 기반 가이드와 수학 문제 풀이를 통합한 학습 플랫폼"
 >
-  <section class="container mx-auto max-w-7xl px-4 pb-8 pt-10 sm:px-6 lg:px-8">
-    <h2 class="app-section-title">학습 대시보드</h2>
-    <ul class="app-kpi-grid mt-5">
-      {
-        kpis.map((kpi) => (
-          <li>
-            <a
-              href={kpi.href}
-              class="app-card app-card-interactive app-card-body block"
-              data-kpi-item
-              data-kpi-key={kpi.key}
-            >
-              <p class="app-kpi-label">{kpi.label}</p>
-              <p class="app-kpi-value" data-kpi-value>{kpi.value}</p>
-              <p class="app-kpi-meta" data-kpi-meta>{kpi.meta}</p>
-            </a>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
-
   <section
-    class="container mx-auto max-w-7xl px-4 pb-12 pt-16 sm:px-6 sm:pt-24 lg:px-8"
+    class="container mx-auto max-w-7xl px-4 pb-6 pt-6 sm:px-6 sm:pb-8 sm:pt-10 lg:px-8"
   >
-    <p class="text-sm font-medium uppercase tracking-wider text-[var(--accent)]">
-      Learning Science · Math Practice
-    </p>
-    <h1 class="mt-4 text-4xl font-bold tracking-tight text-[var(--fg)] sm:text-5xl">
-      어떻게 배워야 잘 배우는가
-    </h1>
-    <p class="mt-4 max-w-2xl text-lg text-[var(--fg-muted)]">
-      HowLearn은 학습 과학 이론에 기반한 가이드/개념/도서/칼럼과,
-      단계별 힌트로 사고력을 키우는 수학 문제 풀이를 하나의 경험으로 제공합니다.
-    </p>
+    <div class="app-dashboard-header">
+      <p class="app-dashboard-kicker">Learning Science · Math Practice</p>
+      <h1 class="app-hero-title">어떻게 배워야 잘 배우는가</h1>
+      <p class="app-dashboard-subtitle">
+        HowLearn은 학습 과학 이론에 기반한 학부모 가이드/학습 과학 개념/수학 학습 칼럼과,
+        단계별 힌트로 사고력을 키우는 수능·모평 및 대학별 고사 수학 문제 풀이를 하나의 경험으로 제공합니다.
+      </p>
+    </div>
     <div class="mt-8 flex flex-wrap gap-3">
       <a href="/guides" class="app-btn-primary">
-        가이드 둘러보기
+        학부모 가이드 보기
       </a>
       <a href="/problems" class="app-btn-secondary">
         문제 풀어보기
@@ -165,95 +108,4 @@ const sections = [
     </ul>
   </section>
 
-  <section class="container mx-auto max-w-3xl px-4 pb-24 sm:px-6 lg:px-8">
-    <article class="prose prose-slate dark:prose-invert">
-      <h2>타이포그래피 샘플</h2>
-      <p>
-        본문은 <code>@tailwindcss/typography</code> 플러그인의 <code>prose</code> 클래스를
-        기반으로 긴 글 가독성을 최적화합니다. 인용/코드/목록/표 모두 동일한 톤으로
-        정렬됩니다.
-      </p>
-      <blockquote>
-        잘 설계된 타이포그래피는 학습자의 인지 부하를 낮춘다.
-      </blockquote>
-      <ul>
-        <li>학습 과학 기반 콘텐츠 체계</li>
-        <li>단계별 힌트 학습 흐름</li>
-        <li>오답 노트/북마크/집중 모드</li>
-      </ul>
-    </article>
-  </section>
 </BaseLayout>
-
-<script is:inline define:vars={{ STORAGE_KEYS, totalProblemCount }}>
-  function parse(raw, fallback) {
-    try {
-      return JSON.parse(raw);
-    } catch {
-      return fallback;
-    }
-  }
-
-  function formatDuration(ms) {
-    const totalMin = Math.max(0, Math.floor((ms || 0) / 60000));
-    const hours = Math.floor(totalMin / 60);
-    const mins = totalMin % 60;
-    if (hours <= 0) return `${mins}m`;
-    return `${hours}h ${String(mins).padStart(2, '0')}m`;
-  }
-
-  function formatPercent(value) {
-    if (!Number.isFinite(value)) return '0%';
-    return `${Math.round(value)}%`;
-  }
-
-  function setKpi(key, value, meta) {
-    const root = document.querySelector(`[data-kpi-item][data-kpi-key="${key}"]`);
-    if (!root) return;
-    const valueEl = root.querySelector('[data-kpi-value]');
-    const metaEl = root.querySelector('[data-kpi-meta]');
-    if (valueEl) valueEl.textContent = value;
-    if (metaEl) metaEl.textContent = meta;
-  }
-
-  const progress = parse(localStorage.getItem(STORAGE_KEYS.PROBLEM_PROGRESS) || '', {
-    v: 1,
-    byId: {},
-  });
-  const wrong = parse(localStorage.getItem(STORAGE_KEYS.WRONG_NOTE) || '', {
-    v: 1,
-    byId: {},
-  });
-  const focus = parse(localStorage.getItem(STORAGE_KEYS.FOCUS_STATE) || '', {
-    v: 1,
-    status: 'idle',
-    elapsedMs: 0,
-    startedAt: null,
-  });
-
-  const doneCount = Object.values(progress.byId || {}).filter((status) => status === 'done').length;
-
-  const wrongRows = Object.values(wrong.byId || {});
-  const wrongCount = wrongRows.length;
-  const highPriorityCount = wrongRows.filter((bucket) => (bucket?.entries?.length || 0) >= 2).length;
-
-  const elapsedMs =
-    focus.status === 'running' && focus.startedAt
-      ? (focus.elapsedMs || 0) + (Date.now() - focus.startedAt)
-      : focus.elapsedMs || 0;
-
-  const progressRate = totalProblemCount > 0 ? (doneCount / totalProblemCount) * 100 : 0;
-  const wrongPriorityRate = wrongCount > 0 ? (highPriorityCount / wrongCount) * 100 : 0;
-  const focusStateLabel =
-    focus.status === 'running'
-      ? '집중 모드 진행 중'
-      : focus.status === 'paused'
-        ? '집중 모드 일시정지'
-        : focus.status === 'finished'
-          ? '최근 세션 종료'
-          : '집중 모드 대기';
-
-  setKpi('study-time', formatDuration(elapsedMs), `${focusStateLabel} · 누적 기록`);
-  setKpi('done-count', String(doneCount), `총 ${totalProblemCount}문항 중 ${formatPercent(progressRate)} 완료`);
-  setKpi('wrong-count', String(wrongCount), `우선 복습 ${highPriorityCount}문항 (${formatPercent(wrongPriorityRate)})`);
-</script>

@@ -5,8 +5,10 @@ import ExamPracticeToolbar from '../../components/ExamPracticeToolbar.astro';
 import DifficultyStars from '../../components/DifficultyStars.astro';
 import {
   buildHintSteps,
+  extractMcqChoices,
   extractProblemStatementMarkdown,
   extractSection,
+  extractSections,
   renderTrustedMarkdown,
 } from '../../lib/problem-markdown';
 import { getCollection, getEntry } from 'astro:content';
@@ -33,12 +35,13 @@ if (!entry) {
 const { source, year, month, examType, chapter, concept, difficulty, answerType, answer, tags } =
   entry.data;
 
-const problemMd = extractProblemStatementMarkdown(entry.body);
+const rawProblemMd = extractProblemStatementMarkdown(entry.body);
+const { statement: problemMd, choices: mcqChoices } = extractMcqChoices(rawProblemMd);
 const problemHtml = await renderTrustedMarkdown(problemMd);
 
-const hintText = extractSection(entry.body, ['힌트']);
+const hintSections = extractSections(entry.body, ['힌트']);
 const solutionText = extractSection(entry.body, ['풀이']);
-const hintSteps = buildHintSteps(hintText);
+const hintSteps = hintSections.flatMap((section) => buildHintSteps(section));
 const hintStepsHtml =
   hintSteps.length > 0 ? await Promise.all(hintSteps.map((s) => renderTrustedMarkdown(s))) : [];
 const solutionHtml = await renderTrustedMarkdown(solutionText);
@@ -68,27 +71,19 @@ const conceptByProblemId = Object.fromEntries(allProblems.map((p) => [p.id, p.da
   title={source}
   description={`${year}년 ${month}월 ${examType} · ${chapter} · ${concept}`}
 >
-  <article class="app-content-wrap prose prose-slate dark:prose-invert prose-headings:tracking-tight">
-    <header class="not-prose app-card mb-6 focus-hide-hard">
-      <p class="text-sm font-medium text-[var(--accent)]">
-        <a href="/problems" class="hover:underline">문제</a>
-        <span class="mx-2 text-[var(--fg-muted)] opacity-50">/</span>
-        <span class="text-[var(--fg-muted)]">{entry.id}</span>
-      </p>
-      <h1 class="mt-4 text-3xl font-bold tracking-tight text-[var(--fg)]">
-        {source}
-      </h1>
-      <div class="mt-4 flex flex-wrap gap-2 focus-hide-in-exam">
+  <article class="app-content-wrap prose prose-slate dark:prose-invert prose-headings:tracking-tight exam-problem-page">
+    <ExamPracticeToolbar problemId={entry.id} />
+    <header class="not-prose app-card book-card--compact mb-4 focus-hide-hard">
+      <a href="/problems" class="exam-back-link">← 목록으로 돌아가기</a>
+      <div class="exam-meta-row mt-4 flex flex-wrap items-center gap-2 focus-hide-in-exam">
         <span class="app-badge app-badge-info">
-          {year}년 {month}월
+          {year}년 {month}월 {examType}
         </span>
-        <span class="app-badge app-badge-neutral">{examType}</span>
-        <span class="app-badge app-badge-neutral">{chapter}</span>
-        <span class="app-badge app-badge-neutral">{concept}</span>
+        <span class="app-badge app-badge-type-problem">{entry.data.subject} &gt; {chapter} &gt; {concept}</span>
         <DifficultyStars value={difficulty} />
-        <span class="app-badge app-badge-success">
-          {answerType === 'mcq' ? '객관식' : '단답형'} / 정답 {answer}
-        </span>
+      </div>
+      <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
+        <h1 class="type-article-title m-0">{source}</h1>
       </div>
       {tags.length > 0 && (
         <div class="mt-4 flex flex-wrap gap-2 focus-hide-in-exam">
@@ -100,8 +95,6 @@ const conceptByProblemId = Object.fromEntries(allProblems.map((p) => [p.id, p.da
         </div>
       )}
     </header>
-
-    <ExamPracticeToolbar problemId={entry.id} />
     <p class="focus-only-note app-feedback app-feedback-info not-prose mb-4">
       집중 모드가 켜져 있습니다. 힌트·최종 풀이·관련 문제는 집중 모드 종료 후 다시 볼 수 있습니다.
     </p>
@@ -117,12 +110,13 @@ const conceptByProblemId = Object.fromEntries(allProblems.map((p) => [p.id, p.da
       problemId={entry.id}
       answerType={answerType}
       answer={answer}
+      mcqChoices={mcqChoices}
       hintStepsHtml={hintStepsHtml}
       solutionHtml={solutionHtml}
     />
 
     {relatedProblems.length > 0 && (
-      <section class="not-prose mt-8 focus-hide-in-exam">
+      <section class="not-prose mt-6 focus-hide-in-exam">
         <div class="app-card p-5">
           <h2 class="text-xl font-bold tracking-tight text-[var(--fg)]">같은 개념의 관련 문제</h2>
           <div class="mt-4 grid gap-3" data-related-list>
