@@ -95,8 +95,6 @@ export interface Problem {
   questionMdx: string;
   hintsMdx: string[];
   answerMdx: string;
-  tags: string[];
-  relatedProblemIds: string[];
 }
 
 export interface EssayProblem extends Problem {

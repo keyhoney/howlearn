@@ -41,16 +41,10 @@ function initProblemInteraction(root: Element): void {
   };
 
   let revealedHintCount = 0;
-  const restore = getProgressDetail(readProgressStore(progressKey), problemId);
-  const initialHintCount = Math.max(restore.hintRevealedCount || 0, 0);
-  revealedHintCount = Math.min(initialHintCount, hintEls.length);
   hintEls.forEach((el, idx) => {
     const content = el.querySelector<HTMLElement>('[data-hint-content]');
-    const label = el.querySelector<HTMLElement>('[data-hint-toggle] span');
     const visible = idx < revealedHintCount;
-    el.classList.toggle('hidden', !visible);
     if (content) content.classList.toggle('hidden', !visible);
-    if (label) label.textContent = visible ? '접기' : '펼치기';
   });
   const showResult = (message: string, tone: 'warning' | 'success' | 'danger') => {
     if (!resultEl) return;
@@ -61,17 +55,22 @@ function initProblemInteraction(root: Element): void {
 
   const revealNextHint = () => {
     if (revealedHintCount >= hintEls.length) return;
-    const target = hintEls[revealedHintCount];
-    target?.classList.remove('hidden');
+    const target = hintEls.find((el) => {
+      const content = el.querySelector<HTMLElement>('[data-hint-content]');
+      return Boolean(content?.classList.contains('hidden'));
+    });
+    if (!target) return;
     const content = target?.querySelector<HTMLElement>('[data-hint-content]');
     if (content) {
       content.classList.remove('hidden');
       content.classList.add('motion-hint-expand');
     }
-    const toggleLabel = target?.querySelector<HTMLElement>('[data-hint-toggle] span');
-    if (toggleLabel) toggleLabel.textContent = '접기';
     revealedHintCount += 1;
-    persist({ hintRevealedCount: revealedHintCount, status: 'progress' });
+    persist({ status: 'progress' });
+    if (revealHintBtn && revealedHintCount >= hintEls.length) {
+      revealHintBtn.disabled = true;
+      revealHintBtn.textContent = '힌트 모두 공개됨';
+    }
   };
 
   const checkAnswer = (userValue: string) => {
@@ -88,7 +87,6 @@ function initProblemInteraction(root: Element): void {
       status: isCorrect ? 'done' : 'progress',
       lastAnswer: userValue,
       attemptCount: latest.attemptCount + 1,
-      hintRevealedCount: revealedHintCount,
     });
 
     if (!isCorrect) {
@@ -97,7 +95,6 @@ function initProblemInteraction(root: Element): void {
         problemId,
         answerType === 'mcq' ? { t: 'mcq', choice: Number(userValue) || 0, ts: Date.now() } : { t: 'short', value: userValue, ts: Date.now() },
       );
-      revealNextHint();
     }
   };
 
@@ -116,19 +113,6 @@ function initProblemInteraction(root: Element): void {
   });
 
   revealHintBtn?.addEventListener('click', revealNextHint);
-  root.querySelectorAll<HTMLElement>('[data-hint-toggle]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const item = btn.closest('[data-hint-step]');
-      const content = item?.querySelector<HTMLElement>('[data-hint-content]');
-      if (!content) return;
-      const willHide = !content.classList.contains('hidden');
-      content.classList.toggle('hidden');
-      if (!willHide) content.classList.add('motion-hint-expand');
-      const label = btn.querySelector('span');
-      if (label) label.textContent = content.classList.contains('hidden') ? '펼치기' : '접기';
-    });
-  });
-
   revealSolutionBtn?.addEventListener('click', () => {
     if (!solutionEl) return;
     const isHidden = solutionEl.classList.contains('hidden');
@@ -136,7 +120,7 @@ function initProblemInteraction(root: Element): void {
       solutionEl.classList.remove('hidden');
       solutionEl.classList.add('motion-block-reveal');
       revealSolutionBtn.textContent = '풀이 닫기';
-      persist({ status: 'done', hintRevealedCount: revealedHintCount });
+      persist({ status: 'done' });
       return;
     }
 
@@ -144,7 +128,10 @@ function initProblemInteraction(root: Element): void {
     revealSolutionBtn.textContent = '풀이 공개';
   });
 
-  persist({ hintRevealedCount: revealedHintCount });
+  if (revealHintBtn && hintEls.length === 0) {
+    revealHintBtn.disabled = true;
+  }
+
 }
 
 document.querySelectorAll('[data-problem-interaction]').forEach((root) => {

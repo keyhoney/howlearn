@@ -2,33 +2,131 @@
   "sample-essay": {
     "source": "예시대학 2026 논술 기출",
     "year": 2026,
-    "month": 11,
     "examType": "논술",
-    "subject": "수학",
-    "chapter": "확률과 통계",
-    "concept": "조건부 확률",
     "difficulty": 4,
-    "answerType": "short",
-    "answer": 0,
     "university": "예시대학",
     "examYear": 2026,
-    "tags": ["조건부확률", "베이즈"],
+    "tags": [],
     "relatedProblemIds": []
   },
   "2026-example-essay": {
     "source": "2026년 예시대학 논술",
     "year": 2026,
-    "month": 11,
     "examType": "논술",
-    "subject": "수학",
-    "chapter": "미적분",
-    "concept": "연속·미분가능",
     "difficulty": 4,
-    "answerType": "short",
-    "answer": 0,
     "university": "예시대학",
     "examYear": 2026,
-    "tags": ["연속", "미분가능"],
+    "tags": [],
+    "relatedProblemIds": []
+  },
+  "2026-essay-03": {
+    "source": "2026년 가온대 논술 수학 (더미)",
+    "year": 2026,
+    "examType": "논술",
+    "difficulty": 3,
+    "university": "가온대학교",
+    "examYear": 2026,
+    "tags": ["미분", "접선"],
+    "relatedProblemIds": []
+  },
+  "2026-essay-04": {
+    "source": "2026년 나래대 논술 수학 (더미)",
+    "year": 2026,
+    "examType": "논술",
+    "difficulty": 4,
+    "university": "나래대학교",
+    "examYear": 2026,
+    "tags": ["적분", "면적"],
+    "relatedProblemIds": []
+  },
+  "2026-essay-05": {
+    "source": "2026년 다온대 논술 수학 (더미)",
+    "year": 2026,
+    "examType": "논술",
+    "difficulty": 2,
+    "university": "다온대학교",
+    "examYear": 2026,
+    "tags": ["수열", "귀납법"],
+    "relatedProblemIds": []
+  },
+  "2025-essay-06": {
+    "source": "2025년 라온대 논술 수학 (더미)",
+    "year": 2025,
+    "examType": "논술",
+    "difficulty": 5,
+    "university": "라온대학교",
+    "examYear": 2025,
+    "tags": ["확률", "조건부확률"],
+    "relatedProblemIds": []
+  },
+  "2025-essay-07": {
+    "source": "2025년 마루대 논술 수학 (더미)",
+    "year": 2025,
+    "examType": "논술",
+    "difficulty": 3,
+    "university": "마루대학교",
+    "examYear": 2025,
+    "tags": ["벡터", "내적"],
+    "relatedProblemIds": []
+  },
+  "2025-essay-08": {
+    "source": "2025년 바른대 논술 수학 (더미)",
+    "year": 2025,
+    "examType": "논술",
+    "difficulty": 4,
+    "university": "바른대학교",
+    "examYear": 2025,
+    "tags": ["함수", "합성함수"],
+    "relatedProblemIds": []
+  },
+  "2025-essay-09": {
+    "source": "2025년 새론대 논술 수학 (더미)",
+    "year": 2025,
+    "examType": "논술",
+    "difficulty": 2,
+    "university": "새론대학교",
+    "examYear": 2025,
+    "tags": ["로그", "지수"],
+    "relatedProblemIds": []
+  },
+  "2024-essay-10": {
+    "source": "2024년 아람대 논술 수학 (더미)",
+    "year": 2024,
+    "examType": "논술",
+    "difficulty": 4,
+    "university": "아람대학교",
+    "examYear": 2024,
+    "tags": ["기하", "공간좌표"],
+    "relatedProblemIds": []
+  },
+  "2024-essay-11": {
+    "source": "2024년 여울대 논술 수학 (더미)",
+    "year": 2024,
+    "examType": "논술",
+    "difficulty": 3,
+    "university": "여울대학교",
+    "examYear": 2024,
+    "tags": ["미적분", "극한"],
+    "relatedProblemIds": []
+  },
+  "2024-essay-12": {
+    "source": "2024년 온빛대 논술 수학 (더미)",
+    "year": 2024,
+    "examType": "논술",
+    "difficulty": 1,
+    "university": "온빛대학교",
+    "examYear": 2024,
+    "tags": ["기초", "함수"],
+    "relatedProblemIds": []
+  },
+  "2024-essay-13": {
+    "source": "2024년 이룸대 논술 수학 (더미)",
+    "year": 2024,
+    "examType": "논술",
+    "difficulty": 5,
+    "university": "이룸대학교",
+    "examYear": 2024,
+    "tags": ["고난도", "증명"],
     "relatedProblemIds": []
   }
 }

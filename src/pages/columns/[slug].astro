@@ -3,6 +3,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection, getEntry, render } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
 import { getRelatedContent } from '../../lib/content-utils';
+import tinaClient from '../../../tina/__generated__/client';
+import ColumnInlineView from '../../components/tina/ColumnInlineView';
 import {
   buildArticleJsonLd,
   buildBreadcrumbJsonLd,
@@ -31,11 +33,29 @@ if (!entry) {
   return Astro.redirect('/columns');
 }
 const { Content } = await render(entry);
+const inlineMode = import.meta.env.DEV;
+let tinaResponse = null;
+if (inlineMode) {
+  try {
+    tinaResponse = await tinaClient.queries.columns({ relativePath: `${entry.id}.mdx` });
+  } catch {
+    tinaResponse = null;
+  }
+}
 const { title, summary, publishedAt, faq, references, coverImage, seoDescription } =
   entry.data;
 const description = seoDescription ?? summary;
 const relatedItems = await getRelatedContent(entry, 4);
+const getCollectionLabel = (collection: string) =>
+  ({
+    guides: '가이드',
+    columns: '칼럼',
+    concepts: '개념',
+    books: '도서',
+  })[collection] ?? collection;
 const pagePath = `/columns/${entry.id}`;
+const tinaPath = `columns/${entry.id}.mdx`;
+const tinaField = (field: string) => `${tinaPath}#${field}`;
 const jsonLd = [
   buildArticleJsonLd({
     title,
@@ -63,34 +83,53 @@ const jsonLd = [
   <article class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
     <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px]">
       <div>
-    <header class="not-prose app-card mb-8 p-6">
-      <p class="text-sm font-medium text-[var(--accent)]">
-        <a href="/columns" class="hover:underline">칼럼</a>
-        <span class="mx-2 text-[var(--fg-muted)] opacity-50">/</span>
-        <span class="text-[var(--fg-muted)]">{entry.id}</span>
-      </p>
-      <h1 class="mt-4 text-3xl font-bold tracking-tight text-[var(--fg)]">
-        {title}
-      </h1>
-      <div class="mt-4 flex flex-wrap gap-2">
-        {publishedAt && <span class="app-chip">{publishedAt.toLocaleDateString('ko-KR')}</span>}
-        {entry.data.tags?.slice(0, 3).map((t) => <span class="app-chip">#{t}</span>)}
-      </div>
-      <p class="mt-6 text-lg leading-relaxed text-[var(--fg-muted)]">{summary}</p>
-    </header>
+    {inlineMode && tinaResponse ? (
+      <ColumnInlineView
+        query={tinaResponse.query}
+        variables={tinaResponse.variables}
+        data={tinaResponse.data}
+      />
+    ) : (
+      <>
+        <header class="not-prose app-card mb-8 p-6">
+          <p class="text-sm font-medium text-[var(--accent)]">
+            <a href="/columns" class="hover:underline">칼럼</a>
+            <span class="mx-2 text-[var(--fg-muted)] opacity-50">/</span>
+            <span class="text-[var(--fg-muted)]">{entry.id}</span>
+          </p>
+          <h1 class="mt-4 text-3xl font-bold tracking-tight text-[var(--fg)]" data-tina-field={tinaField('title')}>
+            {title}
+          </h1>
+          <div class="mt-4 flex flex-wrap gap-2">
+            {publishedAt && <span class="app-chip">{publishedAt.toLocaleDateString('ko-KR')}</span>}
+            {entry.data.tags?.slice(0, 3).map((t) => <span class="app-chip">#{t}</span>)}
+          </div>
+          <p class="mt-6 text-lg leading-relaxed text-[var(--fg-muted)]" data-tina-field={tinaField('summary')}>
+            {summary}
+          </p>
+        </header>
 
-    <div class="prose prose-book dark:prose-invert prose-headings:tracking-tight max-w-none app-card p-6">
-      <Content />
-    </div>
+        <div
+          class="prose prose-book dark:prose-invert prose-headings:tracking-tight max-w-none app-card p-6"
+          data-tina-field={tinaField('body')}
+        >
+          <Content />
+        </div>
+      </>
+    )}
 
     {
       faq && faq.length > 0 && (
         <section class="app-card mt-8 p-6">
           <h2 class="text-xl font-bold text-[var(--fg)]">FAQ</h2>
+          <p class="mt-2 text-sm text-[var(--fg-muted)]">질문을 클릭하면 답변이 펼쳐집니다.</p>
           <div class="mt-4 space-y-3">
             {faq.map((item) => (
-              <details class="rounded-sm border border-[var(--card-border)] bg-[var(--surface-2)] p-4">
-                <summary class="cursor-pointer list-none font-semibold text-[var(--fg)]">{item.question}</summary>
+              <details class="group rounded-sm border border-[var(--card-border)] bg-[var(--surface-2)] p-4">
+                <summary class="flex cursor-pointer list-none items-center justify-between gap-3 font-semibold text-[var(--fg)]">
+                  <span>{item.question}</span>
+                  <span class="text-base font-bold text-[var(--fg)]/80 transition-transform duration-150 group-open:rotate-180">▾</span>
+                </summary>
                 <p class="mt-2 whitespace-pre-wrap text-sm text-[var(--fg-muted)]">{item.answer}</p>
               </details>
             ))}
@@ -115,27 +154,171 @@ const jsonLd = [
         </section>
       )
     }
+    {relatedItems.length > 0 && (
+      <section class="app-card mt-8 p-6">
+        <h2 class="text-xl font-bold text-[var(--fg)]">관련 콘텐츠</h2>
+        <ul class="mt-4 grid gap-2">
+          {relatedItems.map((item) => (
+            <li>
+              <a class="text-sm text-[var(--accent)] hover:underline" href={`/${item.collection}/${item.id}`}>
+                [{getCollectionLabel(item.collection)}] {item.data.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
       </div>
       <aside class="space-y-4 lg:sticky lg:top-20 lg:h-max">
         <section class="app-card p-4">
-          <h2 class="text-sm font-semibold text-[var(--fg)]">칼럼 포인트</h2>
-          <p class="mt-2 text-sm text-[var(--fg-muted)]">핵심 문장을 저장하고 다음 학습으로 연결하세요.</p>
+          <h2 class="text-sm font-semibold text-[var(--fg)]">도움이 됐다면 공유해 주세요</h2>
+          <p class="mt-2 text-sm text-[var(--fg-muted)]">한 번의 공유가 더 많은 학습자에게 큰 도움이 됩니다.</p>
+          <div class="mt-3">
+            <button
+              type="button"
+              class="app-btn-secondary w-full inline-flex items-center justify-center gap-2"
+              data-browser-share
+              data-default-label="지금 공유하기"
+              aria-live="polite"
+            >
+              <span aria-hidden="true">↗</span>
+              <span data-share-label>지금 공유하기</span>
+            </button>
+          </div>
         </section>
-        {relatedItems.length > 0 && (
-          <section class="app-card p-4">
-            <h2 class="text-sm font-semibold text-[var(--fg)]">관련 콘텐츠</h2>
-            <ul class="mt-3 space-y-2">
-              {relatedItems.map((item) => (
-                <li>
-                  <a class="text-sm text-[var(--accent)] hover:underline" href={`/${item.collection}/${item.id}`}>
-                    {item.data.title}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
       </aside>
     </div>
+
+    <script is:inline>
+      (() => {
+        const shareBtn = document.querySelector('[data-browser-share]');
+        if (!shareBtn) return;
+        const shareLabel = shareBtn.querySelector('[data-share-label]');
+        const defaultLabel = shareBtn.getAttribute('data-default-label') || '지금 공유하기';
+        const pageTitle = document.title;
+        const pageUrl = window.location.href;
+        const shareText = 'HowLearn 학습 문서를 공유합니다.';
+
+        let feedbackTimer = null;
+        const showShareFallback = async () => {
+          const existing = document.getElementById('share-fallback-modal');
+          if (existing) existing.remove();
+
+          const modal = document.createElement('div');
+          modal.id = 'share-fallback-modal';
+          modal.style.position = 'fixed';
+          modal.style.inset = '0';
+          modal.style.background = 'rgba(15, 23, 42, 0.45)';
+          modal.style.display = 'grid';
+          modal.style.placeItems = 'center';
+          modal.style.zIndex = '9999';
+
+          const card = document.createElement('div');
+          card.style.width = 'min(92vw, 28rem)';
+          card.style.borderRadius = '0.75rem';
+          card.style.border = '1px solid #d1d5db';
+          card.style.background = '#ffffff';
+          card.style.padding = '1rem';
+          card.style.boxShadow = '0 12px 30px rgba(2, 6, 23, 0.2)';
+
+          const title = document.createElement('p');
+          title.textContent = '링크로 바로 공유하기';
+          title.style.margin = '0 0 0.5rem 0';
+          title.style.fontWeight = '700';
+
+          const input = document.createElement('input');
+          input.type = 'text';
+          input.value = pageUrl;
+          input.readOnly = true;
+          input.style.width = '100%';
+          input.style.border = '1px solid #d1d5db';
+          input.style.borderRadius = '0.5rem';
+          input.style.padding = '0.55rem 0.65rem';
+
+          const actions = document.createElement('div');
+          actions.style.display = 'flex';
+          actions.style.justifyContent = 'flex-end';
+          actions.style.gap = '0.5rem';
+          actions.style.marginTop = '0.75rem';
+
+          const closeBtn = document.createElement('button');
+          closeBtn.type = 'button';
+          closeBtn.textContent = '나중에';
+          closeBtn.className = 'app-btn-secondary';
+
+          const copyBtn = document.createElement('button');
+          copyBtn.type = 'button';
+          copyBtn.textContent = '링크 복사';
+          copyBtn.className = 'app-btn-secondary';
+
+          copyBtn.addEventListener('click', async () => {
+            try {
+              await navigator.clipboard.writeText(pageUrl);
+            } catch {
+              input.focus();
+              input.select();
+              document.execCommand('copy');
+            }
+            copyBtn.textContent = '복사 완료';
+            window.setTimeout(() => {
+              copyBtn.textContent = '링크 복사';
+            }, 1200);
+          });
+
+          closeBtn.addEventListener('click', () => modal.remove());
+          modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.remove();
+          });
+
+          actions.append(closeBtn, copyBtn);
+          card.append(title, input, actions);
+          modal.append(card);
+          document.body.append(modal);
+
+          input.focus();
+          input.select();
+          try {
+            await navigator.clipboard.writeText(pageUrl);
+            copyBtn.textContent = '복사 완료';
+            window.setTimeout(() => {
+              copyBtn.textContent = '링크 복사';
+            }, 1200);
+          } catch {
+            // Keep modal open for manual copy button action.
+          }
+        };
+
+        const setFeedback = (label, icon, disabledMs = 1400) => {
+          shareBtn.setAttribute('aria-busy', 'true');
+          shareBtn.setAttribute('disabled', 'true');
+          if (shareLabel) shareLabel.textContent = label;
+          const iconEl = shareBtn.querySelector('span[aria-hidden="true"]');
+          if (iconEl) iconEl.textContent = icon;
+          if (feedbackTimer) window.clearTimeout(feedbackTimer);
+          feedbackTimer = window.setTimeout(() => {
+            shareBtn.removeAttribute('aria-busy');
+            shareBtn.removeAttribute('disabled');
+            if (shareLabel) shareLabel.textContent = defaultLabel;
+            const resetIconEl = shareBtn.querySelector('span[aria-hidden="true"]');
+            if (resetIconEl) resetIconEl.textContent = '↗';
+          }, disabledMs);
+        };
+
+        shareBtn.addEventListener('click', async () => {
+          try {
+            if (navigator.share) {
+              await navigator.share({ title: pageTitle, text: shareText, url: pageUrl });
+              setFeedback('공유 완료', '✓');
+              return;
+            }
+            await navigator.clipboard.writeText(pageUrl);
+            setFeedback('링크 복사됨', '✓');
+          } catch (error) {
+            if (error instanceof Error && error.name === 'AbortError') return;
+            await showShareFallback();
+          }
+        });
+      })();
+    </script>
   </article>
 </BaseLayout>

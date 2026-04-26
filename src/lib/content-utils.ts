@@ -150,29 +150,95 @@ export async function getRelatedContent(
   item: AnyContentEntry,
   limit = 6,
 ): Promise<AnyContentEntry[]> {
-  const ids = item.data.relatedContentIds ?? [];
-  if (ids.length === 0) return [];
-
   const all = await getAllContent();
-  const byId = new Map(all.map((it) => [`${it.collection.slice(0, -1)}-${it.id}`, it]));
-  const related = ids
-    .map((id) => byId.get(id))
-    .filter((v): v is AnyContentEntry => Boolean(v))
-    .slice(0, limit);
+  const tokenizedSource = tokenizeText(`${item.data.title} ${item.data.summary}`);
+  const sourceDomains = new Set(item.data.domains ?? []);
+  const sourceTags = new Set(item.data.tags ?? []);
+  const sourceCategories = new Set(item.data.categories ?? []);
 
-  return related;
+  return all
+    .filter((candidate) => !(candidate.collection === item.collection && candidate.id === item.id))
+    .map((candidate) => {
+      const domainOverlap = getOverlapCount(sourceDomains, new Set(candidate.data.domains ?? []));
+      const tagOverlap = getOverlapCount(sourceTags, new Set(candidate.data.tags ?? []));
+      const categoryOverlap = getOverlapCount(sourceCategories, new Set(candidate.data.categories ?? []));
+      const tokenOverlap = getOverlapCount(
+        new Set(tokenizedSource),
+        new Set(tokenizeText(`${candidate.data.title} ${candidate.data.summary}`)),
+      );
+
+      let score = 0;
+      if (candidate.collection === item.collection) score += 20;
+      score += domainOverlap * 12;
+      score += tagOverlap * 8;
+      score += categoryOverlap * 4;
+      score += Math.min(20, tokenOverlap * 2);
+
+      return { candidate, score };
+    })
+    .sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      const ad = a.candidate.data.publishedAt?.valueOf() ?? 0;
+      const bd = b.candidate.data.publishedAt?.valueOf() ?? 0;
+      return bd - ad;
+    })
+    .slice(0, limit)
+    .map((v) => v.candidate);
 }
 
 export async function getContentReferringToConcept(
   conceptSlug: string,
   limit = 12,
 ): Promise<AnyContentEntry[]> {
-  const targetId = `concept-${conceptSlug}`;
+  const conceptEntry = await getContentBySlug('concepts', conceptSlug);
+  if (!conceptEntry || conceptEntry.collection !== 'concepts') return [];
+  const concept = conceptEntry.data;
+  const conceptDomains = new Set(concept.domains ?? []);
+  const conceptTags = new Set(concept.tags ?? []);
+  const conceptKeywords = [concept.title, concept.shortDefinition, concept.englishName ?? '']
+    .flatMap((v) => tokenizeText(v))
+    .filter((v) => v.length >= 2);
+
   const all = await getAllContent();
   return all
     .filter((item) => item.collection !== 'concepts')
-    .filter((item) => (item.data.relatedContentIds ?? []).includes(targetId))
-    .slice(0, limit);
+    .map((item) => {
+      const domainOverlap = getOverlapCount(conceptDomains, new Set(item.data.domains ?? []));
+      const tagOverlap = getOverlapCount(conceptTags, new Set(item.data.tags ?? []));
+      const haystack = `${item.data.title} ${item.data.summary}`.toLowerCase();
+      const keywordMatches = conceptKeywords.reduce(
+        (acc, keyword) => (haystack.includes(keyword.toLowerCase()) ? acc + 1 : acc),
+        0,
+      );
+
+      const score = domainOverlap * 12 + tagOverlap * 8 + Math.min(30, keywordMatches * 6);
+      return { item, score };
+    })
+    .filter((v) => v.score > 0)
+    .sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      const ad = a.item.data.publishedAt?.valueOf() ?? 0;
+      const bd = b.item.data.publishedAt?.valueOf() ?? 0;
+      return bd - ad;
+    })
+    .slice(0, limit)
+    .map((v) => v.item);
+}
+
+function tokenizeText(text: string): string[] {
+  return text
+    .toLowerCase()
+    .split(/[\s,./\\|:;!?()[\]{}"']+/)
+    .map((v) => v.trim())
+    .filter((v) => v.length >= 2);
+}
+
+function getOverlapCount<T>(left: Set<T>, right: Set<T>): number {
+  let count = 0;
+  left.forEach((v) => {
+    if (right.has(v)) count += 1;
+  });
+  return count;
 }
 
 /** 과목 → 단원 → [개념…] (선택 UI·필터용, 값은 콘텐츠와 동일한 전체 문자열) */

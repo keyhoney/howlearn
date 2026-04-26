@@ -1,0 +1,48 @@
+---
+import { getCollection } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import BaseHead from '../../../components/BaseHead.astro';
+import { SITE_TITLE } from '../../../consts';
+import tinaClient from '../../../../tina/__generated__/client';
+import ConceptInlineView from '../../../components/tina/ConceptInlineView';
+
+export const getStaticPaths = (async () => {
+  const concepts = await getCollection('concepts');
+  return concepts
+    .filter((entry) => !entry.id.startsWith('_'))
+    .map((entry) => ({
+      params: { slug: entry.id },
+    }));
+}) satisfies GetStaticPaths;
+
+const slug = Astro.params.slug;
+if (!slug) {
+  return Astro.redirect('/concepts');
+}
+
+let tinaResponse;
+try {
+  tinaResponse = await tinaClient.queries.concepts({ relativePath: `${slug}.mdx` });
+} catch {
+  return Astro.redirect('/concepts');
+}
+const title = tinaResponse?.data?.concepts?.title ?? `${slug} | ${SITE_TITLE}`;
+const description = tinaResponse?.data?.concepts?.summary ?? '개념 인라인 편집';
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <BaseHead title={`${title} | ${SITE_TITLE}`} description={description} />
+  </head>
+  <body class="app-shell antialiased">
+    <main class="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+      <ConceptInlineView
+        client:load
+        query={tinaResponse.query}
+        variables={tinaResponse.variables}
+        data={tinaResponse.data}
+      />
+    </main>
+  </body>
+</html>

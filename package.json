@@ -26,11 +26,13 @@
   "dependencies": {
     "@astrojs/cloudflare": "^13.2.0",
     "@astrojs/mdx": "^5.0.4",
+    "@astrojs/react": "^5.0.4",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.2",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.2.4",
     "astro": "^6.1.9",
+    "fs-extra": "^11.3.4",
     "gray-matter": "^4.0.3",
     "mermaid": "^11.14.0",
     "rehype-katex": "^7.0.1",

@@ -21,7 +21,7 @@ const { problemId } = Astro.props;
       시험처럼 방해 요소를 줄이고 경과 시간만 보려면 모드를 켜세요.
     </p>
     <div class="app-exam-focus-actions">
-      <button type="button" class="exam-focus-btn exam-focus-btn-primary exam-focus-idle-only" data-focus-toggle>
+      <button type="button" class="exam-focus-btn exam-focus-btn-primary" data-focus-toggle>
         <svg viewBox="0 0 20 20" aria-hidden="true">
           <path fill="currentColor" d="M10 3a1 1 0 0 1 1 1v1.09a4.99 4.99 0 0 1 3.91 3.91H16a1 1 0 1 1 0 2h-1.09a4.99 4.99 0 0 1-3.91 3.91V16a1 1 0 1 1-2 0v-1.09A4.99 4.99 0 0 1 5.09 11H4a1 1 0 1 1 0-2h1.09A4.99 4.99 0 0 1 9 5.09V4a1 1 0 0 1 1-1Zm0 4a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/>
         </svg>
@@ -48,7 +48,6 @@ const { problemId } = Astro.props;
         </svg>
         <span>스크랩</span>
       </button>
-      <span class="exam-focus-status exam-focus-optional" data-focus-status>대기</span>
       <span
         class="exam-focus-timer exam-focus-optional"
         role="status"

@@ -18,10 +18,14 @@ import { SITE_TITLE } from '../consts';
 
       <a
         href="/"
-        class="truncate text-base font-bold tracking-tight text-[var(--fg)] sm:text-lg lg:hidden"
+        class="inline-flex items-center gap-1.5 truncate text-[0.95rem] font-bold tracking-tight text-[var(--fg)] sm:text-base"
         aria-label={`${SITE_TITLE} 홈`}
       >
-        {SITE_TITLE}
+        <img src="/favicon.png" alt="" class="h-5 w-5 rounded-sm" />
+        <span class="inline-flex items-baseline">
+          <span style="color:#FF9A32;">How</span>
+          <span style="color:#95D6D4;">Learn</span>
+        </span>
       </a>
 
       <form
@@ -62,7 +66,7 @@ import { SITE_TITLE } from '../consts';
       >
         <span
           data-theme-toggle-thumb
-          class="absolute left-[3px] top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full bg-white text-[var(--fg-muted)] shadow transition-transform"
+          class="absolute left-[3px] top-[3px] flex h-5 w-5 items-center justify-center rounded-full bg-white text-[var(--fg-muted)] shadow transition-transform"
         >
           <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-theme-icon-light>
             <path d="M8 12.667A4.667 4.667 0 1 0 8 3.333a4.667 4.667 0 0 0 0 9.334Z"/>

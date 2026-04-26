@@ -33,6 +33,4 @@ export interface Problem {
   difficulty: number;
   answerType: AnswerType;
   answer: number | string;
-  tags: string[];
-  relatedProblemIds: string[];
 }

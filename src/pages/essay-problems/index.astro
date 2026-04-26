@@ -1,157 +1,53 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import {
-  buildProblemSubjectChapterTree,
   getPublishedEssayProblems,
-  normalizeSubjectChapterConceptParams,
 } from '../../lib/content-utils';
 import AppPagination from '../../components/ui/AppPagination.astro';
-import DifficultyStars from '../../components/DifficultyStars.astro';
-
-const university = Astro.url.searchParams.get('university') ?? '';
-const year = Astro.url.searchParams.get('year') ?? '';
-const month = Astro.url.searchParams.get('month') ?? '';
-const status = Astro.url.searchParams.get('status') ?? 'all';
-const wrongOnly = Astro.url.searchParams.get('wrongOnly') === '1';
-const bookmarkedOnly = Astro.url.searchParams.get('bookmarkedOnly') === '1';
-const page = Number.parseInt(Astro.url.searchParams.get('page') ?? '1', 10);
 
 const allProblems = await getPublishedEssayProblems();
-const subjectChapterTree = buildProblemSubjectChapterTree(allProblems);
-const rawSubject = Astro.url.searchParams.get('subject') ?? '';
-const rawChapter = Astro.url.searchParams.get('chapter') ?? '';
-const rawConcept = Astro.url.searchParams.get('concept') ?? '';
-const { subject, chapter, concept } = normalizeSubjectChapterConceptParams(
-  subjectChapterTree,
-  rawSubject,
-  rawChapter,
-  rawConcept,
-);
-
-const filtered = allProblems.filter((p) => {
-  if (university && p.data.university !== university) return false;
-  if (subject && p.data.subject !== subject) return false;
-  if (chapter && p.data.chapter !== chapter) return false;
-  if (concept && p.data.concept !== concept) return false;
-  if (year && String(p.data.year) !== year) return false;
-  if (month && String(p.data.month) !== month) return false;
-  return true;
-});
-
-const pageSize = 12;
-const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
-const currentPage = Math.min(Math.max(1, page), totalPages);
-const start = (currentPage - 1) * pageSize;
-const problems = filtered.slice(start, start + pageSize);
 const universities = Array.from(new Set(allProblems.map((p) => p.data.university)));
-const subjects = Object.keys(subjectChapterTree);
-const chapterOptions = subject ? Object.keys(subjectChapterTree[subject] ?? {}) : [];
-const conceptOptions =
-  subject && chapter ? (subjectChapterTree[subject]?.[chapter] ?? []) : [];
 const years = Array.from(new Set(allProblems.map((p) => p.data.year))).sort((a, b) => b - a);
-const months = Array.from(new Set(allProblems.map((p) => p.data.month))).sort((a, b) => a - b);
-
-const buildPageHref = (targetPage: number) => {
-  const params = new URLSearchParams();
-  if (university) params.set('university', university);
-  if (subject) params.set('subject', subject);
-  if (chapter) params.set('chapter', chapter);
-  if (concept) params.set('concept', concept);
-  if (year) params.set('year', year);
-  if (month) params.set('month', month);
-  if (status && status !== 'all') params.set('status', status);
-  if (wrongOnly) params.set('wrongOnly', '1');
-  if (bookmarkedOnly) params.set('bookmarkedOnly', '1');
-  params.set('page', String(targetPage));
-  return `?${params.toString()}`;
-};
 ---
 
 <BaseLayout title="대학별 고사 수학 문제" description="대학별 고사 대비 논술 수학 문제 및 실전 학습 자료">
-  <section class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+  <section class="container mx-auto max-w-7xl px-4 pb-12 pt-4 sm:px-6 sm:pt-6 lg:px-8">
     <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
       <div>
         <h1 class="app-section-title">대학별 고사 수학 문제</h1>
-        <p class="mt-2 text-sm text-[var(--fg-muted)]">대학별 고사 대비 {filtered.length}문항</p>
       </div>
       <div class="flex flex-wrap gap-2">
         <span class="app-badge app-badge-info">전체 {allProblems.length}</span>
-        <span class="app-badge app-badge-neutral">필터 결과 {filtered.length}</span>
+        <span class="app-badge app-badge-neutral">필터 결과 <span data-filtered-count>{allProblems.length}</span></span>
       </div>
     </div>
 
-    <form class="app-card mt-6 grid gap-3 p-4 sm:grid-cols-4">
+    <form class="app-card mt-6 grid gap-3 p-4 sm:grid-cols-4" data-essay-filter-form>
       <select
         name="university"
         class="app-select"
       >
         <option value="">전체 대학</option>
-        {universities.map((v) => <option value={v} selected={v === university}>{v}</option>)}
-      </select>
-      <select name="subject" id="essay-filter-subject" class="app-select">
-        <option value="">전체 과목</option>
-        {subjects.map((v) => (
-          <option value={v} selected={v === subject}>
-            {v}
-          </option>
-        ))}
-      </select>
-      <select
-        name="chapter"
-        id="essay-filter-chapter"
-        class="app-select"
-        disabled={!subject}
-      >
-        <option value="">{subject ? '전체 단원' : '과목을 먼저 선택'}</option>
-        {chapterOptions.map((v) => (
-          <option value={v} selected={v === chapter}>
-            {v}
-          </option>
-        ))}
-      </select>
-      <select
-        name="concept"
-        id="essay-filter-concept"
-        class="app-select"
-        disabled={!subject || !chapter}
-      >
-        <option value="">{chapter ? '전체 개념' : subject ? '단원을 먼저 선택' : '과목을 먼저 선택'}</option>
-        {conceptOptions.map((v) => (
-          <option value={v} selected={v === concept}>
-            {v}
-          </option>
-        ))}
+        {universities.map((v) => <option value={v}>{v}</option>)}
       </select>
       <select
         name="year"
         class="app-select"
       >
         <option value="">전체 연도</option>
-        {years.map((v) => <option value={String(v)} selected={String(v) === year}>{v}</option>)}
-      </select>
-      <select
-        name="month"
-        class="app-select"
-      >
-        <option value="">전체 월</option>
-        {months.map((v) => <option value={String(v)} selected={String(v) === month}>{v}월</option>)}
+        {years.map((v) => <option value={String(v)}>{v}</option>)}
       </select>
       <select
         name="status"
         class="app-select"
       >
-        <option value="all" selected={status === 'all'}>전체 상태</option>
-        <option value="none" selected={status === 'none'}>미시작</option>
-        <option value="progress" selected={status === 'progress'}>진행 중</option>
-        <option value="done" selected={status === 'done'}>완료</option>
+        <option value="all">전체 상태</option>
+        <option value="none">미시작</option>
+        <option value="done">완료</option>
       </select>
-      <label class="flex items-center gap-2 text-sm text-[var(--fg)]">
-        <input type="checkbox" name="wrongOnly" value="1" checked={wrongOnly} class="h-4 w-4 accent-[var(--accent)]" />
-        오답만
-      </label>
-      <label class="flex items-center gap-2 text-sm text-[var(--fg)]">
-        <input type="checkbox" name="bookmarkedOnly" value="1" checked={bookmarkedOnly} class="h-4 w-4 accent-[var(--accent)]" />
-        스크랩만
+      <label class="inline-flex items-center gap-2 rounded-sm border border-[var(--card-border)] bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--fg)]">
+        <input type="checkbox" name="bookmarked" value="1" class="h-4 w-4 accent-[var(--accent)]" />
+        스크랩한 문제만 보기
       </label>
       <button class="app-btn-primary" type="submit">
         필터 적용
@@ -161,39 +57,29 @@ const buildPageHref = (targetPage: number) => {
 
     <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {
-        problems.map((p) => (
+        allProblems.map((p) => (
           <li>
             <a
               href={`/essay-problems/${p.id}`}
               data-problem-card
               data-problem-id={p.id}
+              data-university={p.data.university}
               data-year={p.data.year}
-              data-month={p.data.month}
-              data-subject={p.data.subject}
-              data-chapter={p.data.chapter}
-              data-concept={p.data.concept}
               class="app-card app-card-interactive flex h-full flex-col p-5 text-[var(--fg)]"
             >
               <div class="flex flex-wrap items-center justify-between gap-2">
                 <span class="app-badge app-badge-type-essay">{p.data.university}</span>
                 <span class="font-mono text-xs text-[var(--fg-muted)]">
-                  {p.data.year}.{String(p.data.month).padStart(2, '0')}
+                  {p.data.examYear ?? p.data.year}
                 </span>
               </div>
               <h2 class="mt-3 text-lg font-semibold text-[var(--fg)]">
                 {p.data.source}
               </h2>
-              <p class="mt-2 text-sm text-[var(--fg-muted)] line-clamp-2 leading-relaxed">
-                {p.data.chapter} · {p.data.concept}
-              </p>
-              <div class="mt-3">
-                <DifficultyStars value={p.data.difficulty} />
-              </div>
               <p class="mt-3 flex flex-wrap gap-1.5" data-problem-state></p>
               <div class="mt-auto flex items-center justify-between gap-2 pt-4">
-                <span class="text-xs font-medium uppercase tracking-wider text-[var(--accent)]">{p.data.subject}</span>
                 <span class="inline-flex items-center gap-1 text-sm font-semibold text-[var(--accent)]">
-                  바로 풀기
+                  문제 열람
                   <svg class="app-card-arrow h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                     <path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd"/>
                   </svg>
@@ -204,72 +90,12 @@ const buildPageHref = (targetPage: number) => {
         ))
       }
     </ul>
-    <AppPagination
-      currentPage={currentPage}
-      totalPages={totalPages}
-      buildHref={buildPageHref}
-    />
+    <AppPagination mode="client" basePath="/essay-problems" rootId="essay-problems-pagination" />
   </section>
 </BaseLayout>
 
-<script is:inline define:vars={{ subjectChapterTree }}>
-  (function () {
-    const tree = subjectChapterTree;
-    const sub = document.getElementById('essay-filter-subject');
-    const ch = document.getElementById('essay-filter-chapter');
-    const co = document.getElementById('essay-filter-concept');
-    if (!sub || !ch || !co || !tree) return;
-
-    function setChapterOptions(subj, keepChapter, keepConcept) {
-      ch.innerHTML = '';
-      const opt0 = document.createElement('option');
-      opt0.value = '';
-      opt0.textContent = subj ? '전체 단원' : '과목을 먼저 선택';
-      ch.appendChild(opt0);
-      ch.disabled = !subj;
-      if (!subj || !tree[subj]) {
-        co.innerHTML = '';
-        const o0 = document.createElement('option');
-        o0.value = '';
-        o0.textContent = !subj ? '과목을 먼저 선택' : '단원을 먼저 선택';
-        co.appendChild(o0);
-        co.disabled = true;
-        return;
-      }
-      for (const name of Object.keys(tree[subj])) {
-        const o = document.createElement('option');
-        o.value = name;
-        o.textContent = name;
-        if (keepChapter && name === keepChapter) o.selected = true;
-        ch.appendChild(o);
-      }
-      const selCh = ch.value;
-      setConceptOptions(subj, selCh, keepConcept);
-    }
-
-    function setConceptOptions(subj, chapterName, keepConcept) {
-      co.innerHTML = '';
-      const opt0 = document.createElement('option');
-      opt0.value = '';
-      opt0.textContent = chapterName ? '전체 개념' : subj ? '단원을 먼저 선택' : '과목을 먼저 선택';
-      co.appendChild(opt0);
-      co.disabled = !chapterName;
-      if (!subj || !chapterName || !tree[subj]?.[chapterName]) return;
-      for (const name of tree[subj][chapterName]) {
-        const o = document.createElement('option');
-        o.value = name;
-        o.textContent = name;
-        if (keepConcept && name === keepConcept) o.selected = true;
-        co.appendChild(o);
-      }
-    }
-
-    sub.addEventListener('change', () => setChapterOptions(sub.value, '', ''));
-    ch.addEventListener('change', () => setConceptOptions(sub.value, ch.value, ''));
-  })();
-</script>
-
 <script is:inline>
+  (() => {
   function getProgressDetail(raw) {
     if (!raw) return { status: 'none', hintRevealedCount: 0, solutionRevealed: false, lastSeenAt: 0 };
     if (typeof raw === 'string') return { status: raw, hintRevealedCount: 0, solutionRevealed: false, lastSeenAt: 0 };
@@ -283,37 +109,87 @@ const buildPageHref = (targetPage: number) => {
 
   const query = new URLSearchParams(window.location.search);
   const statusFilter = query.get('status') ?? 'all';
-  const wrongOnly = query.get('wrongOnly') === '1';
-  const bookmarkedOnly = query.get('bookmarkedOnly') === '1';
+  const bookmarkedOnly = query.get('bookmarked') === '1';
+  const university = query.get('university') ?? '';
+  const year = query.get('year') ?? '';
+  const perPageRaw = Number.parseInt(query.get('perPage') ?? '12', 10);
+  const perPageOptions = [12, 24, 48];
+  const perPage = perPageOptions.includes(perPageRaw) ? perPageRaw : 12;
+  const pageRaw = Number.parseInt(query.get('page') ?? '1', 10);
+  const page = Number.isFinite(pageRaw) && pageRaw > 0 ? pageRaw : 1;
+  const form = document.querySelector('[data-essay-filter-form]');
+  const filteredCountEl = document.querySelector('[data-filtered-count]');
+  const paginationRoot = document.getElementById('essay-problems-pagination');
+  if (!form || !filteredCountEl || !paginationRoot) return;
+  form.querySelector('[name="university"]').value = university;
+  form.querySelector('[name="year"]').value = year;
+  form.querySelector('[name="status"]').value = statusFilter;
+  form.querySelector('[name="bookmarked"]').checked = bookmarkedOnly;
+  form.addEventListener('submit', () => {
+    const pageField = document.createElement('input');
+    pageField.type = 'hidden';
+    pageField.name = 'page';
+    pageField.value = '1';
+    form.appendChild(pageField);
+  });
+
   const progress = JSON.parse(localStorage.getItem('howlearn-problem-progress') || '{"byId":{}}');
   const bookmarks = JSON.parse(localStorage.getItem('howlearn-bookmark') || '{"byId":{}}');
-  const wrongNotes = JSON.parse(localStorage.getItem('howlearn-wrong-note') || '{"byId":{}}');
+  const visibleItems = [];
   document.querySelectorAll('[data-problem-card]').forEach((el) => {
     const id = el.getAttribute('data-problem-id') || '';
     const detail = getProgressDetail(progress.byId?.[id]);
     const valueStatus = detail.status;
     const bookmarked = Boolean(bookmarks.byId?.[id]);
-    const hasWrong = Boolean(wrongNotes.byId?.[id]?.entries?.length);
     const stateEl = el.querySelector('[data-problem-state]');
     const labels = [];
     if (valueStatus === 'done') labels.push('<span class="app-badge app-badge-success">완료</span>');
-    else if (valueStatus === 'progress') labels.push('<span class="app-badge app-badge-info">진행 중</span>');
     else labels.push('<span class="app-badge app-badge-neutral">미시작</span>');
-    if (hasWrong) labels.push('<span class="app-badge app-badge-warning">오답</span>');
     if (bookmarked) labels.push('<span class="app-badge app-badge-info">스크랩</span>');
-    if (detail.hintRevealedCount > 0) labels.push(`<span class="app-badge app-badge-info">힌트 ${detail.hintRevealedCount}개</span>`);
-    if (detail.solutionRevealed) labels.push('<span class="app-badge app-badge-success">풀이 열람</span>');
     if (detail.lastSeenAt > 0) {
       const d = new Date(detail.lastSeenAt);
-      labels.push(`<span class="app-badge app-badge-neutral">${d.getMonth() + 1}/${d.getDate()} 복습</span>`);
+      labels.push(`<span class="app-badge app-badge-neutral">${d.getMonth() + 1}/${d.getDate()} 열람</span>`);
     }
     if (stateEl) stateEl.innerHTML = labels.join('');
 
+    const mismatchServerFilter =
+      (university && (el.getAttribute('data-university') || '') !== university) ||
+      (year && (el.getAttribute('data-year') || '') !== year);
     const mismatchStatus = statusFilter !== 'all' && valueStatus !== statusFilter;
-    const mismatchWrong = wrongOnly && !hasWrong;
     const mismatchBookmark = bookmarkedOnly && !bookmarked;
-    if (mismatchStatus || mismatchWrong || mismatchBookmark) {
-      el.parentElement?.classList.add('hidden');
-    }
+    const li = el.parentElement;
+    if (!li) return;
+    const matched = !(mismatchServerFilter || mismatchStatus || mismatchBookmark);
+    li.classList.toggle('hidden', !matched);
+    if (matched) visibleItems.push(li);
   });
+  filteredCountEl.textContent = String(visibleItems.length);
+  const totalPages = Math.max(1, Math.ceil(visibleItems.length / perPage));
+  const currentPage = Math.min(page, totalPages);
+  visibleItems.forEach((li, idx) => {
+    const show = idx >= (currentPage - 1) * perPage && idx < currentPage * perPage;
+    li.classList.toggle('hidden', !show);
+  });
+  const renderPagination = () => {
+    if (typeof window.__howlearnRenderAppPagination !== 'function') return false;
+    window.__howlearnRenderAppPagination(paginationRoot, {
+      basePath: '/essay-problems',
+      currentPage,
+      totalPages,
+      perPage,
+    });
+    return true;
+  };
+
+  if (!renderPagination()) {
+    let retries = 0;
+    const maxRetries = 20;
+    const tick = () => {
+      if (renderPagination()) return;
+      retries += 1;
+      if (retries < maxRetries) window.setTimeout(tick, 50);
+    };
+    tick();
+  }
+  })();
 </script>

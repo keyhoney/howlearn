@@ -32,7 +32,7 @@ if (!entry) {
   return Astro.redirect('/problems');
 }
 
-const { source, year, month, examType, chapter, concept, difficulty, answerType, answer, tags } =
+const { source, year, month, examType, chapter, concept, difficulty, answerType, answer } =
   entry.data;
 
 const rawProblemMd = extractProblemStatementMarkdown(entry.body);
@@ -46,19 +46,18 @@ const hintStepsHtml =
   hintSteps.length > 0 ? await Promise.all(hintSteps.map((s) => renderTrustedMarkdown(s))) : [];
 const solutionHtml = await renderTrustedMarkdown(solutionText);
 const allProblems = await getCollection('problems');
+const tinaPath = `problems/${entry.id}.mdx`;
+const tinaField = (field: string) => `${tinaPath}#${field}`;
 const relatedProblems = allProblems
   .filter((p) => {
     if (p.id === entry.id) return false;
-    if (p.data.relatedProblemIds.includes(entry.id)) return true;
-    if (entry.data.relatedProblemIds.includes(p.id)) return true;
-    return p.data.subject === entry.data.subject && p.data.chapter === entry.data.chapter && p.data.concept === entry.data.concept;
+    return true;
   })
-  .slice(0, 12)
   .map((p) => {
     let score = 0;
-    if (p.data.subject === entry.data.subject) score += 25;
+    if (p.data.subject === entry.data.subject) score += 35;
     if (p.data.chapter === entry.data.chapter) score += 35;
-    if (p.data.concept === entry.data.concept) score += 40;
+    if (p.data.concept === entry.data.concept) score += 30;
     score += Math.max(0, 15 - Math.abs((p.data.difficulty ?? 3) - (entry.data.difficulty ?? 3)) * 5);
     return { problem: p, score };
   })
@@ -83,22 +82,15 @@ const conceptByProblemId = Object.fromEntries(allProblems.map((p) => [p.id, p.da
         <DifficultyStars value={difficulty} />
       </div>
       <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
-        <h1 class="type-article-title m-0">{source}</h1>
+        <h1 class="type-article-title m-0">
+          {source}
+        </h1>
       </div>
-      {tags.length > 0 && (
-        <div class="mt-4 flex flex-wrap gap-2 focus-hide-in-exam">
-          {tags.map((tag) => (
-            <span class="app-chip">
-              #{tag}
-            </span>
-          ))}
-        </div>
-      )}
     </header>
     <p class="focus-only-note app-feedback app-feedback-info not-prose mb-4">
-      집중 모드가 켜져 있습니다. 힌트·최종 풀이·관련 문제는 집중 모드 종료 후 다시 볼 수 있습니다.
+      집중 모드가 켜져 있습니다. STEP 힌트와 최종 풀이는 계속 볼 수 있고, 관련 문제는 숨겨집니다.
     </p>
-    <div class="app-card not-prose p-5" data-problem-card-root>
+    <div class="app-card not-prose p-5" data-problem-card-root data-tina-field={tinaField('body')}>
       <h2 class="mb-4 text-xl font-bold tracking-tight text-[var(--fg)]">문제</h2>
       <div
         class="prose prose-slate dark:prose-invert max-w-none prose-headings:tracking-tight"
@@ -118,14 +110,18 @@ const conceptByProblemId = Object.fromEntries(allProblems.map((p) => [p.id, p.da
     {relatedProblems.length > 0 && (
       <section class="not-prose mt-6 focus-hide-in-exam">
         <div class="app-card p-5">
-          <h2 class="text-xl font-bold tracking-tight text-[var(--fg)]">같은 개념의 관련 문제</h2>
+          <h2 class="text-xl font-bold tracking-tight text-[var(--fg)]">관련 문제</h2>
           <div class="mt-4 grid gap-3" data-related-list>
             {relatedProblems.map(({ problem: rp, score }) => (
-              <a href={`/problems/${rp.id}`} class="app-card-interactive rounded-sm border border-[var(--card-border)] bg-[var(--surface-1)] p-4" data-related-item data-concept={rp.data.concept} data-related-score={score}>
+              <a href={`/problems/${rp.id}`} class="app-card-interactive rounded-sm border border-[var(--card-border)] bg-[var(--surface-1)] p-4" data-related-item data-related-id={rp.id} data-concept={rp.data.concept} data-related-score={score}>
                 <h3 class="font-semibold text-[var(--fg)]">{rp.data.source}</h3>
                 <p class="mt-2 text-sm text-[var(--fg-muted)]">
-                  {rp.data.year}년 {rp.data.month}월 {rp.data.examType} · {rp.data.subject} &gt; {rp.data.chapter} &gt; {rp.data.concept}
+                  {rp.data.subject} &gt; {rp.data.chapter} &gt; {rp.data.concept}
                 </p>
+                <div class="mt-3 flex items-center justify-between gap-2">
+                  <DifficultyStars value={rp.data.difficulty} />
+                  <span class="app-badge app-badge-neutral" data-related-status>미시작</span>
+                </div>
               </a>
             ))}
           </div>
@@ -137,6 +133,7 @@ const conceptByProblemId = Object.fromEntries(allProblems.map((p) => [p.id, p.da
 
 <script is:inline define:vars={{ conceptByProblemId }}>
   const wrongStore = JSON.parse(localStorage.getItem('howlearn-wrong-note') || '{"byId":{}}');
+  const progressStore = JSON.parse(localStorage.getItem('howlearn-problem-progress') || '{"byId":{}}');
   const conceptFreq = new Map();
   Object.entries(wrongStore.byId || {}).forEach(([problemId, bucket]) => {
     const concept = conceptByProblemId[problemId];
@@ -150,11 +147,30 @@ const conceptByProblemId = Object.fromEntries(allProblems.map((p) => [p.id, p.da
   const list = document.querySelector('[data-related-list]');
   if (list) {
     const items = Array.from(list.querySelectorAll('[data-related-item]'));
+    const getProgressStatus = (id) => {
+      const raw = progressStore?.byId?.[id];
+      if (typeof raw === 'string') return raw;
+      return raw?.status || 'none';
+    };
     items.sort((a, b) => {
       const as = Number(a.getAttribute('data-related-score') || 0) + (conceptFreq.get(a.getAttribute('data-concept') || '') || 0) * 8;
       const bs = Number(b.getAttribute('data-related-score') || 0) + (conceptFreq.get(b.getAttribute('data-concept') || '') || 0) * 8;
       return bs - as;
     });
-    items.forEach((item) => list.appendChild(item));
+    items.forEach((item) => {
+      const id = item.getAttribute('data-related-id') || '';
+      const status = getProgressStatus(id);
+      const statusEl = item.querySelector('[data-related-status]');
+      if (statusEl) {
+        statusEl.textContent = status === 'done' ? '완료' : status === 'progress' ? '진행 중' : '미시작';
+        statusEl.className =
+          status === 'done'
+            ? 'app-badge app-badge-success'
+            : status === 'progress'
+              ? 'app-badge app-badge-info'
+              : 'app-badge app-badge-neutral';
+      }
+      list.appendChild(item);
+    });
   }
 </script>

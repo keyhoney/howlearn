@@ -130,6 +130,24 @@ const problemFields = [
   relatedProblemIdsField,
 ];
 
+const essayProblemFields = [
+  { type: 'string' as const, name: 'source', label: '출처', required: true },
+  { type: 'number' as const, name: 'year', label: '연도', required: true },
+  {
+    type: 'string' as const,
+    name: 'examType',
+    label: '시험 구분',
+    required: true,
+    options: ['논술'],
+    ui: { defaultValue: '논술' },
+  },
+  { type: 'string' as const, name: 'university', label: '대학', required: true },
+  { type: 'number' as const, name: 'examYear', label: '논술 시행 연도 (선택)' },
+  { type: 'number' as const, name: 'difficulty', label: '난이도(1~5)', required: true },
+  tagsField,
+  relatedProblemIdsField,
+];
+
 // ─── Tina CMS 설정 ───────────────────────────────────────────────
 
 export default defineConfig({
@@ -163,7 +181,7 @@ export default defineConfig({
         path: 'src/content/guides',
         format: 'mdx',
         ui: {
-          router: ({ document }) => `/guides/${document._sys.filename}`,
+          router: ({ document }) => `/edit/guides/${document._sys.filename}`,
           defaultItem: () => ({ status: 'draft', domains: [], tags: [], categories: [] }),
         },
         fields: [
@@ -191,7 +209,7 @@ export default defineConfig({
         path: 'src/content/concepts',
         format: 'mdx',
         ui: {
-          router: ({ document }) => `/concepts/${document._sys.filename}`,
+          router: ({ document }) => `/edit/concepts/${document._sys.filename}`,
           defaultItem: () => ({ status: 'draft', domains: [], tags: [], categories: [] }),
         },
         fields: [
@@ -226,7 +244,7 @@ export default defineConfig({
         path: 'src/content/books',
         format: 'mdx',
         ui: {
-          router: ({ document }) => `/books/${document._sys.filename}`,
+          router: ({ document }) => `/edit/books/${document._sys.filename}`,
           defaultItem: () => ({ status: 'draft', domains: [], tags: [], categories: [] }),
         },
         fields: [
@@ -263,7 +281,7 @@ export default defineConfig({
         path: 'src/content/columns',
         format: 'mdx',
         ui: {
-          router: ({ document }) => `/columns/${document._sys.filename}`,
+          router: ({ document }) => `/edit/columns/${document._sys.filename}`,
           defaultItem: () => ({ status: 'draft', domains: [], tags: [], categories: [] }),
         },
         fields: [
@@ -290,11 +308,16 @@ export default defineConfig({
         path: 'src/content/problems',
         format: 'mdx',
         ui: {
-          router: ({ document }) => `/problems/${document._sys.filename}`,
+          router: ({ document }) => `/edit/problems/${document._sys.filename}`,
         },
         fields: [
-          ...problemFields,
-          { type: 'rich-text', name: 'body', label: '문제 본문', isBody: true },
+          {
+            type: 'string',
+            name: 'body',
+            label: '문제 본문 (Markdown 원문)',
+            ui: { component: 'textarea' },
+            isBody: true,
+          },
         ],
       },
 
@@ -306,13 +329,16 @@ export default defineConfig({
         path: 'src/content/essay-problems',
         format: 'mdx',
         ui: {
-          router: ({ document }) => `/essay-problems/${document._sys.filename}`,
+          router: ({ document }) => `/edit/essay-problems/${document._sys.filename}`,
         },
         fields: [
-          ...problemFields,
-          { type: 'string', name: 'university', label: '대학', required: true },
-          { type: 'number', name: 'examYear', label: '논술 시행 연도 (선택)' },
-          { type: 'rich-text', name: 'body', label: '문제 본문', isBody: true },
+          {
+            type: 'string',
+            name: 'body',
+            label: '문제 본문 (Markdown 원문)',
+            ui: { component: 'textarea' },
+            isBody: true,
+          },
         ],
       },
     ],

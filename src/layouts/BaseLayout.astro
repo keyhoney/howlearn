@@ -20,6 +20,19 @@ const {
 } = Astro.props;
 const pageTitle = title === SITE_TITLE ? SITE_TITLE : `${title} | ${SITE_TITLE}`;
 const pathname = Astro.url.pathname;
+const editParams = new URLSearchParams(Astro.url.searchParams);
+editParams.set('tina', '1');
+const editQuery = editParams.toString();
+const tinaTargetPath = (() => {
+  if (pathname.startsWith('/guides/')) return `/edit${pathname}`;
+  if (pathname.startsWith('/columns/')) return `/edit${pathname}`;
+  if (pathname.startsWith('/concepts/')) return `/edit${pathname}`;
+  if (pathname.startsWith('/books/')) return `/edit${pathname}`;
+  if (pathname.startsWith('/problems/')) return `/edit${pathname}`;
+  if (pathname.startsWith('/essay-problems/')) return `/edit${pathname}`;
+  return pathname;
+})();
+const tinaVisualHref = `/admin/index.html#/~${tinaTargetPath}${editQuery ? `?${editQuery}` : ''}`;
 ---
 
 <!doctype html>
@@ -37,10 +50,6 @@ const pathname = Astro.url.pathname;
     </a>
 
     <div class="flex min-h-screen">
-      <div id="app-site-sidebar-rail" class="block lg:hidden sticky top-0 h-screen self-start">
-        <AppSidebar pathname={pathname} iconOnly />
-      </div>
-
       <div id="app-site-sidebar" class="hidden lg:block sticky top-0 h-screen self-start">
         <AppSidebar pathname={pathname} />
       </div>
@@ -49,7 +58,7 @@ const pathname = Astro.url.pathname;
         <SiteHeader />
         <main
           id="main-content"
-          class="flex-1 px-4 pt-6 pb-10 md:px-6 2xl:px-10 mx-auto w-full max-w-[1400px]"
+          class="flex-1 px-[0.075rem] pt-6 pb-10 md:px-6 2xl:px-10 mx-auto w-full max-w-[1400px]"
           tabindex="-1"
         >
           <slot />
@@ -73,6 +82,16 @@ const pathname = Astro.url.pathname;
       <AppSidebar pathname={pathname} compact />
     </div>
 
+    {import.meta.env.DEV && !pathname.startsWith('/admin') && (
+      <a
+        href={tinaVisualHref}
+        class="fixed bottom-5 right-5 z-[70] inline-flex items-center gap-2 rounded-sm border border-[var(--card-border)] bg-[var(--surface-1)] px-3 py-2 text-xs font-semibold text-[var(--fg)] shadow-lg hover:border-[var(--accent)] hover:text-[var(--accent)]"
+        title="Tina 인라인 편집 모드 열기"
+      >
+        Tina 인라인 편집
+      </a>
+    )}
+
     <script is:inline>
       (() => {
         const root = document.documentElement;
@@ -89,8 +108,8 @@ const pathname = Astro.url.pathname;
           if (toggleThumb && toggleButton) {
             const maxOffset = Math.max(0, toggleButton.clientWidth - toggleThumb.clientWidth - 6);
             toggleThumb.style.transform = isDark
-              ? `translate(${maxOffset}px, -50%)`
-              : 'translate(0, -50%)';
+              ? `translateX(${maxOffset}px)`
+              : 'translateX(0)';
           }
           if (iconLight) iconLight.classList.toggle('hidden', isDark);
           if (iconDark) iconDark.classList.toggle('hidden', !isDark);

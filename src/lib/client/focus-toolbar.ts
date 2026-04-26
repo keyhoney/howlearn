@@ -28,13 +28,14 @@ document.querySelectorAll<HTMLElement>('[data-focus-toolbar]').forEach((root) =>
   const bookmarkBtn = root.querySelector<HTMLButtonElement>('[data-bookmark-toggle]');
   const toggleBtn = root.querySelector<HTMLButtonElement>('[data-focus-toggle]');
   const toggleLabel = root.querySelector<HTMLElement>('[data-focus-toggle-label]');
-  const statusEl = root.querySelector<HTMLElement>('[data-focus-status]');
   const optionalEls = Array.from(root.querySelectorAll<HTMLElement>('.exam-focus-optional'));
   const idleOnlyEls = Array.from(root.querySelectorAll<HTMLElement>('.exam-focus-idle-only'));
   const startBtn = root.querySelector<HTMLButtonElement>('[data-focus-start]');
   const pauseBtn = root.querySelector<HTMLButtonElement>('[data-focus-pause]');
   const resumeBtn = root.querySelector<HTMLButtonElement>('[data-focus-resume]');
   const stopBtn = root.querySelector<HTMLButtonElement>('[data-focus-stop]');
+  let isFocusModeOn = false;
+  let hasCommittedOnLeave = false;
 
   const getState = () =>
     parse(localStorage.getItem(focusKey), {
@@ -76,6 +77,15 @@ document.querySelectorAll<HTMLElement>('[data-focus-toolbar]').forEach((root) =>
     localStorage.setItem(focusHistoryKey, JSON.stringify({ v: 1, byDate }));
   };
 
+  const commitAndStopSession = () => {
+    if (hasCommittedOnLeave) return;
+    const state = getState();
+    const elapsed = getElapsed(state);
+    if (elapsed > 0) pushFocusHistory(elapsed);
+    saveState({ status: 'finished', elapsedMs: 0, startedAt: null, targetMs: null });
+    hasCommittedOnLeave = true;
+  };
+
   const refreshBookmark = () => {
     const bookmarks = parse(localStorage.getItem(bookmarkKey), { v: 1, byId: {} as Record<string, unknown> });
     const active = Boolean(bookmarks.byId?.[problemId]);
@@ -88,75 +98,39 @@ document.querySelectorAll<HTMLElement>('[data-focus-toolbar]').forEach((root) =>
   };
 
   const refreshToolbarState = () => {
-    const state = getState();
-    const status = state.status || 'idle';
-    if (statusEl) {
-      const statusText =
-        status === 'running' ? '진행 중' : status === 'paused' ? '일시정지' : status === 'finished' ? '완료' : '대기';
-      statusEl.textContent = statusText;
-      statusEl.className = 'exam-focus-status';
-    }
-    startBtn?.toggleAttribute('disabled', status === 'running' || status === 'paused');
-    pauseBtn?.toggleAttribute('disabled', status !== 'running');
-    resumeBtn?.toggleAttribute('disabled', status !== 'paused');
-    stopBtn?.toggleAttribute('disabled', status === 'idle');
-    pauseBtn?.classList.toggle('is-visible', status === 'running');
-    resumeBtn?.classList.toggle('is-visible', status === 'paused');
-    stopBtn?.classList.toggle('is-visible', status === 'running' || status === 'paused');
-    const active = status === 'running' || status === 'paused';
-    idleOnlyEls.forEach((el) => el.classList.toggle('is-hidden', active));
+    startBtn?.toggleAttribute('disabled', true);
+    pauseBtn?.toggleAttribute('disabled', true);
+    resumeBtn?.toggleAttribute('disabled', true);
+    stopBtn?.toggleAttribute('disabled', true);
+    pauseBtn?.classList.remove('is-visible');
+    resumeBtn?.classList.remove('is-visible');
+    stopBtn?.classList.remove('is-visible');
+    idleOnlyEls.forEach((el) => el.classList.toggle('is-hidden', isFocusModeOn));
     optionalEls.forEach((el) => {
       const isToggleButton =
         el.hasAttribute('data-focus-pause') || el.hasAttribute('data-focus-resume') || el.hasAttribute('data-focus-stop');
       if (isToggleButton) return;
-      el.classList.toggle('is-visible', active);
+      const hasTimer = Boolean(el.querySelector('[data-focus-timer]')) || el.hasAttribute('data-focus-timer');
+      if (hasTimer) {
+        el.classList.add('is-visible');
+        return;
+      }
+      el.classList.toggle('is-visible', isFocusModeOn);
     });
     if (toggleBtn) {
-      if (toggleLabel) toggleLabel.textContent = active ? '집중 모드 켜짐' : '집중 모드 켜기';
-      toggleBtn.classList.toggle('is-active', active);
+      if (toggleLabel) toggleLabel.textContent = isFocusModeOn ? '집중 모드 끄기' : '집중 모드 켜기';
+      toggleBtn.classList.toggle('is-active', isFocusModeOn);
     }
   };
 
-  startBtn?.addEventListener('click', () => {
-    saveState({ status: 'running', elapsedMs: 0, startedAt: Date.now(), targetMs: null });
-    refreshToolbarState();
-  });
+  startBtn?.addEventListener('click', refreshToolbarState);
+  pauseBtn?.addEventListener('click', refreshToolbarState);
+  resumeBtn?.addEventListener('click', refreshToolbarState);
+  stopBtn?.addEventListener('click', refreshToolbarState);
 
-  pauseBtn?.addEventListener('click', () => {
-    const state = getState();
-    if (state.status !== 'running' || !state.startedAt) return;
-    const elapsed = getElapsed(state);
-    pushFocusHistory(elapsed - (state.elapsedMs || 0));
-    saveState({ ...state, status: 'paused', elapsedMs: elapsed, startedAt: null });
-    refreshToolbarState();
-  });
-
-  resumeBtn?.addEventListener('click', () => {
-    const state = getState();
-    if (state.status !== 'paused') return;
-    saveState({ ...state, status: 'running', startedAt: Date.now() });
-    refreshToolbarState();
-  });
-
-  stopBtn?.addEventListener('click', () => {
-    const state = getState();
-    if (state.status === 'running' && state.startedAt) {
-      pushFocusHistory(getElapsed(state) - (state.elapsedMs || 0));
-    }
-    saveState({ status: 'finished', elapsedMs: 0, startedAt: null, targetMs: null });
-    refreshToolbarState();
-  });
   toggleBtn?.addEventListener('click', () => {
-    const state = getState();
-    const active = state.status === 'running' || state.status === 'paused';
-    if (active) {
-      if (state.status === 'running' && state.startedAt) {
-        pushFocusHistory(getElapsed(state) - (state.elapsedMs || 0));
-      }
-      saveState({ status: 'finished', elapsedMs: 0, startedAt: null, targetMs: null });
-    } else {
-      saveState({ status: 'running', elapsedMs: 0, startedAt: Date.now(), targetMs: null });
-    }
+    isFocusModeOn = !isFocusModeOn;
+    applyFocusUi(isFocusModeOn);
     refreshToolbarState();
   });
 
@@ -170,12 +144,16 @@ document.querySelectorAll<HTMLElement>('[data-focus-toolbar]').forEach((root) =>
   });
 
   refreshBookmark();
-  const state = getState();
-  applyFocusUi(state.status === 'running' || state.status === 'paused');
+  saveState({ status: 'running', elapsedMs: 0, startedAt: Date.now(), targetMs: null });
+  applyFocusUi(false);
   refreshToolbarState();
+
+  window.addEventListener('pagehide', commitAndStopSession);
+  window.addEventListener('beforeunload', commitAndStopSession);
+
   setInterval(() => {
     const current = getState();
     if (timerEl) timerEl.textContent = fmt(getElapsed(current));
-    if (current.status === 'running' || current.status === 'paused') refreshToolbarState();
+    refreshToolbarState();
   }, 500);
 });

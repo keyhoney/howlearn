@@ -3,60 +3,56 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import {
   filterContentByQuery,
   getAllContent,
-  getAvailableTagsForDomain,
   paginateContent,
   sortByDate,
 } from '../../lib/content-utils';
 import AppPagination from '../../components/ui/AppPagination.astro';
 
 const q = Astro.url.searchParams.get('q') ?? '';
-const tag = Astro.url.searchParams.get('tag') ?? '';
-const page = Number.parseInt(Astro.url.searchParams.get('page') ?? '1', 10);
+const perPageOptions = [12, 24, 48] as const;
+const perPageRaw = Number.parseInt(Astro.url.searchParams.get('perPage') ?? '12', 10);
+const perPage = perPageOptions.includes(perPageRaw as (typeof perPageOptions)[number]) ? perPageRaw : 12;
+const pageRaw = Number.parseInt(Astro.url.searchParams.get('page') ?? '1', 10);
+const page = Number.isFinite(pageRaw) && pageRaw > 0 ? pageRaw : 1;
 
 const all = await getAllContent();
 const filtered = sortByDate(
-  filterContentByQuery(all, { q, domain: 'books', tag: tag || undefined }),
+  filterContentByQuery(all, { q, domain: 'books' }),
 );
-const paged = paginateContent(filtered, page, 9);
+const paged = paginateContent(filtered, page, perPage);
 const books = paged.items;
-const tags = getAvailableTagsForDomain(all, 'books');
+
+const buildListHref = (nextPage: number, nextPerPage = perPage) => {
+  const params = new URLSearchParams();
+  if (q) params.set('q', q);
+  if (nextPerPage !== 12) params.set('perPage', String(nextPerPage));
+  if (nextPage > 1) params.set('page', String(nextPage));
+  const qs = params.toString();
+  return qs ? `?${qs}` : '/books';
+};
 ---
 
 <BaseLayout title="도서 추천" description="학습 과학 관점의 도서 큐레이션">
-  <section class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+  <section class="container mx-auto max-w-7xl px-4 pb-12 pt-4 sm:px-6 sm:pt-6 lg:px-8">
     <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
       <div>
         <h1 class="app-section-title">도서 추천</h1>
-        <p class="mt-2 text-sm text-[var(--fg-muted)]">학습 과학 관점 추천 도서 {paged.totalItems}권</p>
       </div>
       <span class="app-badge app-badge-info">총 {paged.totalItems}권</span>
     </div>
 
-    <form class="app-card grid gap-3 p-4 sm:grid-cols-4">
+    <form class="app-card grid gap-3 p-4 sm:grid-cols-4" data-content-filter-form>
       <input
         type="search"
         name="q"
         value={q}
         placeholder="검색어"
-        class="app-input sm:col-span-2"
+        class="app-input sm:col-span-3"
       />
-      <select
-        name="tag"
-        class="app-select"
-      >
-        <option value="">전체 태그</option>
-        {tags.map((t) => <option value={t} selected={tag === t}>{t}</option>)}
-      </select>
       <button class="app-btn-primary" type="submit">
         필터 적용
       </button>
     </form>
-
-    {tag && (
-      <div class="mt-4">
-        <span class="app-chip">선택 태그: {tag}</span>
-      </div>
-    )}
     <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {
         books.map((b) => (
@@ -101,7 +97,23 @@ const tags = getAvailableTagsForDomain(all, 'books');
     <AppPagination
       currentPage={paged.currentPage}
       totalPages={paged.totalPages}
-      buildHref={(p) => `?q=${encodeURIComponent(q)}&tag=${encodeURIComponent(tag)}&page=${p}`}
+      perPage={perPage}
+      buildHref={(p) => buildListHref(p)}
+      buildPerPageHref={(n) => buildListHref(1, n)}
     />
   </section>
 </BaseLayout>
+
+<script is:inline>
+  (() => {
+    const form = document.querySelector('[data-content-filter-form]');
+    if (!(form instanceof HTMLFormElement)) return;
+    form.addEventListener('submit', () => {
+      const pageField = document.createElement('input');
+      pageField.type = 'hidden';
+      pageField.name = 'page';
+      pageField.value = '1';
+      form.appendChild(pageField);
+    });
+  })();
+</script>

@@ -43,7 +43,6 @@ const essayProblemIds = essayProblems.map((item) => item.id);
           </div>
           <div class="app-focus-main">
             <strong data-focus-today-time>0m</strong>
-            <span data-focus-state>집중 모드 대기</span>
             <p class="app-focus-meta">오늘 집중 시간</p>
           </div>
         </div>
@@ -323,15 +322,6 @@ const essayProblemIds = essayProblems.map((item) => item.id);
   const problemRemainingCount = Math.max(0, problemIds.length - problemDoneCount);
   const essayRemainingCount = Math.max(0, essayProblemIds.length - essayDoneCount);
   const normalReviewCount = Math.max(0, wrongCount - highPriorityCount);
-  const focusStateLabel =
-    focus.status === 'running'
-      ? '집중 모드 진행 중'
-      : focus.status === 'paused'
-        ? '집중 모드 일시정지'
-        : focus.status === 'finished'
-          ? '최근 세션 종료'
-          : '집중 모드 대기';
-
   const focusRingPercent = Math.min(100, Math.max(0, (todayMs / (2 * 60 * 60 * 1000)) * 100));
   const focusRing = document.querySelector('[data-focus-ring]');
   if (focusRing) {
@@ -341,7 +331,6 @@ const essayProblemIds = essayProblems.map((item) => item.id);
   setElementText('[data-focus-total-time]', formatDurationCompact(totalFocusMs));
   setElementAttr('[data-focus-total-time]', 'title', formatDuration(totalFocusMs));
   setElementText('[data-focus-today-time]', formatDuration(todayMs));
-  setElementText('[data-focus-state]', `${focusStateLabel} · 누적 기록`);
   setFocusSparkline(recentSevenDays);
 
   setProgressWidth('[data-progress-track-fill="problem"]', problemProgressRate);

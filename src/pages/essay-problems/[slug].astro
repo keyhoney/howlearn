@@ -1,11 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import ProblemInteraction from '../../components/ProblemInteraction.astro';
 import ExamPracticeToolbar from '../../components/ExamPracticeToolbar.astro';
-import DifficultyStars from '../../components/DifficultyStars.astro';
 import {
   buildHintSteps,
-  extractMcqChoices,
   extractProblemStatementMarkdown,
   extractSection,
   extractSections,
@@ -13,6 +10,7 @@ import {
 } from '../../lib/problem-markdown';
 import { getCollection, getEntry } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
+import { STORAGE_KEYS } from '../../lib/storage-keys';
 
 export const getStaticPaths = (async () => {
   const items = await getCollection('essay-problems');
@@ -37,18 +35,10 @@ const {
   university,
   examYear,
   year,
-  month,
-  chapter,
-  concept,
-  difficulty,
-  answerType,
-  answer,
-  tags,
 } = entry.data;
 
 const rawProblemMd = extractProblemStatementMarkdown(entry.body);
-const { statement: problemMd, choices: mcqChoices } = extractMcqChoices(rawProblemMd);
-const problemHtml = await renderTrustedMarkdown(problemMd);
+const problemHtml = await renderTrustedMarkdown(rawProblemMd);
 
 const hintSections = extractSections(entry.body, ['힌트']);
 const solutionText = extractSection(entry.body, ['모범 풀이', '풀이']);
@@ -57,60 +47,46 @@ const hintStepsHtml =
   hintSteps.length > 0 ? await Promise.all(hintSteps.map((s) => renderTrustedMarkdown(s))) : [];
 const solutionHtml = await renderTrustedMarkdown(solutionText);
 const allEssayProblems = await getCollection('essay-problems');
+const tinaPath = `essay-problems/${entry.id}.mdx`;
+const tinaField = (field: string) => `${tinaPath}#${field}`;
 const relatedProblems = allEssayProblems
   .filter((p) => {
     if (p.id === entry.id) return false;
-    if (p.data.relatedProblemIds.includes(entry.id)) return true;
-    if (entry.data.relatedProblemIds.includes(p.id)) return true;
-    return p.data.university === entry.data.university && p.data.concept === entry.data.concept;
+    return true;
   })
-  .slice(0, 12)
   .map((p) => {
     let score = 0;
     if (p.data.university === entry.data.university) score += 35;
-    if (p.data.subject === entry.data.subject) score += 20;
-    if (p.data.chapter === entry.data.chapter) score += 20;
-    if (p.data.concept === entry.data.concept) score += 35;
-    score += Math.max(0, 15 - Math.abs((p.data.difficulty ?? 3) - (entry.data.difficulty ?? 3)) * 5);
+    score += Math.max(0, 25 - Math.abs((p.data.examYear ?? p.data.year) - (entry.data.examYear ?? entry.data.year)) * 3);
     return { problem: p, score };
   })
   .sort((a, b) => b.score - a.score)
   .slice(0, 6);
-const conceptByProblemId = Object.fromEntries(allEssayProblems.map((p) => [p.id, p.data.concept]));
 ---
 
 <BaseLayout
   title={source}
-  description={`${university} · ${chapter} · ${concept}`}
+  description={`${university} 대학별 고사 수학 문제`}
 >
   <article class="app-content-wrap prose prose-slate dark:prose-invert prose-headings:tracking-tight exam-problem-page">
     <ExamPracticeToolbar problemId={entry.id} />
     <header class="not-prose app-card book-card--compact mb-4 focus-hide-hard">
       <a href="/essay-problems" class="exam-back-link">← 목록으로 돌아가기</a>
       <div class="exam-meta-row mt-4 flex flex-wrap items-center gap-2 focus-hide-in-exam">
-        <span class="app-badge app-badge-info">{examYear ?? year}년 {month}월 {entry.data.examType}</span>
-        <span class="app-badge app-badge-type-essay">{entry.data.subject} &gt; {chapter} &gt; {concept}</span>
+        <span class="app-badge app-badge-info">{examYear ?? year}년 {entry.data.examType}</span>
         <span class="app-badge app-badge-neutral">{university}</span>
-        <DifficultyStars value={difficulty} />
       </div>
       <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
-        <h1 class="type-article-title m-0">{source}</h1>
+        <h1 class="type-article-title m-0">
+          {source}
+        </h1>
       </div>
-      {tags.length > 0 && (
-        <div class="mt-4 flex flex-wrap gap-2 focus-hide-in-exam">
-          {tags.map((tag) => (
-            <span class="app-chip">
-              #{tag}
-            </span>
-          ))}
-        </div>
-      )}
     </header>
 
     <p class="focus-only-note app-feedback app-feedback-info not-prose mb-4">
-      집중 모드가 켜져 있습니다. 힌트·최종 풀이·관련 문제는 집중 모드 종료 후 다시 볼 수 있습니다.
+      집중 모드가 켜져 있습니다. STEP 힌트와 최종 풀이는 계속 볼 수 있고, 관련 문제는 숨겨집니다.
     </p>
-    <div class="app-card not-prose p-5" data-problem-card-root>
+    <div class="app-card not-prose p-5" data-problem-card-root data-tina-field={tinaField('body')}>
       <h2 class="mb-4 text-xl font-bold tracking-tight text-[var(--fg)]">문제</h2>
       <div
         class="prose prose-slate dark:prose-invert max-w-none prose-headings:tracking-tight"
@@ -118,28 +94,78 @@ const conceptByProblemId = Object.fromEntries(allEssayProblems.map((p) => [p.id,
       />
     </div>
 
-    <ProblemInteraction
-      problemId={entry.id}
-      answerType={answerType}
-      answer={answer}
-      mcqChoices={mcqChoices}
-      hintStepsHtml={hintStepsHtml}
-      solutionHtml={solutionHtml}
-    />
+    <section class="not-prose mt-6 app-card p-5" data-essay-interaction>
+      <h2 class="text-lg font-bold text-[var(--fg)]">문제 해설</h2>
+
+      <div class="mt-4 rounded-sm border border-[var(--card-border)] bg-[var(--surface-2)] p-4">
+        <div class="flex items-center justify-between gap-2">
+          <h3 class="text-sm font-semibold text-[var(--fg)]">STEP 힌트</h3>
+          <button
+            type="button"
+            class="app-btn-secondary"
+            data-essay-reveal-hint
+            disabled={hintStepsHtml.length === 0}
+          >
+            다음 힌트 공개
+          </button>
+        </div>
+        {hintStepsHtml.length > 0 ? (
+          <ul class="mt-3 grid gap-2" data-essay-hint-list>
+            {hintStepsHtml.map((html, idx) => (
+              <li class="rounded-sm border border-[var(--card-border)] bg-[var(--surface-1)] p-3 text-sm text-[var(--fg)]" data-essay-hint-step data-step-index={idx}>
+                <div class="flex w-full items-center justify-between text-left">
+                  <strong class="text-[var(--accent)]">STEP {idx + 1}</strong>
+                </div>
+                <div
+                  class="prose prose-sm prose-slate dark:prose-invert mt-2 hidden max-w-none text-[var(--fg)]"
+                  data-essay-hint-content
+                  set:html={html}
+                />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="mt-3 rounded-sm border border-[var(--card-border)] bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--fg-muted)]">
+            이 문제는 힌트가 없습니다.
+          </p>
+        )}
+      </div>
+
+      <div class="mt-4 rounded-sm border border-[var(--card-border)] bg-[var(--surface-2)] p-4">
+        <div class="flex items-center justify-between gap-2">
+          <h3 class="text-sm font-semibold text-[var(--fg)]">최종 풀이</h3>
+          <button
+            type="button"
+            class="app-btn-outline-primary"
+            data-essay-reveal-solution
+          >
+            풀이 공개
+          </button>
+        </div>
+        <div
+          class="prose prose-sm prose-slate dark:prose-invert mt-3 hidden max-w-none rounded-sm border border-[var(--card-border)] bg-[var(--surface-1)] px-3 py-2 text-[var(--fg)]"
+          data-essay-solution
+          set:html={solutionHtml}
+        />
+      </div>
+    </section>
 
     {relatedProblems.length > 0 && (
       <section class="not-prose mt-6 focus-hide-in-exam">
         <div class="app-card p-5">
           <h2 class="text-xl font-bold tracking-tight text-[var(--fg)]">
-            같은 대학·개념의 관련 문제
+            관련 문제
           </h2>
           <div class="mt-4 grid gap-3" data-related-list>
             {relatedProblems.map(({ problem: rp, score }) => (
-              <a href={`/essay-problems/${rp.id}`} class="app-card-interactive rounded-sm border border-[var(--card-border)] bg-[var(--surface-1)] p-4" data-related-item data-concept={rp.data.concept} data-related-score={score}>
+              <a href={`/essay-problems/${rp.id}`} class="app-card-interactive rounded-sm border border-[var(--card-border)] bg-[var(--surface-1)] p-4" data-related-item data-related-id={rp.id} data-related-score={score}>
                 <h3 class="font-semibold text-[var(--fg)]">{rp.data.source}</h3>
                 <p class="mt-2 text-sm text-[var(--fg-muted)]">
-                  {rp.data.university} · {rp.data.examYear ?? rp.data.year}년 {rp.data.month}월 · {rp.data.chapter} &gt; {rp.data.concept}
+                  {rp.data.university}
                 </p>
+                <div class="mt-3">
+                  <span class="app-badge app-badge-neutral" data-related-status>미시작</span>
+                </div>
               </a>
             ))}
           </div>
@@ -149,26 +175,77 @@ const conceptByProblemId = Object.fromEntries(allEssayProblems.map((p) => [p.id,
   </article>
 </BaseLayout>
 
-<script is:inline define:vars={{ conceptByProblemId }}>
-  const wrongStore = JSON.parse(localStorage.getItem('howlearn-wrong-note') || '{"byId":{}}');
-  const conceptFreq = new Map();
-  Object.entries(wrongStore.byId || {}).forEach(([problemId, bucket]) => {
-    const concept = conceptByProblemId[problemId];
-    if (!concept) return;
-    const entries = bucket?.entries || [];
-    entries.forEach((entry) => {
-      if (Date.now() - Number(entry.ts || 0) > 1000 * 60 * 60 * 24 * 14) return;
-      conceptFreq.set(concept, (conceptFreq.get(concept) || 0) + 1);
-    });
-  });
+<script is:inline define:vars={{ problemId: entry.id, progressKey: STORAGE_KEYS.PROBLEM_PROGRESS }}>
+  const progress = JSON.parse(localStorage.getItem(progressKey) || '{"v":1,"byId":{}}');
+  const prev = progress.byId?.[problemId];
+  const prevObj = prev && typeof prev === 'object' ? prev : {};
+  progress.byId = progress.byId || {};
+  progress.byId[problemId] = {
+    ...prevObj,
+    status: 'done',
+    lastSeenAt: Date.now(),
+  };
+  localStorage.setItem(progressKey, JSON.stringify(progress));
+
   const list = document.querySelector('[data-related-list]');
   if (list) {
+    const statusStore = JSON.parse(localStorage.getItem(progressKey) || '{"v":1,"byId":{}}');
+    const getProgressStatus = (id) => {
+      const raw = statusStore?.byId?.[id];
+      if (typeof raw === 'string') return raw;
+      return raw?.status || 'none';
+    };
     const items = Array.from(list.querySelectorAll('[data-related-item]'));
-    items.sort((a, b) => {
-      const as = Number(a.getAttribute('data-related-score') || 0) + (conceptFreq.get(a.getAttribute('data-concept') || '') || 0) * 8;
-      const bs = Number(b.getAttribute('data-related-score') || 0) + (conceptFreq.get(b.getAttribute('data-concept') || '') || 0) * 8;
-      return bs - as;
+    items.sort((a, b) => Number(b.getAttribute('data-related-score') || 0) - Number(a.getAttribute('data-related-score') || 0));
+    items.forEach((item) => {
+      const id = item.getAttribute('data-related-id') || '';
+      const status = getProgressStatus(id);
+      const statusEl = item.querySelector('[data-related-status]');
+      if (statusEl) {
+        statusEl.textContent = status === 'done' ? '완료' : status === 'progress' ? '진행 중' : '미시작';
+        statusEl.className =
+          status === 'done'
+            ? 'app-badge app-badge-success'
+            : status === 'progress'
+              ? 'app-badge app-badge-info'
+              : 'app-badge app-badge-neutral';
+      }
+      list.appendChild(item);
     });
-    items.forEach((item) => list.appendChild(item));
+  }
+
+  const hintSteps = Array.from(document.querySelectorAll('[data-essay-hint-step]'));
+  const revealHintBtn = document.querySelector('[data-essay-reveal-hint]');
+  let revealedHintCount = 0;
+
+  const revealHintStep = (stepEl) => {
+    const content = stepEl.querySelector('[data-essay-hint-content]');
+    if (!content || !(content instanceof HTMLElement)) return;
+    content.classList.remove('hidden');
+    const idx = Number(stepEl.getAttribute('data-step-index') || 0);
+    revealedHintCount = Math.max(revealedHintCount, idx + 1);
+  };
+
+  if (revealHintBtn instanceof HTMLButtonElement) {
+    revealHintBtn.addEventListener('click', () => {
+      if (revealedHintCount >= hintSteps.length) return;
+      const next = hintSteps[revealedHintCount];
+      if (next) revealHintStep(next);
+      if (revealedHintCount >= hintSteps.length) {
+        revealHintBtn.disabled = true;
+        revealHintBtn.textContent = '힌트 모두 공개됨';
+      }
+    });
+    if (hintSteps.length === 0) revealHintBtn.disabled = true;
+  }
+
+  const solutionEl = document.querySelector('[data-essay-solution]');
+  const revealSolutionBtn = document.querySelector('[data-essay-reveal-solution]');
+  if (solutionEl instanceof HTMLElement && revealSolutionBtn instanceof HTMLButtonElement) {
+    revealSolutionBtn.addEventListener('click', () => {
+      const willOpen = solutionEl.classList.contains('hidden');
+      solutionEl.classList.toggle('hidden');
+      revealSolutionBtn.textContent = willOpen ? '풀이 닫기' : '풀이 공개';
+    });
   }
 </script>

@@ -74,25 +74,35 @@ async function loadProblems(
   return { docs, errors };
 }
 
-function validateBase(problem: ProblemDoc): string[] {
+function validateCommon(problem: ProblemDoc): string[] {
   const errors: string[] = [];
   const d = problem.data;
-  const reqStrings = ['source', 'subject', 'chapter', 'concept'] as const;
+  const reqStrings = ['source'] as const;
   for (const key of reqStrings) {
     if (typeof d[key] !== 'string' || !(d[key] as string).trim()) {
       errors.push(`${problem.collection}/${problem.id}: missing ${key}`);
     }
   }
+  return errors;
+}
 
+function validateProblem(problem: ProblemDoc): string[] {
+  if (problem.collection !== 'problems') return [];
+  const d = problem.data;
+  const errors: string[] = [];
+  const reqStrings = ['subject', 'chapter', 'concept'] as const;
+  for (const key of reqStrings) {
+    if (typeof d[key] !== 'string' || !(d[key] as string).trim()) {
+      errors.push(`${problem.collection}/${problem.id}: missing ${key}`);
+    }
+  }
   for (const key of ['year', 'month', 'difficulty'] as const) {
     if (!isInteger(d[key])) errors.push(`${problem.collection}/${problem.id}: ${key} must be integer`);
   }
-
   const examType = d.examType;
   if (!['수능', '모의평가', '교육청', '논술'].includes(String(examType))) {
     errors.push(`${problem.collection}/${problem.id}: invalid examType`);
   }
-
   const answerType = String(d.answerType);
   const answer = d.answer;
   if (!['mcq', 'short'].includes(answerType)) {
@@ -104,7 +114,6 @@ function validateBase(problem: ProblemDoc): string[] {
   } else if (answerType === 'short' && (answer < 0 || answer > 999)) {
     errors.push(`${problem.collection}/${problem.id}: short answer must be 0..999`);
   }
-
   return errors;
 }
 
@@ -112,6 +121,15 @@ function validateEssay(problem: ProblemDoc): string[] {
   if (problem.collection !== 'essay-problems') return [];
   const d = problem.data;
   const errors: string[] = [];
+  if (!isInteger(d.year)) {
+    errors.push(`${problem.collection}/${problem.id}: year must be integer`);
+  }
+  if (!isInteger(d.difficulty)) {
+    errors.push(`${problem.collection}/${problem.id}: difficulty must be integer`);
+  }
+  if (String(d.examType) !== '논술') {
+    errors.push(`${problem.collection}/${problem.id}: examType must be 논술`);
+  }
   if (typeof d.university !== 'string' || !(d.university as string).trim()) {
     errors.push(`${problem.collection}/${problem.id}: missing university`);
   }
@@ -129,7 +147,11 @@ async function main() {
   const errors = [
     ...p1.errors,
     ...p2.errors,
-    ...docs.flatMap((doc) => [...validateBase(doc), ...validateEssay(doc)]),
+    ...docs.flatMap((doc) => [
+      ...validateCommon(doc),
+      ...validateProblem(doc),
+      ...validateEssay(doc),
+    ]),
   ];
 
   if (errors.length > 0) {

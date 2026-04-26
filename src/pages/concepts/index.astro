@@ -11,30 +11,41 @@ import AppPagination from '../../components/ui/AppPagination.astro';
 
 const q = Astro.url.searchParams.get('q') ?? '';
 const tag = Astro.url.searchParams.get('tag') ?? '';
-const page = Number.parseInt(Astro.url.searchParams.get('page') ?? '1', 10);
+const perPageOptions = [12, 24, 48] as const;
+const perPageRaw = Number.parseInt(Astro.url.searchParams.get('perPage') ?? '12', 10);
+const perPage = perPageOptions.includes(perPageRaw as (typeof perPageOptions)[number]) ? perPageRaw : 12;
+const pageRaw = Number.parseInt(Astro.url.searchParams.get('page') ?? '1', 10);
+const page = Number.isFinite(pageRaw) && pageRaw > 0 ? pageRaw : 1;
 
 const all = await getAllContent();
 const filtered = sortByDate(
   filterContentByQuery(all, { q, domain: 'concepts', tag: tag || undefined }),
 );
-const paged = paginateContent(filtered, page, 9);
+const paged = paginateContent(filtered, page, perPage);
 const concepts = paged.items;
 const tags = getAvailableTagsForDomain(all, 'concepts');
+
+const buildListHref = (nextPage: number, nextPerPage = perPage) => {
+  const params = new URLSearchParams();
+  if (q) params.set('q', q);
+  if (tag) params.set('tag', tag);
+  if (nextPerPage !== 12) params.set('perPage', String(nextPerPage));
+  if (nextPage > 1) params.set('page', String(nextPage));
+  const qs = params.toString();
+  return qs ? `?${qs}` : '/concepts';
+};
 ---
 
 <BaseLayout title="학습 과학 개념" description="학습 과학 핵심 이론 및 개념">
-  <section class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+  <section class="container mx-auto max-w-7xl px-4 pb-12 pt-4 sm:px-6 sm:pt-6 lg:px-8">
     <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
       <div>
         <h1 class="app-section-title">학습 과학 개념</h1>
-        <p class="mt-2 text-sm text-[var(--fg-muted)]">
-          학습 과학 핵심 이론 및 개념 {paged.totalItems}개
-        </p>
       </div>
       <span class="app-badge app-badge-info">총 {paged.totalItems}개</span>
     </div>
 
-    <form class="app-card grid gap-3 p-4 sm:grid-cols-4">
+    <form class="app-card grid gap-3 p-4 sm:grid-cols-4" data-content-filter-form>
       <input
         type="search"
         name="q"
@@ -100,7 +111,23 @@ const tags = getAvailableTagsForDomain(all, 'concepts');
     <AppPagination
       currentPage={paged.currentPage}
       totalPages={paged.totalPages}
-      buildHref={(p) => `?q=${encodeURIComponent(q)}&tag=${encodeURIComponent(tag)}&page=${p}`}
+      perPage={perPage}
+      buildHref={(p) => buildListHref(p)}
+      buildPerPageHref={(n) => buildListHref(1, n)}
     />
   </section>
 </BaseLayout>
+
+<script is:inline>
+  (() => {
+    const form = document.querySelector('[data-content-filter-form]');
+    if (!(form instanceof HTMLFormElement)) return;
+    form.addEventListener('submit', () => {
+      const pageField = document.createElement('input');
+      pageField.type = 'hidden';
+      pageField.name = 'page';
+      pageField.value = '1';
+      form.appendChild(pageField);
+    });
+  })();
+</script>

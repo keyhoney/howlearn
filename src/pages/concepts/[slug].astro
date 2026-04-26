@@ -45,7 +45,16 @@ const {
 const description = seoDescription ?? summary;
 const relatedItems = await getRelatedContent(entry, 4);
 const referringItems = await getContentReferringToConcept(entry.id, 8);
+const getCollectionLabel = (collection: string) =>
+  ({
+    guides: '가이드',
+    columns: '칼럼',
+    concepts: '개념',
+    books: '도서',
+  })[collection] ?? collection;
 const pagePath = `/concepts/${entry.id}`;
+const tinaPath = `concepts/${entry.id}.mdx`;
+const tinaField = (field: string) => `${tinaPath}#${field}`;
 const jsonLd = [
   buildArticleJsonLd({
     title,
@@ -79,7 +88,9 @@ const jsonLd = [
             <span class="mx-2 text-[var(--fg-muted)] opacity-50">/</span>
             <span class="text-[var(--fg-muted)]">{entry.id}</span>
           </p>
-          <h1 class="mt-3 text-3xl font-bold tracking-tight text-[var(--fg)]">{title}</h1>
+          <h1 class="mt-3 text-3xl font-bold tracking-tight text-[var(--fg)]" data-tina-field={tinaField('title')}>
+            {title}
+          </h1>
           {englishName && <p class="mt-1 text-sm italic text-[var(--fg-muted)]">{englishName}</p>}
           <div class="mt-4 flex flex-wrap gap-2">
             {publishedAt && <span class="app-chip">{publishedAt.toLocaleDateString('ko-KR')}</span>}
@@ -87,22 +98,33 @@ const jsonLd = [
           </div>
           <p class="mt-5 rounded-sm border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] bg-[color-mix(in_srgb,var(--accent)_8%,var(--surface-2))] px-4 py-3 text-base leading-relaxed text-[var(--fg)]">
             <span class="font-semibold text-[var(--accent)]">짧은 정의</span>
-            <span class="mt-1 block whitespace-pre-wrap">{shortDefinition}</span>
+            <span class="mt-1 block whitespace-pre-wrap" data-tina-field={tinaField('shortDefinition')}>
+              {shortDefinition}
+            </span>
           </p>
-          <p class="mt-4 text-base leading-relaxed text-[var(--fg-muted)]">{summary}</p>
+          <p class="mt-4 text-base leading-relaxed text-[var(--fg-muted)]" data-tina-field={tinaField('summary')}>
+            {summary}
+          </p>
         </header>
 
-        <div class="prose prose-book dark:prose-invert prose-headings:tracking-tight max-w-none app-card p-6">
+        <div
+          class="prose prose-book dark:prose-invert prose-headings:tracking-tight max-w-none app-card p-6"
+          data-tina-field={tinaField('body')}
+        >
           <Content />
         </div>
 
         {faq && faq.length > 0 && (
           <section class="app-card mt-8 p-6">
             <h2 class="text-xl font-bold text-[var(--fg)]">FAQ</h2>
+            <p class="mt-2 text-sm text-[var(--fg-muted)]">질문을 클릭하면 답변이 펼쳐집니다.</p>
             <div class="mt-4 space-y-3">
               {faq.map((item) => (
-                <details class="rounded-sm border border-[var(--card-border)] bg-[var(--surface-2)] p-4">
-                  <summary class="cursor-pointer list-none font-semibold text-[var(--fg)]">{item.question}</summary>
+                <details class="group rounded-sm border border-[var(--card-border)] bg-[var(--surface-2)] p-4">
+                  <summary class="flex cursor-pointer list-none items-center justify-between gap-3 font-semibold text-[var(--fg)]">
+                    <span>{item.question}</span>
+                    <span class="text-base font-bold text-[var(--fg)]/80 transition-transform duration-150 group-open:rotate-180">▾</span>
+                  </summary>
                   <p class="mt-2 whitespace-pre-wrap text-sm text-[var(--fg-muted)]">{item.answer}</p>
                 </details>
               ))}
@@ -124,6 +146,21 @@ const jsonLd = [
           </ul>
         </section>
         )}
+
+        {relatedItems.length > 0 && (
+          <section class="app-card mt-8 p-6">
+            <h2 class="text-xl font-bold text-[var(--fg)]">관련 콘텐츠</h2>
+            <ul class="mt-4 grid gap-2">
+              {relatedItems.map((item) => (
+                <li>
+                  <a class="text-sm text-[var(--accent)] hover:underline" href={`/${item.collection}/${item.id}`}>
+                    [{getCollectionLabel(item.collection)}] {item.data.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </div>
 
       <aside class="space-y-4 lg:sticky lg:top-20 lg:h-max">
@@ -134,21 +171,7 @@ const jsonLd = [
               {referringItems.map((item) => (
                 <li>
                   <a class="text-sm text-[var(--accent)] hover:underline" href={`/${item.collection}/${item.id}`}>
-                    {item.data.title}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-        {relatedItems.length > 0 && (
-          <section class="app-card p-4">
-            <h2 class="text-sm font-semibold text-[var(--fg)]">관련 콘텐츠</h2>
-            <ul class="mt-3 space-y-2">
-              {relatedItems.map((item) => (
-                <li>
-                  <a class="text-sm text-[var(--accent)] hover:underline" href={`/${item.collection}/${item.id}`}>
-                    {item.data.title}
+                    [{getCollectionLabel(item.collection)}] {item.data.title}
                   </a>
                 </li>
               ))}

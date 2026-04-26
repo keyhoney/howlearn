@@ -19,8 +19,6 @@ faq:
     answer: "새로운 정보가 장기 기억으로 전이되지 못하고 학습 효율이 급격히 떨어집니다."
 ---
 
-import Mermaid from '../../components/Mermaid.astro';
-
 ## 개념 정의
 
 **인지 부하 이론(Cognitive Load Theory)**은 존 스웰러(John Sweller)가 1988년 제안한 이론으로,
@@ -42,14 +40,11 @@ import Mermaid from '../../components/Mermaid.astro';
 
 ## 개념 관계 다이어그램
 
-<Mermaid
-  caption="인지 부하 유형 간 관계"
-  code={`
+```mermaid
 graph TD
   A[인지 부하] --> B[내재적 부하]
   A --> C[외재적 부하]
   A --> D[본질적 부하]
   C --> E[학습 설계 개선으로 감소]
   D --> F[학습 성과 향상에 기여]
-  `}
-/>
+```

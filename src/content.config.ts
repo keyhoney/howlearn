@@ -44,7 +44,7 @@ const baseContentSchema = z.object({
    */
   relatedContentIds: z.array(z.string()).default([]),
   references: z.array(referenceSchema).default([]),
-  author: z.string().optional(),
+  author: z.string().default('하우런'),
   lang: z.string().default('ko'),
 });
 
@@ -53,7 +53,7 @@ const baseContentSchema = z.object({
 /** 가이드: 학습 과학 기반 학습법/교육 전략 가이드 */
 const guides = defineCollection({
   loader: glob({ base: './src/content/guides', pattern: '**/*.{md,mdx}' }),
-  schema: baseContentSchema.extend({
+  schema: baseContentSchema.omit({ categories: true }).extend({
     intro: z.string().optional(),
     faq: z.array(faqSchema).default([]),
   }),
@@ -62,7 +62,7 @@ const guides = defineCollection({
 /** 개념: 인지 부하, 분산 학습 등 핵심 개념 사전 */
 const concepts = defineCollection({
   loader: glob({ base: './src/content/concepts', pattern: '**/*.{md,mdx}' }),
-  schema: baseContentSchema.extend({
+  schema: baseContentSchema.omit({ categories: true }).extend({
     /** 개념 요약 (필수) – 검색 카드/툴팁에 사용 */
     shortDefinition: z.string(),
     englishName: z.string().optional(),
@@ -73,7 +73,7 @@ const concepts = defineCollection({
 /** 도서: 부모·학습자에게 도움이 되는 도서 리뷰 */
 const books = defineCollection({
   loader: glob({ base: './src/content/books', pattern: '**/*.{md,mdx}' }),
-  schema: baseContentSchema.extend({
+  schema: baseContentSchema.omit({ categories: true, tags: true }).extend({
     subtitle: z.string().optional(),
     purchaseLinks: z
       .array(z.object({ label: z.string(), href: z.string().url() }))
@@ -84,7 +84,7 @@ const books = defineCollection({
 /** 칼럼: 장기 학습을 돕는 에세이 콘텐츠 */
 const columns = defineCollection({
   loader: glob({ base: './src/content/columns', pattern: '**/*.{md,mdx}' }),
-  schema: baseContentSchema.extend({
+  schema: baseContentSchema.omit({ categories: true }).extend({
     faq: z.array(faqSchema).default([]),
   }),
 });
@@ -117,8 +117,14 @@ const problemBaseSchema = z.object({
    * answerType과의 일치는 4단계 validate-problems.ts에서 검사한다.
    */
   answer: z.coerce.number().int().min(0).max(999),
-  tags: z.array(z.string()).default([]),
-  relatedProblemIds: z.array(z.string()).default([]),
+});
+
+const essayProblemSchema = z.object({
+  source: z.string(),
+  year: z.coerce.number().int().min(2000).max(2100),
+  examType: z.literal('논술').default('논술'),
+  university: z.string(),
+  examYear: z.coerce.number().int().optional(),
 });
 
 /** 수능/모의평가 수학 기출 문제 — 메타는 `_metadata.json`, 본문만 `.mdx` */
@@ -136,10 +142,7 @@ const essayProblems = defineCollection({
     collectionDir: 'src/content/essay-problems',
     registryFile: '_metadata.json',
   }),
-  schema: problemBaseSchema.extend({
-    university: z.string(),
-    examYear: z.coerce.number().int().optional(),
-  }),
+  schema: essayProblemSchema,
 });
 
 export const collections = {
