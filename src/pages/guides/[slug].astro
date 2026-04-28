@@ -93,7 +93,7 @@ const jsonLd = [
           <>
             <header class="app-card mb-8 p-6">
               <p class="text-sm font-medium text-[var(--accent)]">
-                <a href="/guides" class="hover:underline">가이드</a>
+                <a href="/guides" class="hover:underline" data-list-back-link data-list-base-path="/guides">가이드</a>
                 <span class="mx-2 text-[var(--fg-muted)] opacity-50">/</span>
                 <span class="text-[var(--fg-muted)]">{entry.id}</span>
               </p>
@@ -196,6 +196,11 @@ const jsonLd = [
 
     <script is:inline>
       (() => {
+        const backLink = document.querySelector('[data-list-back-link]');
+        if (backLink instanceof HTMLAnchorElement && window.location.search) {
+          backLink.href = `${backLink.dataset.listBasePath || '/guides'}${window.location.search}`;
+        }
+
         const shareBtn = document.querySelector('[data-browser-share]');
         if (!shareBtn) return;
         const shareLabel = shareBtn.querySelector('[data-share-label]');

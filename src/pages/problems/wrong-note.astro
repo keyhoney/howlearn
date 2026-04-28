@@ -20,6 +20,7 @@ const candidates = [
     examType: p.data.examType,
     subject: p.data.subject,
     chapter: p.data.chapter,
+    subChapter: p.data.subChapter,
     concept: p.data.concept,
     difficulty: p.data.difficulty,
   })),
@@ -35,6 +36,7 @@ const candidates = [
     examType: p.data.examType,
     subject: '논술',
     chapter: p.data.university,
+    subChapter: '대학별',
     concept: '대학별 고사',
     difficulty: p.data.difficulty,
   })),
@@ -203,7 +205,7 @@ const candidates = [
     }
     if (keyword) {
       rows = rows.filter((row) => {
-        const target = `${row.item.title} ${row.item.meta} ${row.item.chapter} ${row.item.concept}`.toLowerCase();
+        const target = `${row.item.title} ${row.item.meta} ${row.item.chapter} ${row.item.subChapter} ${row.item.concept}`.toLowerCase();
         return target.includes(keyword);
       });
     }
@@ -230,7 +232,7 @@ const candidates = [
         const when = new Date(row.ts).toLocaleString();
         const ym = Number(it.month) > 0 ? `${it.year}.${String(it.month).padStart(2, '0')}` : `${it.year}`;
         const badgeCls = it.type === 'essay' ? 'app-badge-type-essay' : 'app-badge-type-problem';
-        const subtitle = `${it.chapter} · ${it.concept}`;
+        const subtitle = `${it.chapter} · ${it.subChapter} · ${it.concept}`;
         return `
           <li>
             <a href="${it.href}" class="app-card app-card-interactive flex h-full flex-col p-5 text-[var(--fg)]">

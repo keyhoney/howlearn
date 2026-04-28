@@ -21,7 +21,8 @@
     "cms:sync": "tsx scripts/cms-sync.ts",
     "content:validate": "tsx scripts/validate-content-index.ts",
     "problem:validate": "tsx scripts/validate-problems.ts",
-    "smoke:check": "tsx scripts/smoke-check.ts"
+    "smoke:check": "tsx scripts/smoke-check.ts",
+    "metadata:from-xlsm": "python scripts/xlsm_to_metadata.py"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^13.2.0",

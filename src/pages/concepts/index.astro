@@ -76,6 +76,7 @@ const buildListHref = (nextPage: number, nextPerPage = perPage) => {
           <li>
             <a
               href={`/concepts/${c.id}`}
+              data-preserve-list-state-link
               class="app-card app-card-interactive flex h-full flex-col p-5 text-[var(--fg)]"
             >
               <div class="flex flex-wrap items-center justify-between gap-2">
@@ -121,6 +122,14 @@ const buildListHref = (nextPage: number, nextPerPage = perPage) => {
 <script is:inline>
   (() => {
     const form = document.querySelector('[data-content-filter-form]');
+    const currentQuery = window.location.search;
+    if (currentQuery) {
+      document.querySelectorAll('a[data-preserve-list-state-link]').forEach((anchor) => {
+        const href = anchor.getAttribute('href');
+        if (!href || href.includes('?')) return;
+        anchor.setAttribute('href', `${href}${currentQuery}`);
+      });
+    }
     if (!(form instanceof HTMLFormElement)) return;
     form.addEventListener('submit', () => {
       const pageField = document.createElement('input');

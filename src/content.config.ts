@@ -104,6 +104,7 @@ const problemBaseSchema = z.object({
   examType: examTypeEnum,
   subject: z.string(),
   chapter: z.string(),
+  subChapter: z.string(),
   concept: z.string(),
   difficulty: z.coerce.number().int().min(1).max(5).default(3),
   /**

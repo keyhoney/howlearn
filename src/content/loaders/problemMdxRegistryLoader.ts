@@ -28,6 +28,12 @@ function posixRelative(from: string, to: string): string {
   return path.relative(from, to).split(path.sep).join('/');
 }
 
+function normalizeProblemMeta(data: Record<string, unknown>): Record<string, unknown> {
+  const out = { ...data };
+  if (out.examType === '모평') out.examType = '모의평가';
+  return out;
+}
+
 /**
  * MDX 파일(본문) + 동일 폴더의 JSON 레지스트리(메타데이터)를 합쳐 한 항목으로 적재한다.
  * 병합 규칙: 레지스트리 값이 프론트매터보다 우선(본문만 두고 메타는 JSON에만 두는 용도).
@@ -73,7 +79,9 @@ export function problemMdxRegistryLoader(opts: {
 
       async function readRegistry(): Promise<void> {
         const raw = await fs.readFile(registryPath, 'utf-8');
-        registry = JSON.parse(raw) as Record<string, Record<string, unknown>>;
+        // Some editors/tools may save JSON with UTF-8 BOM.
+        const cleaned = raw.charCodeAt(0) === 0xfeff ? raw.slice(1) : raw;
+        registry = JSON.parse(cleaned) as Record<string, Record<string, unknown>>;
       }
 
       async function syncOne(fileName: string, untouched: Set<string>): Promise<void> {
@@ -81,7 +89,8 @@ export function problemMdxRegistryLoader(opts: {
         const fullPath = path.join(baseDir, fileName);
         const fileUrl = pathToFileURL(fullPath);
         const contents = await fs.readFile(fullPath, 'utf-8');
-        const fileMeta = registry[id];
+        const fileMetaRaw = registry[id];
+        const fileMeta = fileMetaRaw ? normalizeProblemMeta(fileMetaRaw) : undefined;
         if (!fileMeta) {
           logger.error(
             `problemMdxRegistryLoader: "${id}" has no entry in ${opts.registryFile}`,

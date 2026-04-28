@@ -90,7 +90,7 @@ function validateProblem(problem: ProblemDoc): string[] {
   if (problem.collection !== 'problems') return [];
   const d = problem.data;
   const errors: string[] = [];
-  const reqStrings = ['subject', 'chapter', 'concept'] as const;
+  const reqStrings = ['subject', 'chapter', 'subChapter', 'concept'] as const;
   for (const key of reqStrings) {
     if (typeof d[key] !== 'string' || !(d[key] as string).trim()) {
       errors.push(`${problem.collection}/${problem.id}: missing ${key}`);

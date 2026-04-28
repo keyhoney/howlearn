@@ -71,7 +71,7 @@ const relatedProblems = allEssayProblems
   <article class="app-content-wrap prose prose-slate dark:prose-invert prose-headings:tracking-tight exam-problem-page">
     <ExamPracticeToolbar problemId={entry.id} />
     <header class="not-prose app-card book-card--compact mb-4 focus-hide-hard">
-      <a href="/essay-problems" class="exam-back-link">← 목록으로 돌아가기</a>
+      <a href="/essay-problems" class="exam-back-link" data-list-back-link data-list-base-path="/essay-problems">← 목록으로 돌아가기</a>
       <div class="exam-meta-row mt-4 flex flex-wrap items-center gap-2 focus-hide-in-exam">
         <span class="app-badge app-badge-info">{examYear ?? year}년 {entry.data.examType}</span>
         <span class="app-badge app-badge-neutral">{university}</span>
@@ -176,6 +176,14 @@ const relatedProblems = allEssayProblems
 </BaseLayout>
 
 <script is:inline define:vars={{ problemId: entry.id, progressKey: STORAGE_KEYS.PROBLEM_PROGRESS }}>
+  (() => {
+    const backLink = document.querySelector('[data-list-back-link]');
+    if (!(backLink instanceof HTMLAnchorElement)) return;
+    if (window.location.search) {
+      backLink.href = `${backLink.dataset.listBasePath || '/essay-problems'}${window.location.search}`;
+    }
+  })();
+
   const progress = JSON.parse(localStorage.getItem(progressKey) || '{"v":1,"byId":{}}');
   const prev = progress.byId?.[problemId];
   const prevObj = prev && typeof prev === 'object' ? prev : {};

@@ -11,6 +11,7 @@ interface ProblemInlineViewProps {
     examType: string;
     subject: string;
     chapter: string;
+    subChapter: string;
     concept: string;
     difficulty: number;
     answerType: string;
@@ -52,6 +53,7 @@ export default function ProblemInlineView(props: ProblemInlineViewProps) {
           <span className="app-chip">{meta.examType}</span>
           <span className="app-chip">{meta.subject}</span>
           <span className="app-chip">{meta.chapter}</span>
+          <span className="app-chip">{meta.subChapter}</span>
           <span className="app-chip">{meta.concept}</span>
           <span className="app-chip">난이도 {meta.difficulty}</span>
           <span className="app-chip">정답 형식 {meta.answerType}</span>

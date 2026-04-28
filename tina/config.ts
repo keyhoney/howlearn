@@ -116,6 +116,7 @@ const problemFields = [
   },
   { type: 'string' as const, name: 'subject', label: '과목', required: true },
   { type: 'string' as const, name: 'chapter', label: '단원', required: true },
+  { type: 'string' as const, name: 'subChapter', label: '소단원', required: true },
   { type: 'string' as const, name: 'concept', label: '핵심 개념', required: true },
   { type: 'number' as const, name: 'difficulty', label: '난이도(1~5)', required: true },
   {

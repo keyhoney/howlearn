@@ -18,7 +18,12 @@ if (!slug) {
   return Astro.redirect('/columns');
 }
 
-const tinaResponse = await tinaClient.queries.columns({ relativePath: `${slug}.mdx` });
+let tinaResponse;
+try {
+  tinaResponse = await tinaClient.queries.columns({ relativePath: `${slug}.mdx` });
+} catch {
+  return Astro.redirect('/columns');
+}
 const title = tinaResponse?.data?.columns?.title ?? `${slug} | ${SITE_TITLE}`;
 const description = tinaResponse?.data?.columns?.summary ?? '칼럼 인라인 편집';
 ---

@@ -8,11 +8,39 @@ import DifficultyStars from '../../components/DifficultyStars.astro';
 import AppPagination from '../../components/ui/AppPagination.astro';
 
 const allProblems = await getPublishedProblems();
+const monthPriority = new Map<number, number>([
+  [11, 0], // 수능
+  [9, 1],  // 9월 모평
+  [6, 2],  // 6월 모평
+]);
+
+function extractQuestionNumber(source: string): number {
+  const matched = source.match(/(\d+)\s*번(?!.*\d+\s*번)/);
+  return matched ? Number.parseInt(matched[1] ?? '', 10) : Number.POSITIVE_INFINITY;
+}
+
+const sortedProblems = [...allProblems].sort((a, b) => {
+  // 1) 최신 연도 우선
+  if (a.data.year !== b.data.year) return b.data.year - a.data.year;
+
+  // 2) 수능(11월) -> 9월 -> 6월 우선, 그 외 월은 뒤로
+  const aMonthOrder = monthPriority.get(a.data.month) ?? 999;
+  const bMonthOrder = monthPriority.get(b.data.month) ?? 999;
+  if (aMonthOrder !== bMonthOrder) return aMonthOrder - bMonthOrder;
+  if (a.data.month !== b.data.month) return b.data.month - a.data.month;
+
+  // 3) 문항 번호 오름차순, 동일하면 source 텍스트 오름차순
+  const aQ = extractQuestionNumber(a.data.source);
+  const bQ = extractQuestionNumber(b.data.source);
+  if (aQ !== bQ) return aQ - bQ;
+  return a.data.source.localeCompare(b.data.source, 'ko');
+});
+
 const subjectChapterTree = buildProblemSubjectChapterTree(allProblems);
-const examTypes = Array.from(new Set(allProblems.map((p) => p.data.examType)));
+const examTypes = Array.from(new Set(sortedProblems.map((p) => p.data.examType)));
 const subjects = Object.keys(subjectChapterTree);
-const years = Array.from(new Set(allProblems.map((p) => p.data.year))).sort((a, b) => b - a);
-const months = Array.from(new Set(allProblems.map((p) => p.data.month))).sort((a, b) => a - b);
+const years = Array.from(new Set(sortedProblems.map((p) => p.data.year))).sort((a, b) => b - a);
+const months = Array.from(new Set(sortedProblems.map((p) => p.data.month))).sort((a, b) => a - b);
 ---
 
 <BaseLayout title="수능·모평 수학 문제" description="수능/모의평가 기출 문제 및 단계별 힌트·해설">
@@ -22,8 +50,8 @@ const months = Array.from(new Set(allProblems.map((p) => p.data.month))).sort((a
         <h1 class="app-section-title">수능·모평 수학 문제</h1>
       </div>
       <div class="flex flex-wrap gap-2">
-        <span class="app-badge app-badge-info">전체 {allProblems.length}</span>
-        <span class="app-badge app-badge-neutral">필터 결과 <span data-filtered-count>{allProblems.length}</span></span>
+        <span class="app-badge app-badge-info">전체 {sortedProblems.length}</span>
+        <span class="app-badge app-badge-neutral">필터 결과 <span data-filtered-count>{sortedProblems.length}</span></span>
       </div>
     </div>
 
@@ -47,11 +75,18 @@ const months = Array.from(new Set(allProblems.map((p) => p.data.month))).sort((a
         <option value="">과목을 먼저 선택</option>
       </select>
       <select
+        name="subChapter"
+        id="filter-sub-chapter"
+        class="app-select"
+      >
+        <option value="">단원을 먼저 선택</option>
+      </select>
+      <select
         name="concept"
         id="filter-concept"
         class="app-select"
       >
-        <option value="">과목을 먼저 선택</option>
+        <option value="">중단원을 먼저 선택</option>
       </select>
       <select
         name="year"
@@ -92,10 +127,11 @@ const months = Array.from(new Set(allProblems.map((p) => p.data.month))).sort((a
 
     <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {
-        allProblems.map((p) => (
+        sortedProblems.map((p) => (
           <li>
             <a
               href={`/problems/${p.id}`}
+              data-preserve-list-state-link
               data-problem-card
               data-problem-id={p.id}
               data-exam-type={p.data.examType}
@@ -103,6 +139,7 @@ const months = Array.from(new Set(allProblems.map((p) => p.data.month))).sort((a
               data-month={p.data.month}
               data-subject={p.data.subject}
               data-chapter={p.data.chapter}
+              data-sub-chapter={p.data.subChapter}
               data-concept={p.data.concept}
               class="app-card app-card-interactive flex h-full flex-col p-5 text-[var(--fg)]"
             >
@@ -116,7 +153,7 @@ const months = Array.from(new Set(allProblems.map((p) => p.data.month))).sort((a
                 {p.data.source}
               </h2>
               <p class="mt-2 text-sm text-[var(--fg-muted)] line-clamp-2 leading-relaxed">
-                {p.data.chapter} · {p.data.concept}
+                {p.data.chapter} · {p.data.subChapter} · {p.data.concept}
               </p>
               <div class="mt-3">
                 <DifficultyStars value={p.data.difficulty} />
@@ -145,11 +182,12 @@ const months = Array.from(new Set(allProblems.map((p) => p.data.month))).sort((a
     const tree = subjectChapterTree;
     const sub = document.getElementById('filter-subject');
     const ch = document.getElementById('filter-chapter');
+    const subCh = document.getElementById('filter-sub-chapter');
     const co = document.getElementById('filter-concept');
     const form = document.querySelector('[data-problem-filter-form]');
     const filteredCountEl = document.querySelector('[data-filtered-count]');
     const paginationRoot = document.getElementById('problems-pagination');
-    if (!sub || !ch || !co || !tree || !form || !filteredCountEl || !paginationRoot) return;
+    if (!sub || !ch || !subCh || !co || !tree || !form || !filteredCountEl || !paginationRoot) return;
     const perPageOptions = [12, 24, 48];
     const query = new URLSearchParams(window.location.search);
     function getProgressDetail(raw) {
@@ -163,19 +201,22 @@ const months = Array.from(new Set(allProblems.map((p) => p.data.month))).sort((a
       };
     }
 
-    function normalizeParams(subject, chapter, concept) {
+    function normalizeParams(subject, chapter, subChapter, concept) {
       const s = subject.trim();
       let chName = chapter.trim();
+      let subChName = subChapter.trim();
       let coName = concept.trim();
-      if (!s || !tree[s]) return { subject: '', chapter: '', concept: '' };
+      if (!s || !tree[s]) return { subject: '', chapter: '', subChapter: '', concept: '' };
       const chapters = Object.keys(tree[s]);
-      if (!chName || !chapters.includes(chName)) return { subject: s, chapter: '', concept: '' };
-      const concepts = tree[s][chName] ?? [];
-      if (!coName || !concepts.includes(coName)) return { subject: s, chapter: chName, concept: '' };
-      return { subject: s, chapter: chName, concept: coName };
+      if (!chName || !chapters.includes(chName)) return { subject: s, chapter: '', subChapter: '', concept: '' };
+      const subChapters = Object.keys(tree[s]?.[chName] ?? {});
+      if (!subChName || !subChapters.includes(subChName)) return { subject: s, chapter: chName, subChapter: '', concept: '' };
+      const concepts = tree[s]?.[chName]?.[subChName] ?? [];
+      if (!coName || !concepts.includes(coName)) return { subject: s, chapter: chName, subChapter: subChName, concept: '' };
+      return { subject: s, chapter: chName, subChapter: subChName, concept: coName };
     }
 
-    function setChapterOptions(subj, keepChapter, keepConcept) {
+    function setChapterOptions(subj, keepChapter, keepSubChapter, keepConcept) {
       ch.innerHTML = '';
       const opt0 = document.createElement('option');
       opt0.value = '';
@@ -183,12 +224,7 @@ const months = Array.from(new Set(allProblems.map((p) => p.data.month))).sort((a
       ch.appendChild(opt0);
       ch.disabled = !subj;
       if (!subj || !tree[subj]) {
-        co.innerHTML = '';
-        const o0 = document.createElement('option');
-        o0.value = '';
-        o0.textContent = !subj ? '과목을 먼저 선택' : '단원을 먼저 선택';
-        co.appendChild(o0);
-        co.disabled = true;
+        setSubChapterOptions('', '', '', '');
         return;
       }
       for (const name of Object.keys(tree[subj])) {
@@ -199,18 +235,40 @@ const months = Array.from(new Set(allProblems.map((p) => p.data.month))).sort((a
         ch.appendChild(o);
       }
       const selCh = ch.value;
-      setConceptOptions(subj, selCh, keepConcept);
+      setSubChapterOptions(subj, selCh, keepSubChapter, keepConcept);
     }
 
-    function setConceptOptions(subj, chapterName, keepConcept) {
+    function setSubChapterOptions(subj, chapterName, keepSubChapter, keepConcept) {
+      subCh.innerHTML = '';
+      const opt0 = document.createElement('option');
+      opt0.value = '';
+      opt0.textContent = chapterName ? '전체 중단원' : subj ? '단원을 먼저 선택' : '과목을 먼저 선택';
+      subCh.appendChild(opt0);
+      subCh.disabled = !chapterName;
+      if (!subj || !chapterName || !tree[subj]?.[chapterName]) {
+        setConceptOptions('', '', '', '');
+        return;
+      }
+      for (const name of Object.keys(tree[subj][chapterName])) {
+        const o = document.createElement('option');
+        o.value = name;
+        o.textContent = name;
+        if (keepSubChapter && name === keepSubChapter) o.selected = true;
+        subCh.appendChild(o);
+      }
+      const selSubCh = subCh.value;
+      setConceptOptions(subj, chapterName, selSubCh, keepConcept);
+    }
+
+    function setConceptOptions(subj, chapterName, subChapterName, keepConcept) {
       co.innerHTML = '';
       const opt0 = document.createElement('option');
       opt0.value = '';
-      opt0.textContent = chapterName ? '전체 개념' : subj ? '단원을 먼저 선택' : '과목을 먼저 선택';
+      opt0.textContent = subChapterName ? '전체 소단원' : chapterName ? '중단원을 먼저 선택' : subj ? '단원을 먼저 선택' : '과목을 먼저 선택';
       co.appendChild(opt0);
-      co.disabled = !chapterName;
-      if (!subj || !chapterName || !tree[subj]?.[chapterName]) return;
-      for (const name of tree[subj][chapterName]) {
+      co.disabled = !subChapterName;
+      if (!subj || !chapterName || !subChapterName || !tree[subj]?.[chapterName]?.[subChapterName]) return;
+      for (const name of tree[subj][chapterName][subChapterName]) {
         const o = document.createElement('option');
         o.value = name;
         o.textContent = name;
@@ -222,6 +280,7 @@ const months = Array.from(new Set(allProblems.map((p) => p.data.month))).sort((a
     const examType = query.get('examType') ?? '';
     const subject = query.get('subject') ?? '';
     const chapter = query.get('chapter') ?? '';
+    const subChapter = query.get('subChapter') ?? '';
     const concept = query.get('concept') ?? '';
     const year = query.get('year') ?? '';
     const month = query.get('month') ?? '';
@@ -232,19 +291,20 @@ const months = Array.from(new Set(allProblems.map((p) => p.data.month))).sort((a
     const perPage = perPageOptions.includes(perPageRaw) ? perPageRaw : 12;
     const pageRaw = Number.parseInt(query.get('page') ?? '1', 10);
     const page = Number.isFinite(pageRaw) && pageRaw > 0 ? pageRaw : 1;
-    const normalized = normalizeParams(subject, chapter, concept);
+    const normalized = normalizeParams(subject, chapter, subChapter, concept);
 
     form.querySelector('[name="examType"]').value = examType;
     sub.value = normalized.subject;
-    setChapterOptions(normalized.subject, normalized.chapter, normalized.concept);
+    setChapterOptions(normalized.subject, normalized.chapter, normalized.subChapter, normalized.concept);
     form.querySelector('[name="year"]').value = year;
     form.querySelector('[name="month"]').value = month;
     form.querySelector('[name="status"]').value = statusFilter;
     form.querySelector('[name="wrongOnly"]').checked = wrongOnly;
     form.querySelector('[name="bookmarkedOnly"]').checked = bookmarkedOnly;
 
-    sub.addEventListener('change', () => setChapterOptions(sub.value, '', ''));
-    ch.addEventListener('change', () => setConceptOptions(sub.value, ch.value, ''));
+    sub.addEventListener('change', () => setChapterOptions(sub.value, '', '', ''));
+    ch.addEventListener('change', () => setSubChapterOptions(sub.value, ch.value, '', ''));
+    subCh.addEventListener('change', () => setConceptOptions(sub.value, ch.value, subCh.value, ''));
     form.addEventListener('submit', () => {
       const pageField = document.createElement('input');
       pageField.type = 'hidden';
@@ -256,6 +316,14 @@ const months = Array.from(new Set(allProblems.map((p) => p.data.month))).sort((a
     const progress = JSON.parse(localStorage.getItem('howlearn-problem-progress') || '{"byId":{}}');
     const bookmarks = JSON.parse(localStorage.getItem('howlearn-bookmark') || '{"byId":{}}');
     const wrongNotes = JSON.parse(localStorage.getItem('howlearn-wrong-note') || '{"byId":{}}');
+    const currentQuery = window.location.search;
+    if (currentQuery) {
+      document.querySelectorAll('a[data-preserve-list-state-link]').forEach((anchor) => {
+        const href = anchor.getAttribute('href');
+        if (!href || href.includes('?')) return;
+        anchor.setAttribute('href', `${href}${currentQuery}`);
+      });
+    }
     const visibleItems = [];
     document.querySelectorAll('[data-problem-card]').forEach((el) => {
       const id = el.getAttribute('data-problem-id') || '';
@@ -267,6 +335,7 @@ const months = Array.from(new Set(allProblems.map((p) => p.data.month))).sort((a
         (examType && (el.getAttribute('data-exam-type') || '') !== examType) ||
         (normalized.subject && (el.getAttribute('data-subject') || '') !== normalized.subject) ||
         (normalized.chapter && (el.getAttribute('data-chapter') || '') !== normalized.chapter) ||
+        (normalized.subChapter && (el.getAttribute('data-sub-chapter') || '') !== normalized.subChapter) ||
         (normalized.concept && (el.getAttribute('data-concept') || '') !== normalized.concept) ||
         (year && (el.getAttribute('data-year') || '') !== year) ||
         (month && (el.getAttribute('data-month') || '') !== month);

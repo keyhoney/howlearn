@@ -84,7 +84,7 @@ const jsonLd = [
       <div>
         <header class="app-card mb-8 p-6">
           <p class="text-sm font-medium text-[var(--accent)]">
-            <a href="/concepts" class="hover:underline">개념</a>
+            <a href="/concepts" class="hover:underline" data-list-back-link data-list-base-path="/concepts">개념</a>
             <span class="mx-2 text-[var(--fg-muted)] opacity-50">/</span>
             <span class="text-[var(--fg-muted)]">{entry.id}</span>
           </p>
@@ -181,4 +181,12 @@ const jsonLd = [
       </aside>
     </div>
   </article>
+  <script is:inline>
+    (() => {
+      const backLink = document.querySelector('[data-list-back-link]');
+      if (backLink instanceof HTMLAnchorElement && window.location.search) {
+        backLink.href = `${backLink.dataset.listBasePath || '/concepts'}${window.location.search}`;
+      }
+    })();
+  </script>
 </BaseLayout>

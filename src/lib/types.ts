@@ -77,6 +77,7 @@ export interface ExamDate {
 export interface ProblemTopic {
   subject: string;
   chapter: string;
+  subChapter: string;
   concept: string;
 }
 

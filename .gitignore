@@ -31,3 +31,5 @@ tina/__generated__/
 .wrangler/
 
 docs/
+
+docx2mdx/

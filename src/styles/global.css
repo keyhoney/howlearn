@@ -267,6 +267,32 @@ html.dark .prose {
   box-shadow: var(--shadow-default);
 }
 
+/* 시험 문제 본문: 블록 인용(「조건」 등)을 카드형 네모 박스로 */
+.exam-problem-page .prose blockquote {
+  border-left: none;
+  border: 1px solid var(--card-border);
+  border-radius: 0.125rem;
+  background-color: var(--surface-1);
+  box-shadow: var(--shadow-default);
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  font-style: normal;
+  color: var(--fg);
+}
+
+.exam-problem-page .prose blockquote p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.exam-problem-page .prose blockquote p:first-child {
+  margin-top: 0;
+}
+
+.exam-problem-page .prose blockquote p:last-child {
+  margin-bottom: 0;
+}
+
 .app-card-emphasis {
   box-shadow: var(--shadow-card-soft);
 }
@@ -2034,6 +2060,26 @@ html.dark .exam-focus-timer {
 
 .exam-problem-page {
   --tw-prose-body: var(--fg);
+}
+
+/* 문제/힌트/풀이 가독성 개선: 줄높이 + 문단 간격 확장 */
+.exam-problem-page [data-problem-card-root] .prose,
+.exam-problem-page [data-hint-content],
+.exam-problem-page [data-solution] {
+  line-height: 3 !important;
+}
+
+.exam-problem-page [data-problem-card-root] .prose :where(p, li),
+.exam-problem-page [data-hint-content] :where(p, li),
+.exam-problem-page [data-solution] :where(p, li) {
+  line-height: 3 !important;
+}
+
+.exam-problem-page [data-problem-card-root] .prose :where(p):not(:where([class~="not-prose"], [class~="not-prose"] *)),
+.exam-problem-page [data-hint-content] :where(p):not(:where([class~="not-prose"], [class~="not-prose"] *)),
+.exam-problem-page [data-solution] :where(p):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+  margin-top: 1rem !important;
+  margin-bottom: 1rem !important;
 }
 
 .exam-back-link {

@@ -6,14 +6,24 @@ interface Props {
   answerType: 'mcq' | 'short';
   answer: number;
   mcqChoices?: string[];
+  mcqChoicesHtml?: string[];
   /** 힌트 단계별 HTML(신뢰 출처 MDX만) */
   hintStepsHtml: string[];
   /** 풀이 HTML(신뢰 출처 MDX만) */
   solutionHtml: string;
 }
 
-const { problemId, answerType, answer, mcqChoices = [], hintStepsHtml, solutionHtml } = Astro.props;
+const {
+  problemId,
+  answerType,
+  answer,
+  mcqChoices = [],
+  mcqChoicesHtml = [],
+  hintStepsHtml,
+  solutionHtml,
+} = Astro.props;
 const renderedMcqChoices = mcqChoices.length > 0 ? mcqChoices : ['1', '2', '3', '4', '5'];
+const renderedMcqChoicesHtml = mcqChoicesHtml.length > 0 ? mcqChoicesHtml : renderedMcqChoices;
 ---
 
 <section
@@ -34,7 +44,7 @@ const renderedMcqChoices = mcqChoices.length > 0 ? mcqChoices : ['1', '2', '3', 
         <fieldset data-choice-fieldset>
           <legend class="sr-only">객관식 선택지</legend>
           <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
-          {renderedMcqChoices.map((choiceText, idx) => (
+          {renderedMcqChoicesHtml.map((choiceHtml, idx) => (
             <label class="choice-item flex min-h-12 cursor-pointer items-center justify-center rounded-sm border border-[var(--card-border)] bg-[var(--surface-1)] px-2 py-2 text-center text-sm leading-snug text-[var(--fg)] hover:border-[var(--accent)] hover:text-[var(--accent)]">
               <input
                 type="radio"
@@ -43,7 +53,7 @@ const renderedMcqChoices = mcqChoices.length > 0 ? mcqChoices : ['1', '2', '3', 
                 class="sr-only"
                 data-answer-choice
               />
-              <span class="whitespace-normal break-words">{choiceText}</span>
+              <span class="whitespace-normal break-words" set:html={choiceHtml} />
             </label>
           ))}
           </div>

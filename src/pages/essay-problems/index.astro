@@ -61,6 +61,7 @@ const years = Array.from(new Set(allProblems.map((p) => p.data.year))).sort((a, 
           <li>
             <a
               href={`/essay-problems/${p.id}`}
+              data-preserve-list-state-link
               data-problem-card
               data-problem-id={p.id}
               data-university={p.data.university}
@@ -135,6 +136,14 @@ const years = Array.from(new Set(allProblems.map((p) => p.data.year))).sort((a, 
 
   const progress = JSON.parse(localStorage.getItem('howlearn-problem-progress') || '{"byId":{}}');
   const bookmarks = JSON.parse(localStorage.getItem('howlearn-bookmark') || '{"byId":{}}');
+  const currentQuery = window.location.search;
+  if (currentQuery) {
+    document.querySelectorAll('a[data-preserve-list-state-link]').forEach((anchor) => {
+      const href = anchor.getAttribute('href');
+      if (!href || href.includes('?')) return;
+      anchor.setAttribute('href', `${href}${currentQuery}`);
+    });
+  }
   const visibleItems = [];
   document.querySelectorAll('[data-problem-card]').forEach((el) => {
     const id = el.getAttribute('data-problem-id') || '';
