@@ -44,7 +44,8 @@ async function loadProblems(
   let registry: Record<string, Record<string, unknown>>;
   try {
     const raw = await fs.readFile(registryPath, 'utf8');
-    registry = JSON.parse(raw) as Record<string, Record<string, unknown>>;
+    const cleaned = raw.charCodeAt(0) === 0xfeff ? raw.slice(1) : raw;
+    registry = JSON.parse(cleaned) as Record<string, Record<string, unknown>>;
   } catch {
     errors.push(`${collection}: cannot read or parse _metadata.json`);
     return { docs: [], errors };
@@ -99,7 +100,7 @@ function validateProblem(problem: ProblemDoc): string[] {
   for (const key of ['year', 'month', 'difficulty'] as const) {
     if (!isInteger(d[key])) errors.push(`${problem.collection}/${problem.id}: ${key} must be integer`);
   }
-  const examType = d.examType;
+  const examType = String(d.examType) === '모평' ? '모의평가' : d.examType;
   if (!['수능', '모의평가', '교육청', '논술'].includes(String(examType))) {
     errors.push(`${problem.collection}/${problem.id}: invalid examType`);
   }
