@@ -30,6 +30,8 @@ tina/__generated__/
 # Wrangler 로컬 상태
 .wrangler/
 
-docs/
+# Python
+__pycache__/
+*.py[cod]
 
-/docx2mdx/
+docs/

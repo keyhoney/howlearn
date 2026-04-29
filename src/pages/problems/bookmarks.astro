@@ -56,27 +56,31 @@ const candidates = [
       </div>
     </div>
 
-    <div class="app-card book-card--compact">
+    <div class="app-filter-panel">
       <p class="text-sm text-[var(--fg-muted)] leading-relaxed">
         스크랩한 문제를 모아 복습 루틴을 만들 수 있습니다.
       </p>
-      <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <input
-          id="bookmark-keyword"
-          type="search"
-          placeholder="키워드 검색"
-          class="app-input min-h-10 w-full"
-        />
-        <select id="bookmark-type" class="app-select min-h-10 w-full">
-          <option value="all">전체 유형</option>
-          <option value="problem">기출</option>
-          <option value="essay">논술</option>
-        </select>
-        <select id="bookmark-sort" class="app-select min-h-10 w-full">
-          <option value="recent">최근순</option>
-          <option value="name">이름순</option>
-          <option value="attempts">횟수순</option>
-        </select>
+      <div class="mt-4 app-filter-grid sm:grid-cols-2 lg:grid-cols-3">
+        <label class="app-filter-field">
+          <span class="app-filter-label">검색어</span>
+          <input id="bookmark-keyword" type="search" placeholder="키워드 검색" class="app-input w-full" />
+        </label>
+        <label class="app-filter-field">
+          <span class="app-filter-label">유형</span>
+          <select id="bookmark-type" class="app-select w-full">
+            <option value="all">전체 유형</option>
+            <option value="problem">기출</option>
+            <option value="essay">논술</option>
+          </select>
+        </label>
+        <label class="app-filter-field">
+          <span class="app-filter-label">정렬</span>
+          <select id="bookmark-sort" class="app-select w-full">
+            <option value="recent">최근순</option>
+            <option value="name">이름순</option>
+            <option value="attempts">횟수순</option>
+          </select>
+        </label>
       </div>
     </div>
 

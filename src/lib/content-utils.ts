@@ -192,37 +192,25 @@ export async function getContentReferringToConcept(
 ): Promise<AnyContentEntry[]> {
   const conceptEntry = await getContentBySlug('concepts', conceptSlug);
   if (!conceptEntry || conceptEntry.collection !== 'concepts') return [];
-  const concept = conceptEntry.data;
-  const conceptDomains = new Set(concept.domains ?? []);
-  const conceptTags = new Set(concept.tags ?? []);
-  const conceptKeywords = [concept.title, concept.shortDefinition, concept.englishName ?? '']
-    .flatMap((v) => tokenizeText(v))
-    .filter((v) => v.length >= 2);
+  const normalizedConceptId = conceptEntry.id.trim().toLowerCase();
+  const normalizedConceptTitle = conceptEntry.data.title.trim().toLowerCase();
+  const targetTags = new Set([normalizedConceptId, normalizedConceptTitle].filter(Boolean));
 
   const all = await getAllContent();
   return all
-    .filter((item) => item.collection !== 'concepts')
-    .map((item) => {
-      const domainOverlap = getOverlapCount(conceptDomains, new Set(item.data.domains ?? []));
-      const tagOverlap = getOverlapCount(conceptTags, new Set(item.data.tags ?? []));
-      const haystack = `${item.data.title} ${item.data.summary}`.toLowerCase();
-      const keywordMatches = conceptKeywords.reduce(
-        (acc, keyword) => (haystack.includes(keyword.toLowerCase()) ? acc + 1 : acc),
-        0,
-      );
-
-      const score = domainOverlap * 12 + tagOverlap * 8 + Math.min(30, keywordMatches * 6);
-      return { item, score };
+    .filter((item) => item.collection === 'guides' || item.collection === 'concepts')
+    .filter((item) => !(item.collection === 'concepts' && item.id === conceptEntry.id))
+    .filter((item) => {
+      const normalizedTags = (item.data.tags ?? []).map((tag) => tag.trim().toLowerCase());
+      return normalizedTags.some((tag) => targetTags.has(tag));
     })
-    .filter((v) => v.score > 0)
     .sort((a, b) => {
-      if (b.score !== a.score) return b.score - a.score;
-      const ad = a.item.data.publishedAt?.valueOf() ?? 0;
-      const bd = b.item.data.publishedAt?.valueOf() ?? 0;
+      const ad = a.data.publishedAt?.valueOf() ?? 0;
+      const bd = b.data.publishedAt?.valueOf() ?? 0;
       return bd - ad;
     })
     .slice(0, limit)
-    .map((v) => v.item);
+    .map((item) => item);
 }
 
 function tokenizeText(text: string): string[] {

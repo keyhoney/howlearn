@@ -1,12 +1,5 @@
 ---
-import { STORAGE_KEYS } from '../lib/storage-keys';
-
 interface Props {
-  problemId: string;
-  answerType: 'mcq' | 'short';
-  answer: number;
-  mcqChoices?: string[];
-  mcqChoicesHtml?: string[];
   /** 힌트 단계별 HTML(신뢰 출처 MDX만) */
   hintStepsHtml: string[];
   /** 풀이 HTML(신뢰 출처 MDX만) */
@@ -14,99 +7,41 @@ interface Props {
 }
 
 const {
-  problemId,
-  answerType,
-  answer,
-  mcqChoices = [],
-  mcqChoicesHtml = [],
   hintStepsHtml,
   solutionHtml,
 } = Astro.props;
-const renderedMcqChoices = mcqChoices.length > 0 ? mcqChoices : ['1', '2', '3', '4', '5'];
-const renderedMcqChoicesHtml = mcqChoicesHtml.length > 0 ? mcqChoicesHtml : renderedMcqChoices;
 ---
 
-<section
-  class="not-prose mt-6 app-card p-5"
-  data-problem-interaction
-  data-problem-id={problemId}
-  data-answer-type={answerType}
-  data-answer={String(answer)}
-  data-progress-key={STORAGE_KEYS.PROBLEM_PROGRESS}
-  data-wrong-note-key={STORAGE_KEYS.WRONG_NOTE}
->
-  <h2 class="text-lg font-bold text-[var(--fg)]">문제 상호작용</h2>
-
-  <div class="mt-4 rounded-sm border border-[var(--card-border)] bg-[var(--surface-2)] p-4">
-    <h3 class="text-sm font-semibold text-[var(--fg)]">정답 체크</h3>
-    <div class="mt-3" data-answer-input-wrap>
-      {answerType === 'mcq' ? (
-        <fieldset data-choice-fieldset>
-          <legend class="sr-only">객관식 선택지</legend>
-          <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
-          {renderedMcqChoicesHtml.map((choiceHtml, idx) => (
-            <label class="choice-item flex min-h-12 cursor-pointer items-center justify-center rounded-sm border border-[var(--card-border)] bg-[var(--surface-1)] px-2 py-2 text-center text-sm leading-snug text-[var(--fg)] hover:border-[var(--accent)] hover:text-[var(--accent)]">
-              <input
-                type="radio"
-                name={`choice-${problemId}`}
-                value={idx + 1}
-                class="sr-only"
-                data-answer-choice
-              />
-              <span class="whitespace-normal break-words" set:html={choiceHtml} />
-            </label>
-          ))}
-          </div>
-        </fieldset>
-      ) : (
-        <input
-          type="text"
-          inputmode="numeric"
-          placeholder="정답 입력"
-          aria-label="단답형 정답 입력"
-          class="app-input"
-          data-answer-short
-        />
-      )}
-    </div>
-    <div class="mt-3 flex flex-wrap items-center gap-2">
-      {answerType === 'mcq' ? (
-        <p class="app-feedback app-feedback-info m-0 px-3 py-2">선택지를 클릭하면 바로 채점됩니다.</p>
-      ) : (
-        <button
-          type="button"
-          class="app-btn-primary"
-          data-check-answer
-        >
-          정답 확인
-        </button>
-      )}
-      <p class="hidden" data-answer-result role="status" aria-live="polite"></p>
-      <a href="/problems/wrong-note" class="app-btn-secondary hidden" data-go-wrong-note>
-        오답노트로 이동
-      </a>
-    </div>
-  </div>
+<section class="not-prose mt-6 app-card p-5">
+  <h2 class="text-lg font-bold text-[var(--fg)]">힌트 및 풀이</h2>
 
   <div class="mt-4 rounded-sm border border-[var(--card-border)] bg-[var(--surface-2)] p-4">
     <div class="flex items-center justify-between gap-2">
       <h3 class="text-sm font-semibold text-[var(--fg)]">STEP 힌트</h3>
-      <button
-        type="button"
-        class="app-btn-secondary"
-        data-reveal-hint
-        disabled={hintStepsHtml.length === 0}
-      >
-        다음 힌트 공개
-      </button>
     </div>
     {hintStepsHtml.length > 0 ? (
       <ul class="mt-3 grid gap-2" data-hint-list>
         {hintStepsHtml.map((html, idx) => (
-          <li class="rounded-sm border border-[var(--card-border)] bg-[var(--surface-1)] p-3 text-sm text-[var(--fg)]" data-hint-step data-step-index={idx}>
-            <div class="flex w-full items-center justify-between text-left">
-              <strong class="text-[var(--accent)]">STEP {idx + 1}</strong>
-            </div>
+          <li class="app-hint-step-card" data-hint-step data-step-index={idx}>
+            <button
+              type="button"
+              class="app-hint-step-trigger"
+              data-hint-trigger
+              data-step-index={idx}
+              aria-expanded="false"
+            >
+              <strong>STEP {idx + 1}</strong>
+              <span class="app-hint-step-meta">
+                <span class="app-hint-step-icon" data-hint-step-icon aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" class="hidden h-4 w-4" data-icon-eye>
+                    <path d="M2 12C3.7 8.7 7.2 6.5 12 6.5C16.8 6.5 20.3 8.7 22 12C20.3 15.3 16.8 17.5 12 17.5C7.2 17.5 3.7 15.3 2 12Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <circle cx="12" cy="12" r="2.3" fill="currentColor"></circle>
+                  </svg>
+                  <span data-icon-check class="hidden">✓</span>
+                </span>
+                <span data-hint-step-state>잠김</span>
+              </span>
+            </button>
             <div
               class="prose prose-sm prose-slate dark:prose-invert mt-2 hidden max-w-none text-[var(--fg)]"
               data-hint-content
@@ -120,6 +55,7 @@ const renderedMcqChoicesHtml = mcqChoicesHtml.length > 0 ? mcqChoicesHtml : rend
         이 문제는 힌트가 없습니다.
       </p>
     )}
+    <button type="button" class="hidden" data-reveal-hint aria-hidden="true" tabindex="-1"></button>
   </div>
 
   <div class="mt-4 rounded-sm border border-[var(--card-border)] bg-[var(--surface-2)] p-4">
@@ -133,6 +69,9 @@ const renderedMcqChoicesHtml = mcqChoicesHtml.length > 0 ? mcqChoicesHtml : rend
         풀이 공개
       </button>
     </div>
+    <p class="mt-2 text-xs text-[var(--fg-muted)]" data-solution-gate role="status" aria-live="polite">
+      모든 STEP 힌트를 공개하면 풀이를 열 수 있습니다.
+    </p>
     <div
       class="prose prose-sm prose-slate dark:prose-invert mt-3 hidden max-w-none rounded-sm border border-[var(--card-border)] bg-[var(--surface-1)] px-3 py-2 text-[var(--fg)]"
       data-solution
@@ -140,7 +79,3 @@ const renderedMcqChoicesHtml = mcqChoicesHtml.length > 0 ? mcqChoicesHtml : rend
     />
   </div>
 </section>
-
-<script>
-  import '../lib/client/problem-interaction';
-</script>

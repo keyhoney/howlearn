@@ -30,7 +30,7 @@ const entry = await getEntry('concepts', slug);
 if (!entry) {
   return Astro.redirect('/concepts');
 }
-const { Content } = await render(entry);
+const { Content, headings } = await render(entry);
 const {
   title,
   summary,
@@ -45,6 +45,7 @@ const {
 const description = seoDescription ?? summary;
 const relatedItems = await getRelatedContent(entry, 4);
 const referringItems = await getContentReferringToConcept(entry.id, 8);
+const tocItems = headings.filter((heading) => heading.depth === 2);
 const getCollectionLabel = (collection: string) =>
   ({
     guides: '가이드',
@@ -164,6 +165,24 @@ const jsonLd = [
       </div>
 
       <aside class="space-y-4 lg:sticky lg:top-20 lg:h-max">
+        {tocItems.length > 0 && (
+          <section class="app-card hidden p-4 lg:block">
+            <h2 class="text-sm font-semibold text-[var(--fg)]">이 글 목차</h2>
+            <ul class="mt-3 space-y-2">
+              {tocItems.map((item) => (
+                <li>
+                  <a
+                    class="text-sm text-[var(--fg-muted)] hover:text-[var(--accent)]"
+                    href={`#${item.slug}`}
+                    data-toc-link
+                  >
+                    {item.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
         {referringItems.length > 0 && (
           <section class="app-card p-4">
             <h2 class="text-sm font-semibold text-[var(--fg)]">이 개념을 다룬 콘텐츠</h2>
@@ -186,6 +205,51 @@ const jsonLd = [
       const backLink = document.querySelector('[data-list-back-link]');
       if (backLink instanceof HTMLAnchorElement && window.location.search) {
         backLink.href = `${backLink.dataset.listBasePath || '/concepts'}${window.location.search}`;
+      }
+
+      const tocLinks = Array.from(document.querySelectorAll('[data-toc-link]')).filter(
+        (link) => link instanceof HTMLAnchorElement
+      );
+      if (tocLinks.length === 0) return;
+
+      const tocMap = new Map();
+      tocLinks.forEach((link) => {
+        if (!(link instanceof HTMLAnchorElement)) return;
+        const targetId = decodeURIComponent(link.getAttribute('href')?.replace(/^#/, '') || '');
+        if (!targetId) return;
+        const target = document.getElementById(targetId);
+        if (target) tocMap.set(targetId, link);
+      });
+
+      const setActive = (activeId) => {
+        tocMap.forEach((link, id) => {
+          const isActive = id === activeId;
+          link.classList.toggle('text-[var(--accent)]', isActive);
+          link.classList.toggle('font-semibold', isActive);
+          link.classList.toggle('text-[var(--fg-muted)]', !isActive);
+        });
+      };
+
+      const headingIds = Array.from(tocMap.keys());
+      if (headingIds.length > 0) {
+        setActive(headingIds[0]);
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const visible = entries
+              .filter((entry) => entry.isIntersecting)
+              .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+            if (visible.length === 0) return;
+            const id = visible[0].target.id;
+            if (!id) return;
+            setActive(id);
+          },
+          { rootMargin: '-25% 0px -65% 0px', threshold: [0, 0.2, 0.5, 0.8, 1] }
+        );
+
+        headingIds.forEach((id) => {
+          const target = document.getElementById(id);
+          if (target) observer.observe(target);
+        });
       }
     })();
   </script>

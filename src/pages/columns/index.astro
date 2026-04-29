@@ -45,24 +45,21 @@ const buildListHref = (nextPage: number, nextPerPage = perPage) => {
       <span class="app-badge app-badge-info">총 {paged.totalItems}편</span>
     </div>
 
-    <form class="app-card grid gap-3 p-4 sm:grid-cols-4" data-content-filter-form>
-      <input
-        type="search"
-        name="q"
-        value={q}
-        placeholder="검색어"
-        class="app-input sm:col-span-2"
-      />
-      <select
-        name="tag"
-        class="app-select"
-      >
-        <option value="">전체 태그</option>
-        {tags.map((t) => <option value={t} selected={tag === t}>{t}</option>)}
-      </select>
-      <button class="app-btn-primary" type="submit">
-        필터 적용
-      </button>
+    <form class="app-filter-panel app-filter-grid sm:grid-cols-4" data-content-filter-form>
+      <label class="app-filter-field sm:col-span-2">
+        <span class="app-filter-label">검색어</span>
+        <input type="search" name="q" value={q} placeholder="제목/요약 검색" class="app-input" />
+      </label>
+      <label class="app-filter-field">
+        <span class="app-filter-label">태그</span>
+        <select name="tag" class="app-select">
+          <option value="">전체 태그</option>
+          {tags.map((t) => <option value={t} selected={tag === t}>{t}</option>)}
+        </select>
+      </label>
+      <div class="app-filter-actions">
+        <button class="app-btn-primary" type="submit">필터 적용</button>
+      </div>
     </form>
 
     {tag && (

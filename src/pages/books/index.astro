@@ -41,17 +41,14 @@ const buildListHref = (nextPage: number, nextPerPage = perPage) => {
       <span class="app-badge app-badge-info">총 {paged.totalItems}권</span>
     </div>
 
-    <form class="app-card grid gap-3 p-4 sm:grid-cols-4" data-content-filter-form>
-      <input
-        type="search"
-        name="q"
-        value={q}
-        placeholder="검색어"
-        class="app-input sm:col-span-3"
-      />
-      <button class="app-btn-primary" type="submit">
-        필터 적용
-      </button>
+    <form class="app-filter-panel app-filter-grid sm:grid-cols-4" data-content-filter-form>
+      <label class="app-filter-field sm:col-span-3">
+        <span class="app-filter-label">검색어</span>
+        <input type="search" name="q" value={q} placeholder="도서명/요약 검색" class="app-input" />
+      </label>
+      <div class="app-filter-actions">
+        <button class="app-btn-primary" type="submit">필터 적용</button>
+      </div>
     </form>
     <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {

@@ -293,6 +293,132 @@ html.dark .prose {
   margin-bottom: 0;
 }
 
+/*
+  시험 문제 「조건」 카드
+  - design_ref: rounded-sm, border, shadow-card, surface-1, primary accent
+  - 콜아웃: 왼쪽 4px primary 바 + 헤더 구분선 + 넉넉한 행간
+*/
+.exam-problem-page .prose blockquote.hl-exam-conditions,
+.exam-problem-page .prose aside.hl-exam-conditions {
+  /* (가)/(나) 고정 라벨 폭 + 최소 간격 — 행잉 들여쓰기(둘째 줄 정렬) */
+  --hl-cond-hang: 2.25rem;
+  margin: 1.5rem 0;
+  padding: 1.25rem 1.5rem 1.375rem 1.375rem;
+  background-color: var(--surface-1);
+  border: 1px solid var(--card-border);
+  border-left: 4px solid var(--accent);
+  border-radius: 0.125rem;
+  box-shadow: var(--shadow-card);
+  font-style: normal;
+}
+
+.exam-problem-page .prose blockquote.hl-exam-conditions > p:first-of-type,
+.exam-problem-page .prose aside.hl-exam-conditions .hl-exam-conditions__lead {
+  margin: 0;
+  padding: 0 0 0.875rem;
+  border-bottom: 1px solid var(--card-border);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+  color: var(--fg);
+}
+
+/*
+  (가)(나): 행잉 인덴트 — 2번째 줄부터 라벨이 아니라 본문 시작(첫 줄의 "모든…" 등)에 맞춤
+*/
+.exam-problem-page .prose blockquote.hl-exam-conditions > p:not(:first-of-type):has(> strong:first-child) {
+  display: block;
+  padding-left: var(--hl-cond-hang);
+  text-indent: calc(-1 * var(--hl-cond-hang));
+  margin: 1rem 0 0;
+  margin-bottom: 0;
+  line-height: 1.75;
+  color: var(--fg);
+}
+
+.exam-problem-page
+  .prose
+  blockquote.hl-exam-conditions
+  > p:not(:first-of-type):has(> strong:first-child)
+  > strong:first-child {
+  font-weight: 700;
+  color: var(--fg);
+}
+
+/* (가) 직후 디스플레이 수식 단락: 본문 열과 같은 들여쓰기 */
+.exam-problem-page
+  .prose
+  blockquote.hl-exam-conditions
+  > p:not(:first-of-type):not(:has(> strong:first-child)) {
+  display: block;
+  padding-left: var(--hl-cond-hang);
+  text-indent: 0;
+  margin: 0.625rem 0 0;
+  margin-bottom: 0;
+  line-height: 1.75;
+  color: var(--fg);
+}
+
+.exam-problem-page .prose blockquote.hl-exam-conditions .katex-display {
+  margin: 0.35rem 0 0.15rem;
+  text-align: left;
+}
+
+.exam-problem-page .prose blockquote.hl-exam-conditions .katex-display .katex {
+  font-size: 1.05em;
+}
+
+.exam-problem-page
+  .prose
+  blockquote.hl-exam-conditions
+  > p:not(:first-of-type):not(:has(> strong:first-child))
+  .katex-display {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.exam-problem-page .prose aside.hl-exam-conditions .hl-exam-conditions__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+  line-height: 1.75;
+  color: var(--fg);
+}
+
+.exam-problem-page .prose aside.hl-exam-conditions .hl-exam-conditions__row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.625rem;
+  align-items: start;
+  margin: 0;
+}
+
+.exam-problem-page .prose aside.hl-exam-conditions .hl-exam-conditions__label {
+  font-weight: 700;
+  color: var(--fg);
+  line-height: 1.75;
+  white-space: nowrap;
+}
+
+.exam-problem-page .prose aside.hl-exam-conditions .hl-exam-conditions__text {
+  min-width: 0;
+  line-height: 1.75;
+}
+
+html:not(.dark) .exam-problem-page .prose blockquote.hl-exam-conditions,
+html:not(.dark) .exam-problem-page .prose aside.hl-exam-conditions,
+html:not(.dark) .exam-problem-page .prose blockquote.hl-exam-conditions :where(p, li),
+html:not(.dark) .exam-problem-page .prose aside.hl-exam-conditions :where(p, li, .hl-exam-conditions__text) {
+  color: #111111;
+}
+
+html.dark .exam-problem-page .prose blockquote.hl-exam-conditions,
+html.dark .exam-problem-page .prose aside.hl-exam-conditions {
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.22);
+}
+
 .app-card-emphasis {
   box-shadow: var(--shadow-card-soft);
 }
@@ -482,7 +608,7 @@ html.dark .prose {
 }
 
 .app-dashboard-subtitle {
-  max-width: 56ch;
+  width: min(100%, clamp(56ch, 72vw, 92ch));
   font-size: 0.95rem;
   color: var(--fg-muted);
 }
@@ -1162,6 +1288,72 @@ html.dark .prose {
   background-color: var(--surface-2);
 }
 
+.app-filter-panel {
+  border: 1px solid color-mix(in srgb, var(--card-border) 88%, var(--accent));
+  border-radius: 0.9rem;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface-1) 95%, #ffffff) 0%,
+      var(--surface-1) 100%
+    );
+  box-shadow:
+    0 12px 26px color-mix(in srgb, #0f172a 8%, transparent),
+    0 1px 0 color-mix(in srgb, #ffffff 65%, transparent) inset;
+  padding: 1rem;
+}
+
+.app-filter-grid {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.app-filter-field {
+  display: grid;
+  gap: 0.38rem;
+}
+
+.app-filter-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: color-mix(in srgb, var(--fg-muted) 88%, var(--fg));
+}
+
+.app-filter-field .app-input,
+.app-filter-field .app-select {
+  border-radius: 0.7rem;
+  min-height: 2.7rem;
+  border-color: color-mix(in srgb, var(--card-border) 82%, var(--accent));
+  background: color-mix(in srgb, var(--surface-1) 92%, #ffffff);
+  box-shadow: 0 1px 0 color-mix(in srgb, #ffffff 70%, transparent) inset;
+}
+
+.app-filter-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2.7rem;
+  border-radius: 0.7rem;
+  border: 1px solid color-mix(in srgb, var(--card-border) 85%, var(--accent));
+  background: color-mix(in srgb, var(--surface-2) 78%, #ffffff);
+  padding: 0.55rem 0.85rem;
+  font-size: 0.9rem;
+  color: var(--fg);
+}
+
+.app-filter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.app-filter-actions .app-btn-primary,
+.app-filter-actions .app-btn-secondary {
+  min-height: 2.7rem;
+  border-radius: 0.7rem;
+}
+
 .app-chip {
   display: inline-flex;
   align-items: center;
@@ -1420,6 +1612,59 @@ html.dark .app-badge-type-essay {
   border-color: var(--accent) !important;
   background-color: color-mix(in srgb, var(--accent) 10%, var(--surface-1)) !important;
   color: var(--accent) !important;
+}
+
+.app-hint-step-card {
+  border: 2px dashed color-mix(in srgb, var(--card-border) 88%, var(--accent));
+  border-radius: 0.6rem;
+  background: color-mix(in srgb, var(--surface-1) 92%, #ffffff);
+  padding: 0.7rem 0.85rem;
+  transition: border-color 160ms ease, background-color 160ms ease, opacity 160ms ease;
+}
+
+.app-hint-step-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  text-align: left;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--fg-muted);
+  background: transparent;
+}
+
+.app-hint-step-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.86rem;
+}
+
+.app-hint-step-icon {
+  display: inline-flex;
+  width: 1rem;
+  justify-content: center;
+  font-size: 0.8rem;
+}
+
+.app-hint-step-card.is-current {
+  border-color: color-mix(in srgb, var(--accent) 70%, var(--card-border));
+  background: color-mix(in srgb, var(--accent) 6%, var(--surface-1));
+}
+
+.app-hint-step-card.is-current .app-hint-step-trigger {
+  color: var(--accent);
+}
+
+.app-hint-step-card.is-revealed {
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--card-border));
+}
+
+.app-hint-step-card.is-locked {
+  opacity: 0.58;
 }
 
 /* 난이도 별 (DifficultyStars) — 토큰 기반 고대비 */
@@ -2060,6 +2305,29 @@ html.dark .exam-focus-timer {
 
 .exam-problem-page {
   --tw-prose-body: var(--fg);
+}
+
+/*
+  문제 본문: `prose-slate` 기본 본문색(slate-700)이 회색으로 보이므로
+  라이트 모드에서만 카드 안 본문을 일반 검정에 가깝게 맞춘다.
+*/
+html:not(.dark) .exam-problem-page [data-problem-card-root] .prose {
+  --tw-prose-body: #111111;
+  --tw-prose-headings: #111111;
+  --tw-prose-lead: #111111;
+  --tw-prose-links: var(--accent);
+  --tw-prose-bold: #111111;
+  --tw-prose-counters: #111111;
+  --tw-prose-bullets: #111111;
+  --tw-prose-quotes: #111111;
+  --tw-prose-captions: #111111;
+  --tw-prose-kbd: #111111;
+  --tw-prose-code: #111111;
+  color: #111111;
+}
+
+html:not(.dark) .exam-problem-page [data-problem-card-root] .prose blockquote {
+  color: #111111;
 }
 
 /* 문제/힌트/풀이 가독성 개선: 줄높이 + 문단 간격 확장 */

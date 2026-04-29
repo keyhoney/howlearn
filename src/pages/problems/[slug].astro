@@ -4,6 +4,7 @@ import ProblemInteraction from '../../components/ProblemInteraction.astro';
 import ExamPracticeToolbar from '../../components/ExamPracticeToolbar.astro';
 import DifficultyStars from '../../components/DifficultyStars.astro';
 import { buildProblemOccurrenceStats } from '../../lib/content-utils';
+import { STORAGE_KEYS } from '../../lib/storage-keys';
 import {
   buildHintSteps,
   extractMcqChoices,
@@ -48,6 +49,7 @@ const mcqChoicesHtml =
         }),
       )
     : [];
+const renderedMcqChoicesHtml = mcqChoicesHtml.length > 0 ? mcqChoicesHtml : ['1', '2', '3', '4', '5'];
 
 const hintSections = extractSections(entry.body, ['힌트']);
 const solutionText = extractSection(entry.body, ['풀이']);
@@ -82,7 +84,16 @@ const conceptByProblemId = Object.fromEntries(allProblems.map((p) => [p.id, p.da
   title={source}
   description={`${year}년 ${month}월 ${examType} · ${chapter} · ${subChapter} · ${concept}`}
 >
-  <article class="app-content-wrap prose prose-slate dark:prose-invert prose-headings:tracking-tight exam-problem-page">
+  <article
+    class="app-content-wrap prose prose-slate dark:prose-invert prose-headings:tracking-tight exam-problem-page"
+    data-problem-interaction
+    data-problem-id={entry.id}
+    data-total-hints={String(hintStepsHtml.length)}
+    data-answer-type={answerType}
+    data-answer={String(answer)}
+    data-progress-key={STORAGE_KEYS.PROBLEM_PROGRESS}
+    data-wrong-note-key={STORAGE_KEYS.WRONG_NOTE}
+  >
     <ExamPracticeToolbar problemId={entry.id} />
     <header class="not-prose app-card book-card--compact mb-4 focus-hide-hard">
       <a href="/problems" class="exam-back-link" data-list-back-link data-list-base-path="/problems">← 목록으로 돌아가기</a>
@@ -108,14 +119,55 @@ const conceptByProblemId = Object.fromEntries(allProblems.map((p) => [p.id, p.da
         class="prose prose-slate dark:prose-invert max-w-none prose-headings:tracking-tight"
         set:html={problemHtml}
       />
+      <div class="mt-5 rounded-sm border border-[var(--card-border)] bg-[var(--surface-2)] p-4">
+        <h3 class="text-sm font-semibold text-[var(--fg)]">정답 체크</h3>
+        <div class="mt-3" data-answer-input-wrap>
+          {answerType === 'mcq' ? (
+            <fieldset data-choice-fieldset>
+              <legend class="sr-only">객관식 선택지</legend>
+              <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
+                {renderedMcqChoicesHtml.map((choiceHtml, idx) => (
+                  <label class="choice-item flex min-h-12 cursor-pointer items-center justify-center rounded-sm border border-[var(--card-border)] bg-[var(--surface-1)] px-2 py-2 text-center text-sm leading-snug text-[var(--fg)] hover:border-[var(--accent)] hover:text-[var(--accent)]">
+                    <input
+                      type="radio"
+                      name={`choice-${entry.id}`}
+                      value={idx + 1}
+                      class="sr-only"
+                      data-answer-choice
+                    />
+                    <span class="whitespace-normal break-words" set:html={choiceHtml} />
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          ) : (
+            <input
+              type="text"
+              inputmode="numeric"
+              placeholder="정답 입력"
+              aria-label="단답형 정답 입력"
+              class="app-input"
+              data-answer-short
+            />
+          )}
+        </div>
+        <div class="mt-3 flex flex-wrap items-center gap-2">
+          {answerType === 'mcq' ? (
+            <p class="app-feedback app-feedback-info m-0 px-3 py-2">선택지를 클릭하면 바로 채점됩니다.</p>
+          ) : (
+            <button type="button" class="app-btn-primary" data-check-answer>
+              정답 확인
+            </button>
+          )}
+          <p class="hidden" data-answer-result role="status" aria-live="polite"></p>
+          <a href="/problems/wrong-note" class="app-btn-secondary hidden" data-go-wrong-note>
+            오답노트로 이동
+          </a>
+        </div>
+      </div>
     </div>
 
     <ProblemInteraction
-      problemId={entry.id}
-      answerType={answerType}
-      answer={answer}
-      mcqChoices={mcqChoices}
-      mcqChoicesHtml={mcqChoicesHtml}
       hintStepsHtml={hintStepsHtml}
       solutionHtml={solutionHtml}
     />
@@ -245,4 +297,7 @@ const conceptByProblemId = Object.fromEntries(allProblems.map((p) => [p.id, p.da
       list.appendChild(item);
     });
   }
+</script>
+<script>
+  import '../../lib/client/problem-interaction';
 </script>

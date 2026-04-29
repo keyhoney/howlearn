@@ -1,3 +1,5 @@
+import { enqueueSyncPatch } from './firebase-sync';
+
 function parse<T>(raw: string | null, fallback: T): T {
   if (!raw) return fallback;
   try {
@@ -75,6 +77,10 @@ document.querySelectorAll<HTMLElement>('[data-focus-toolbar]').forEach((root) =>
     const key = toDateKey(Date.now());
     byDate[key] = (byDate[key] || 0) + safeDelta;
     localStorage.setItem(focusHistoryKey, JSON.stringify({ v: 1, byDate }));
+    enqueueSyncPatch('focusDaily', key, {
+      dateKey: key,
+      totalMs: byDate[key],
+    });
   };
 
   const commitAndStopSession = () => {
@@ -137,8 +143,20 @@ document.querySelectorAll<HTMLElement>('[data-focus-toolbar]').forEach((root) =>
   bookmarkBtn?.addEventListener('click', () => {
     const bookmarks = parse(localStorage.getItem(bookmarkKey), { v: 1, byId: {} as Record<string, { ts: number }> });
     bookmarks.byId = bookmarks.byId || {};
-    if (bookmarks.byId[problemId]) delete bookmarks.byId[problemId];
-    else bookmarks.byId[problemId] = { ts: Date.now() };
+    const clickedAt = Date.now();
+    if (bookmarks.byId[problemId]) {
+      delete bookmarks.byId[problemId];
+      enqueueSyncPatch('bookmarks', problemId, {
+        bookmarked: false,
+        ts: clickedAt,
+      });
+    } else {
+      bookmarks.byId[problemId] = { ts: clickedAt };
+      enqueueSyncPatch('bookmarks', problemId, {
+        bookmarked: true,
+        ts: clickedAt,
+      });
+    }
     localStorage.setItem(bookmarkKey, JSON.stringify({ v: 1, byId: bookmarks.byId }));
     refreshBookmark();
   });

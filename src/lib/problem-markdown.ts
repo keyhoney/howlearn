@@ -4,13 +4,14 @@ import rehypeKatex from 'rehype-katex';
 import { rehypeKatexSafeOptions } from './katex-shared';
 import { normalizeMathMarkdownSource } from './math-mdx-normalize';
 import { remarkDfrac } from './remark-dfrac';
+import { remarkExamConditions } from './remark-exam-conditions';
 
 let processorPromise: ReturnType<typeof createMarkdownProcessor> | null = null;
 
 async function getProcessor() {
   if (!processorPromise) {
     processorPromise = createMarkdownProcessor({
-      remarkPlugins: [remarkMath, remarkDfrac],
+      remarkPlugins: [remarkExamConditions, remarkMath, remarkDfrac],
       rehypePlugins: [[rehypeKatex, rehypeKatexSafeOptions]],
       gfm: true,
     });

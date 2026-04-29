@@ -22,37 +22,37 @@ const years = Array.from(new Set(allProblems.map((p) => p.data.year))).sort((a, 
       </div>
     </div>
 
-    <form class="app-card mt-6 grid gap-3 p-4 sm:grid-cols-4" data-essay-filter-form>
-      <select
-        name="university"
-        class="app-select"
-      >
-        <option value="">전체 대학</option>
-        {universities.map((v) => <option value={v}>{v}</option>)}
-      </select>
-      <select
-        name="year"
-        class="app-select"
-      >
-        <option value="">전체 연도</option>
-        {years.map((v) => <option value={String(v)}>{v}</option>)}
-      </select>
-      <select
-        name="status"
-        class="app-select"
-      >
-        <option value="all">전체 상태</option>
-        <option value="none">미시작</option>
-        <option value="done">완료</option>
-      </select>
-      <label class="inline-flex items-center gap-2 rounded-sm border border-[var(--card-border)] bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--fg)]">
+    <form class="app-filter-panel mt-6 app-filter-grid sm:grid-cols-2 lg:grid-cols-4" data-essay-filter-form>
+      <label class="app-filter-field">
+        <span class="app-filter-label">대학</span>
+        <select name="university" class="app-select">
+          <option value="">전체 대학</option>
+          {universities.map((v) => <option value={v}>{v}</option>)}
+        </select>
+      </label>
+      <label class="app-filter-field">
+        <span class="app-filter-label">연도</span>
+        <select name="year" class="app-select">
+          <option value="">전체 연도</option>
+          {years.map((v) => <option value={String(v)}>{v}</option>)}
+        </select>
+      </label>
+      <label class="app-filter-field">
+        <span class="app-filter-label">풀이 상태</span>
+        <select name="status" class="app-select">
+          <option value="all">전체 상태</option>
+          <option value="none">미시작</option>
+          <option value="done">완료</option>
+        </select>
+      </label>
+      <label class="app-filter-check">
         <input type="checkbox" name="bookmarked" value="1" class="h-4 w-4 accent-[var(--accent)]" />
         스크랩한 문제만 보기
       </label>
-      <button class="app-btn-primary" type="submit">
-        필터 적용
-      </button>
-      <a href="/essay-problems" class="app-btn-secondary">초기화</a>
+      <div class="app-filter-actions sm:col-span-2 lg:col-span-2">
+        <button class="app-btn-primary" type="submit">필터 적용</button>
+        <a href="/essay-problems" class="app-btn-secondary">초기화</a>
+      </div>
     </form>
 
     <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

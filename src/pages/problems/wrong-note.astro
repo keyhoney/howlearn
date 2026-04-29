@@ -56,7 +56,7 @@ const candidates = [
       </div>
     </div>
 
-    <div class="app-card book-card--compact">
+    <div class="app-filter-panel">
       <p class="text-sm text-[var(--fg-muted)] leading-relaxed">
         오답 횟수와 최근 시각을 기준으로 복습 우선순위를 잡아보세요.
       </p>
@@ -74,23 +74,27 @@ const candidates = [
           <p class="mt-1 text-sm font-semibold text-[var(--fg)]" id="wrong-note-conversion-rate">0%</p>
         </div>
       </div>
-      <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <input
-          id="wrong-note-keyword"
-          type="search"
-          placeholder="키워드 검색"
-          class="app-input min-h-10 w-full"
-        />
-        <select id="wrong-note-type" class="app-select min-h-10 w-full">
-          <option value="all">전체 유형</option>
-          <option value="problem">기출</option>
-          <option value="essay">논술</option>
-        </select>
-        <select id="wrong-note-sort" class="app-select min-h-10 w-full">
-          <option value="recent">최근순</option>
-          <option value="name">이름순</option>
-          <option value="attempts">횟수순</option>
-        </select>
+      <div class="mt-4 app-filter-grid sm:grid-cols-2 lg:grid-cols-3">
+        <label class="app-filter-field">
+          <span class="app-filter-label">검색어</span>
+          <input id="wrong-note-keyword" type="search" placeholder="키워드 검색" class="app-input w-full" />
+        </label>
+        <label class="app-filter-field">
+          <span class="app-filter-label">유형</span>
+          <select id="wrong-note-type" class="app-select w-full">
+            <option value="all">전체 유형</option>
+            <option value="problem">기출</option>
+            <option value="essay">논술</option>
+          </select>
+        </label>
+        <label class="app-filter-field">
+          <span class="app-filter-label">정렬</span>
+          <select id="wrong-note-sort" class="app-select w-full">
+            <option value="recent">최근순</option>
+            <option value="name">이름순</option>
+            <option value="attempts">횟수순</option>
+          </select>
+        </label>
       </div>
     </div>
 

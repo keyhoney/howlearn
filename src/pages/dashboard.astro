@@ -279,7 +279,15 @@ const essayProblemIds = essayProblems.map((item) => item.id);
     v: 1,
     byId: {},
   });
+  const progressSummary = parse(localStorage.getItem('howlearn-progress-summary-cache') || '', {
+    v: 1,
+    byId: {},
+  });
   const wrong = parse(localStorage.getItem(STORAGE_KEYS.WRONG_NOTE) || '', {
+    v: 1,
+    byId: {},
+  });
+  const wrongSummary = parse(localStorage.getItem('howlearn-wrong-summary-cache') || '', {
     v: 1,
     byId: {},
   });
@@ -293,10 +301,24 @@ const essayProblemIds = essayProblems.map((item) => item.id);
     v: 1,
     byDate: {},
   });
+  const focusDaily = parse(localStorage.getItem('howlearn-focus-daily-cache') || '', {
+    v: 1,
+    byDate: {},
+  });
+  const focusMonthly = parse(localStorage.getItem('howlearn-focus-monthly-cache') || '', {
+    v: 1,
+    byMonth: {},
+  });
+
+  const query = new URLSearchParams(window.location.search);
+  const forceLocal = query.get('local') === '1';
+
+  const hasCloudProgress = Object.keys(progressSummary.byId || {}).length > 0;
+  const progressById = !forceLocal && hasCloudProgress ? progressSummary.byId : progress.byId;
 
   const getDoneCountByIds = (ids) =>
     ids.filter((id) => {
-      const item = progress.byId?.[id];
+      const item = progressById?.[id];
       const status = typeof item === 'string' ? item : item?.status;
       return status === 'done';
     }).length;
@@ -305,16 +327,31 @@ const essayProblemIds = essayProblems.map((item) => item.id);
   const essayDoneCount = getDoneCountByIds(essayProblemIds || []);
   const doneCount = problemDoneCount + essayDoneCount;
 
+  const wrongSummaryRows = Object.values(wrongSummary.byId || {});
+  const hasCloudWrongSummary = wrongSummaryRows.length > 0;
   const wrongRows = Object.values(wrong.byId || {});
-  const wrongCount = wrongRows.length;
-  const highPriorityCount = wrongRows.filter((bucket) => (bucket?.entries?.length || 0) >= 2).length;
+  const useCloudWrong = !forceLocal && hasCloudWrongSummary;
+  const wrongCount = useCloudWrong ? wrongSummaryRows.length : wrongRows.length;
+  const highPriorityCount = useCloudWrong
+    ? wrongSummaryRows.filter((row) => Boolean(row?.isRepeatWrong) || Number(row?.wrongCount || 0) >= 2).length
+    : wrongRows.filter((bucket) => (bucket?.entries?.length || 0) >= 2).length;
 
   const runningDeltaMs = focus.status === 'running' && focus.startedAt ? (Date.now() - focus.startedAt) : 0;
+  const hasCloudFocusDaily = Object.keys(focusDaily.byDate || {}).length > 0;
+  const focusByDate = !forceLocal && hasCloudFocusDaily ? focusDaily.byDate || {} : focusHistory.byDate || {};
   const todayKey = toDateKey(Date.now());
-  const todayAccumulatedMs = Number(focusHistory.byDate?.[todayKey] || 0);
-  const todayMs = todayAccumulatedMs + runningDeltaMs;
-  const totalFocusMs = Object.values(focusHistory.byDate || {}).reduce((acc, cur) => acc + (Number(cur) || 0), 0) + runningDeltaMs;
-  const recentSevenDays = getRecentDaysMs(focusHistory.byDate || {}, 7);
+  const todayAccumulatedMs = Number(focusByDate?.[todayKey] || 0);
+  const todayMs = todayAccumulatedMs + (forceLocal ? runningDeltaMs : 0);
+  const cloudTotalFocusMs = Object.values(focusMonthly.byMonth || {}).reduce(
+    (acc, cur) => acc + (Number(cur) || 0),
+    0,
+  );
+  const totalFocusMs =
+    (!forceLocal && cloudTotalFocusMs > 0
+      ? cloudTotalFocusMs
+      : Object.values(focusByDate || {}).reduce((acc, cur) => acc + (Number(cur) || 0), 0)) +
+    (forceLocal ? runningDeltaMs : 0);
+  const recentSevenDays = getRecentDaysMs(focusByDate || {}, 7);
   if (recentSevenDays.length) recentSevenDays[recentSevenDays.length - 1] = todayMs;
 
   const problemProgressRate = problemIds.length > 0 ? (problemDoneCount / problemIds.length) * 100 : 0;
@@ -347,4 +384,7 @@ const essayProblemIds = essayProblems.map((item) => item.id);
   setElementText('[data-progress-remain="essay"]', String(essayRemainingCount));
   setElementText('[data-review-priority-count]', String(highPriorityCount));
   setElementText('[data-review-normal-count]', String(normalReviewCount));
+</script>
+<script>
+  import '../lib/client/firebase-sync';
 </script>
