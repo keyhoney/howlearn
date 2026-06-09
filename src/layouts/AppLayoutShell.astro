@@ -1,0 +1,113 @@
+---
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import AppSidebar from '../components/ui/AppSidebar.astro';
+
+interface Props {
+  pathname: string;
+  tinaVisualHref: string;
+}
+
+const { pathname, tinaVisualHref } = Astro.props;
+---
+
+<body class="app-shell antialiased">
+  <a
+    href="#main-content"
+    class="fixed left-4 top-4 z-[100] -translate-y-[200%] rounded-sm bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white shadow-lg focus:translate-y-0 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2"
+  >
+    본문으로 건너뛰기
+  </a>
+
+  <div class="flex min-h-screen">
+    <div id="app-site-sidebar" class="hidden lg:block sticky top-0 h-screen self-start">
+      <AppSidebar pathname={pathname} />
+    </div>
+
+    <div class="flex min-w-0 flex-1 flex-col">
+      <SiteHeader />
+      <main
+        id="main-content"
+        class="flex-1 px-[0.075rem] pt-6 pb-10 md:px-6 2xl:px-10 mx-auto w-full max-w-[1400px]"
+      >
+        <slot />
+      </main>
+      <SiteFooter />
+    </div>
+  </div>
+
+  <div
+    data-sidebar-overlay
+    class="fixed inset-0 z-40 hidden bg-black/40 backdrop-blur-[2px] opacity-0 transition-opacity lg:hidden"
+    aria-hidden="true"
+  ></div>
+  <div
+    data-sidebar-drawer
+    class="fixed left-0 top-0 z-50 h-full w-80 max-w-[85vw] -translate-x-full transition-transform duration-200 ease-out lg:hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-label="모바일 사이드바"
+  >
+    <AppSidebar pathname={pathname} compact />
+  </div>
+
+  {import.meta.env.DEV && !pathname.startsWith('/admin') && (
+    <a
+      href={tinaVisualHref}
+      class="fixed bottom-5 right-5 z-[70] inline-flex items-center gap-2 rounded-sm border border-[var(--card-border)] bg-[var(--surface-1)] px-3 py-2 text-xs font-semibold text-[var(--fg)] shadow-lg hover:border-[var(--accent)] hover:text-[var(--accent)]"
+      title="Tina 인라인 편집 모드 열기"
+    >
+      Tina 인라인 편집
+    </a>
+  )}
+
+  <script is:inline>
+    (() => {
+      const root = document.documentElement;
+      const toggleButton = document.querySelector('[data-theme-toggle]');
+      const toggleLabel = document.querySelector('[data-theme-toggle-label]');
+
+      const applyTheme = (isDark) => {
+        root.classList.toggle('dark', isDark);
+        if (toggleButton) toggleButton.setAttribute('aria-pressed', String(isDark));
+        if (toggleLabel) toggleLabel.textContent = isDark ? '라이트 모드' : '다크 모드';
+      };
+
+      const saved = localStorage.getItem('darkMode');
+      const initial =
+        saved === null
+          ? window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+          : saved === 'true';
+      applyTheme(initial);
+
+      toggleButton?.addEventListener('click', () => {
+        const next = !root.classList.contains('dark');
+        localStorage.setItem('darkMode', String(next));
+        applyTheme(next);
+      });
+
+      const drawer = document.querySelector('[data-sidebar-drawer]');
+      const overlay = document.querySelector('[data-sidebar-overlay]');
+      const openButtons = document.querySelectorAll('[data-sidebar-open]');
+
+      const closeSidebar = () => {
+        drawer?.classList.add('-translate-x-full');
+        overlay?.classList.add('hidden');
+        requestAnimationFrame(() => overlay?.classList.add('opacity-0'));
+      };
+
+      const openSidebar = () => {
+        overlay?.classList.remove('hidden');
+        requestAnimationFrame(() => overlay?.classList.remove('opacity-0'));
+        drawer?.classList.remove('-translate-x-full');
+      };
+
+      openButtons.forEach((button) => button.addEventListener('click', openSidebar));
+      overlay?.addEventListener('click', closeSidebar);
+      drawer?.addEventListener('click', (event) => {
+        const target = event.target;
+        if (target instanceof HTMLAnchorElement) closeSidebar();
+      });
+    })();
+  </script>
+</body>

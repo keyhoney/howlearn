@@ -1,0 +1,26 @@
+---
+interface Props {
+  url: string;
+  title: string;
+  domain: 'guides' | 'columns' | 'concepts' | 'books' | string;
+  slug?: string;
+  conceptSlugs?: { slug: string; title: string }[];
+}
+
+const { url, title, domain, slug, conceptSlugs = [] } = Astro.props;
+---
+
+<div
+  data-article-visit
+  data-article-url={url}
+  data-article-title={title}
+  data-article-domain={domain}
+  data-article-slug={slug}
+  data-concept-slugs={JSON.stringify(conceptSlugs)}
+  hidden
+  aria-hidden="true"
+></div>
+
+<script>
+  import '../../lib/client/article-visit-tracker';
+</script>

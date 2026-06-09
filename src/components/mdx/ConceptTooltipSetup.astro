@@ -1,0 +1,17 @@
+---
+import { ConceptTooltipEnhancer } from './ConceptTooltipEnhancer';
+import type { ConceptLinkRegistry } from '@/lib/concept-links';
+
+interface Props {
+  registry: ConceptLinkRegistry;
+  currentConceptSlug?: string | null;
+}
+
+const { registry, currentConceptSlug = null } = Astro.props;
+---
+
+<ConceptTooltipEnhancer
+  client:load
+  registry={registry}
+  currentConceptSlug={currentConceptSlug}
+/>

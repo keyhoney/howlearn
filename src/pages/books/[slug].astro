@@ -1,0 +1,224 @@
+---
+import MathLayout from '../../layouts/MathLayout.astro';
+import { getCollection, getEntry, render } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import { getRelatedContent } from '../../lib/content-utils';
+import {
+  buildArticleJsonLd,
+  buildBreadcrumbJsonLd,
+  buildLearningResourceJsonLd,
+} from '../../lib/seo';
+import { SITE_URL } from '../../consts';
+import ArticleMeta from '../../components/content/ArticleMeta.astro';
+import ArticleVisitSetup from '../../components/content/ArticleVisitSetup.astro';
+import {
+  AnalogyBlock,
+  BookCoverImage,
+  BookStoreLinks,
+  BookToc,
+  BottomSummary,
+  Callout,
+  CalloutShell,
+  CaseModule,
+  Citation,
+  ConclusionHero,
+  MdxH2,
+  MidSummaryBox,
+  RelatedConcepts,
+  Sources,
+  TopicIntro,
+  Troubleshooting,
+  TrustModule,
+  VsBox,
+} from '../../components/mdx';
+
+export const getStaticPaths = (async () => {
+  const items = await getCollection('books');
+  const list = import.meta.env.DEV
+    ? items
+    : items.filter((e) => e.data.status === 'published');
+  return list.map((entry) => ({
+    params: { slug: entry.id },
+  }));
+}) satisfies GetStaticPaths;
+export const prerender = true;
+
+const slug = Astro.params.slug;
+if (!slug) {
+  return Astro.redirect('/books');
+}
+const entry = await getEntry('books', slug);
+if (!entry) {
+  return Astro.redirect('/books');
+}
+const { Content } = await render(entry);
+const {
+  title,
+  summary,
+  subtitle,
+  publishedAt,
+  purchaseLinks,
+  references,
+  coverImage,
+  ogImage,
+  seoDescription,
+  categories,
+} = entry.data;
+const description = seoDescription ?? summary;
+const heroImage = coverImage ?? ogImage;
+const relatedItems = await getRelatedContent(entry, 4);
+const getCollectionLabel = (collection: string) =>
+  ({
+    guides: '가이드',
+    columns: '칼럼',
+    concepts: '개념',
+    books: '도서',
+  })[collection] ?? collection;
+const pagePath = `/books/${entry.id}`;
+const tinaPath = `books/${entry.id}.mdx`;
+const tinaField = (field: string) => `${tinaPath}#${field}`;
+const mdxComponents = {
+  AnalogyBlock,
+  BookCoverImage,
+  BookStoreLinks,
+  BookToc,
+  BottomSummary,
+  Callout,
+  CalloutShell,
+  CaseModule,
+  Citation,
+  ConclusionHero,
+  MdxH2,
+  MidSummaryBox,
+  RelatedConcepts,
+  Sources,
+  TopicIntro,
+  Troubleshooting,
+  TrustModule,
+  VsBox,
+};
+const jsonLd = [
+  buildArticleJsonLd({
+    title,
+    description,
+    path: pagePath,
+    image: heroImage,
+    datePublished: publishedAt,
+  }),
+  buildBreadcrumbJsonLd([
+    { name: '홈', item: SITE_URL },
+    { name: '도서', item: new URL('/books', SITE_URL).toString() },
+    { name: title, item: new URL(pagePath, SITE_URL).toString() },
+  ]),
+  buildLearningResourceJsonLd({
+    title,
+    description,
+    path: pagePath,
+    keywords: categories,
+  }),
+];
+---
+
+<MathLayout title={title} description={description} image={heroImage} jsonLd={jsonLd}>
+  <article class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px]">
+      <div>
+    <header class="not-prose app-card mb-8 p-6">
+      <p class="text-sm font-medium text-[var(--accent)]">
+        <a href="/books" class="hover:underline" data-list-back-link data-list-base-path="/books">도서</a>
+        <span class="mx-2 text-[var(--fg-muted)] opacity-50">/</span>
+        <span class="text-[var(--fg-muted)]">{entry.id}</span>
+      </p>
+      <h1 class="mt-4 text-3xl font-bold tracking-tight text-[var(--fg)]" data-tina-field={tinaField('title')}>
+        {title}
+      </h1>
+      <ArticleMeta data={entry.data} />
+      {subtitle && (
+        <p class="mt-2 text-lg text-[var(--fg-muted)]">{subtitle}</p>
+      )}
+      <div class="mt-4 flex flex-wrap gap-2">
+        {publishedAt && <span class="app-chip">{publishedAt.toLocaleDateString('ko-KR')}</span>}
+        {categories?.slice(0, 3).map((c) => (
+          <span class="app-chip">{c}</span>
+        ))}
+      </div>
+      {summary && (
+        <p class="mt-6 text-lg leading-relaxed text-[var(--fg-muted)]" data-tina-field={tinaField('summary')}>
+          {summary}
+        </p>
+      )}
+
+      {
+        purchaseLinks && purchaseLinks.length > 0 && (
+          <div class="mt-8 flex flex-wrap gap-3">
+            {purchaseLinks.map((link) => (
+              <a
+                href={link.href}
+                class="app-btn-outline-primary"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+        )
+      }
+    </header>
+
+    <div
+      class="prose prose-book dark:prose-invert prose-headings:tracking-tight max-w-none app-card p-6"
+      data-tina-field={tinaField('body')}
+    >
+      <Content components={mdxComponents} />
+    </div>
+
+    {
+      references && references.length > 0 && (
+        <section class="app-card mt-8 p-6">
+          <h2 class="text-xl font-bold text-[var(--fg)]">참고</h2>
+          <ul class="mt-4 space-y-2">
+            {references.map((ref) => (
+              <li>
+                <a href={ref.url} class="text-[var(--accent)] hover:underline" target="_blank" rel="noopener noreferrer">
+                  {ref.title ?? ref.url}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+    {relatedItems.length > 0 && (
+      <section class="app-card mt-8 p-6">
+        <h2 class="text-xl font-bold text-[var(--fg)]">관련 콘텐츠</h2>
+        <ul class="mt-4 grid gap-2">
+          {relatedItems.map((item) => (
+            <li>
+              <a class="text-sm text-[var(--accent)] hover:underline" href={`/${item.collection}/${item.id}`}>
+                [{getCollectionLabel(item.collection)}] {item.data.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+      </div>
+      <aside class="space-y-4 lg:sticky lg:top-20 lg:h-max">
+        <section class="app-card p-4">
+          <h2 class="text-sm font-semibold text-[var(--fg)]">도서 메모</h2>
+          <p class="mt-2 text-sm text-[var(--fg-muted)]">핵심 문장과 실천 포인트를 요약해 보세요.</p>
+        </section>
+      </aside>
+    </div>
+  </article>
+  <script is:inline>
+    (() => {
+      const backLink = document.querySelector('[data-list-back-link]');
+      if (backLink instanceof HTMLAnchorElement && window.location.search) {
+        backLink.href = `${backLink.dataset.listBasePath || '/books'}${window.location.search}`;
+      }
+    })();
+  </script>
+  <ArticleVisitSetup url={pagePath} title={title} domain="books" />
+</MathLayout>

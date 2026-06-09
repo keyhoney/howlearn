@@ -1,0 +1,4 @@
+/sitemap.xml /sitemap-index.xml 301
+/sitemap-index /sitemap-index.xml 301
+/rss /rss.xml 301
+/feed.xml /rss.xml 301

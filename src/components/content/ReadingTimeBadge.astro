@@ -1,0 +1,39 @@
+---
+import { estimateReadingMinutes, formatReadingTime, formatReadingTimeLabel } from '@/lib/reading-time';
+
+interface Props {
+  body?: string;
+  minutes?: number;
+  /** meta: 목록 카드용 작은 텍스트, chip: 상세 헤더용 칩, list-footer: 목록 카드 하단 */
+  variant?: 'meta' | 'chip' | 'list-footer';
+  class?: string;
+}
+
+const { body, minutes: minutesProp, variant = 'meta', class: className = '' } = Astro.props;
+const minutes = minutesProp ?? (body ? estimateReadingMinutes(body) : null);
+---
+
+{
+  minutes != null && variant === 'list-footer' ? (
+    <span
+      class:list={['app-card-footer-reading', 'app-reading-time', className]}
+      title="예상 읽기 시간"
+    >
+      {formatReadingTime(minutes)}
+    </span>
+  ) : minutes != null && variant === 'chip' ? (
+    <span
+      class:list={['app-chip', 'app-reading-time', className]}
+      title="예상 읽기 시간"
+    >
+      {formatReadingTimeLabel(minutes, '읽기')}
+    </span>
+  ) : minutes != null ? (
+    <span
+      class:list={['font-mono text-xs text-[var(--fg-muted)]', 'app-reading-time', className]}
+      title="예상 읽기 시간"
+    >
+      {formatReadingTime(minutes)}
+    </span>
+  ) : null
+}

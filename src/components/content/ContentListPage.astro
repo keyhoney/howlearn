@@ -1,0 +1,108 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {
+  filterContentByQuery,
+  getAllContent,
+  getAvailableTagsForDomain,
+  type ContentDomain,
+} from '../../lib/content-utils';
+import { serializeContentListItems, type ContentListCardType } from '../../lib/content-list-serialize';
+import AppPagination from '../ui/AppPagination.astro';
+
+interface Props {
+  domain: ContentDomain;
+  basePath: '/guides' | '/columns' | '/concepts';
+  layoutTitle: string;
+  layoutDescription: string;
+  pageTitle: string;
+  countSuffix: string;
+  cardType: ContentListCardType;
+  searchPlaceholder: string;
+  showTagFilter?: boolean;
+}
+
+const {
+  domain,
+  basePath,
+  layoutTitle,
+  layoutDescription,
+  pageTitle,
+  countSuffix,
+  cardType,
+  searchPlaceholder,
+  showTagFilter = true,
+} = Astro.props;
+
+const q = Astro.url.searchParams.get('q') ?? '';
+const tag = Astro.url.searchParams.get('tag') ?? '';
+
+const all = await getAllContent();
+const domainItems = filterContentByQuery(all, { domain });
+const serializedItems = serializeContentListItems(domainItems, domain);
+const tags = showTagFilter ? getAvailableTagsForDomain(all, domain) : [];
+---
+
+<BaseLayout title={layoutTitle} description={layoutDescription}>
+  <section class="container mx-auto max-w-7xl px-4 pb-12 pt-4 sm:px-6 sm:pt-6 lg:px-8">
+    <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <h1 class="app-section-title">{pageTitle}</h1>
+      </div>
+      <span class="app-badge app-badge-info" data-content-list-count>총 {domainItems.length}{countSuffix}</span>
+    </div>
+
+    <form class="app-filter-panel app-filter-grid sm:grid-cols-4" data-content-filter-form>
+      <label class="app-filter-field sm:col-span-2">
+        <span class="app-filter-label">검색어</span>
+        <input type="search" name="q" value={q} placeholder={searchPlaceholder} class="app-input" />
+      </label>
+      {
+        showTagFilter && (
+          <label class="app-filter-field">
+            <span class="app-filter-label">태그</span>
+            <select name="tag" class="app-select">
+              <option value="">전체 태그</option>
+              {tags.map((t) => <option value={t} selected={tag === t}>{t}</option>)}
+            </select>
+          </label>
+        )
+      }
+      <div class="app-filter-actions">
+        <button class="app-btn-primary" type="submit">필터 적용</button>
+      </div>
+    </form>
+
+    <div class:list={['mt-4', tag ? '' : 'hidden']} data-content-list-tag-chip>
+      {tag ? `선택 태그: ${tag}` : ''}
+    </div>
+
+    <ul id="content-list-results" class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></ul>
+    <AppPagination
+      mode="client"
+      basePath={basePath}
+      rootId="content-list-pagination"
+    />
+  </section>
+
+  <script
+    type="application/json"
+    id="content-list-data"
+    set:html={JSON.stringify({
+      basePath,
+      cardType,
+      countSuffix,
+      showTagFilter,
+      items: serializedItems,
+    })}
+  />
+
+  <script>
+    import { initContentListPage } from '../../lib/client/content-list-page';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const dataEl = document.getElementById('content-list-data');
+      if (!dataEl?.textContent) return;
+      initContentListPage(JSON.parse(dataEl.textContent));
+    });
+  </script>
+</BaseLayout>

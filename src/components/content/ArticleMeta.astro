@@ -1,0 +1,66 @@
+---
+import {
+  formatArticleDate,
+  resolveArticleMeta,
+  type ArticleMetaInput,
+} from '@/lib/article-meta';
+
+interface Props {
+  data: ArticleMetaInput;
+}
+
+const { data } = Astro.props;
+const meta = resolveArticleMeta(data);
+
+const hasMeta = Boolean(
+  meta.publishedAt || meta.updatedAt || meta.reviewedAt || meta.author,
+);
+---
+
+{
+  hasMeta && (
+    <div class="app-article-meta mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-[var(--fg-muted)]">
+      {meta.publishedAt && (
+        <span>
+          <span class="font-medium text-[var(--fg)]">게시</span>{' '}
+          <time datetime={meta.publishedAt.toISOString()}>{formatArticleDate(meta.publishedAt)}</time>
+        </span>
+      )}
+      {meta.updatedAt && (
+        <>
+          <span class="text-[var(--fg-muted)] opacity-40" aria-hidden="true">
+            ·
+          </span>
+          <span>
+            <span class="font-medium text-[var(--fg)]">수정</span>{' '}
+            <time datetime={meta.updatedAt.toISOString()}>{formatArticleDate(meta.updatedAt)}</time>
+          </span>
+        </>
+      )}
+      {meta.reviewedAt && (
+        <>
+          <span class="text-[var(--fg-muted)] opacity-40" aria-hidden="true">
+            ·
+          </span>
+          <span>
+            <span class="font-medium text-[var(--fg)]">검토</span>{' '}
+            <time datetime={meta.reviewedAt.toISOString()}>{formatArticleDate(meta.reviewedAt)}</time>
+          </span>
+        </>
+      )}
+      {meta.author && (
+        <>
+          <span class="text-[var(--fg-muted)] opacity-40" aria-hidden="true">
+            ·
+          </span>
+          <span>
+            <span class="font-medium text-[var(--fg)]">저자</span>{' '}
+            <a href="/about" class="text-[var(--accent)] hover:underline">
+              {meta.author}
+            </a>
+          </span>
+        </>
+      )}
+    </div>
+  )
+}
