@@ -12,7 +12,6 @@ import { rehypeKatexSafeOptions } from './src/lib/katex-shared';
 import { rehypeImgPerformance } from './src/lib/rehype-img-performance';
 import { rehypeConceptLinks } from './src/lib/rehype-concept-links';
 import { loadConceptLinkRegistrySync } from './src/lib/concept-links';
-import tinaDirective from './astro-tina-directive/register';
 import { shouldExcludeFromSitemap } from './src/lib/seo-paths';
 
 const conceptLinkRegistry = loadConceptLinkRegistrySync();
@@ -41,7 +40,6 @@ export default defineConfig({
       filter: (page) => !shouldExcludeFromSitemap(page),
     }),
     react(),
-    tinaDirective(),
   ],
   vite: {
     resolve: {

@@ -10,8 +10,6 @@ import ReadingProgressSetup from '../../components/content/ReadingProgressSetup.
 import ReadingTimeBadge from '../../components/content/ReadingTimeBadge.astro';
 import ArticleMeta from '../../components/content/ArticleMeta.astro';
 import ArticleVisitSetup from '../../components/content/ArticleVisitSetup.astro';
-import tinaClient from '../../../tina/__generated__/client';
-import GuideInlineView from '../../components/tina/GuideInlineView';
 import {
   buildArticleJsonLd,
   buildBreadcrumbJsonLd,
@@ -40,15 +38,6 @@ if (!entry) {
   return Astro.redirect('/guides');
 }
 const { Content, headings } = await render(entry);
-const inlineMode = import.meta.env.DEV && Astro.url.searchParams.get('inline') === '1';
-let tinaResponse = null;
-if (inlineMode) {
-  try {
-    tinaResponse = await tinaClient.queries.guides({ relativePath: `${entry.id}.mdx` });
-  } catch {
-    tinaResponse = null;
-  }
-}
 const { title, summary, description: legacyDescription, intro, publishedAt, faq, references, coverImage, seoDescription } =
   entry.data;
 const description = seoDescription ?? summary ?? legacyDescription ?? intro ?? title;
@@ -67,8 +56,6 @@ const getCollectionLabel = (collection: string) =>
     books: '도서',
   })[collection] ?? collection;
 const pagePath = `/guides/${entry.id}`;
-const tinaPath = `guides/${entry.id}.mdx`;
-const tinaField = (field: string) => `${tinaPath}#${field}`;
 const jsonLd = [
   buildArticleJsonLd({
     title,
@@ -96,49 +83,38 @@ const jsonLd = [
   <article class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8" data-concept-tooltip-root data-reading-progress-root>
     <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px]">
       <div>
-        {inlineMode && tinaResponse ? (
-          <GuideInlineView
-            query={tinaResponse.query}
-            variables={tinaResponse.variables}
-            data={tinaResponse.data}
-          />
-        ) : (
-          <>
-            <header class="app-card mb-8 p-6">
-              <p class="text-sm font-medium text-[var(--accent)]">
-                <a href="/guides" class="hover:underline" data-list-back-link data-list-base-path="/guides">가이드</a>
-                <span class="mx-2 text-[var(--fg-muted)] opacity-50">/</span>
-                <span class="text-[var(--fg-muted)]">{entry.id}</span>
-              </p>
-              <h1 class="mt-3 text-3xl font-bold tracking-tight text-[var(--fg)]" data-tina-field={tinaField('title')}>
-                {title}
-              </h1>
-              <ArticleMeta data={entry.data} />
-              <div class="mt-4 flex flex-wrap gap-2">
-                <ReadingTimeBadge body={entry.body} variant="chip" />
-                {entry.data.tags?.slice(0, 3).map((t) => <span class="app-chip">#{t}</span>)}
-              </div>
-              {intro && (
-                <p class="mt-5 text-base leading-relaxed text-[var(--fg-muted)]" data-tina-field={tinaField('intro')}>
-                  {intro}
-                </p>
-              )}
-            </header>
+        <header class="app-card mb-8 p-6">
+          <p class="text-sm font-medium text-[var(--accent)]">
+            <a href="/guides" class="hover:underline" data-list-back-link data-list-base-path="/guides">가이드</a>
+            <span class="mx-2 text-[var(--fg-muted)] opacity-50">/</span>
+            <span class="text-[var(--fg-muted)]">{entry.id}</span>
+          </p>
+          <h1 class="mt-3 text-3xl font-bold tracking-tight text-[var(--fg)]">
+            {title}
+          </h1>
+          <ArticleMeta data={entry.data} />
+          <div class="mt-4 flex flex-wrap gap-2">
+            <ReadingTimeBadge body={entry.body} variant="chip" />
+            {entry.data.tags?.slice(0, 3).map((t) => <span class="app-chip">#{t}</span>)}
+          </div>
+          {intro && (
+            <p class="mt-5 text-base leading-relaxed text-[var(--fg-muted)]">
+              {intro}
+            </p>
+          )}
+        </header>
 
-            {conceptsInArticle.length > 0 && (
-              <section class="app-card mb-8 p-5 lg:hidden">
-                <ConceptsInArticle concepts={conceptsInArticle} />
-              </section>
-            )}
-
-            <div
-              class="prose prose-book dark:prose-invert prose-headings:tracking-tight max-w-none app-card p-6"
-              data-tina-field={tinaField('body')}
-            >
-              <Content components={mdxContentComponents} />
-            </div>
-          </>
+        {conceptsInArticle.length > 0 && (
+          <section class="app-card mb-8 p-5 lg:hidden">
+            <ConceptsInArticle concepts={conceptsInArticle} />
+          </section>
         )}
+
+        <div
+          class="prose prose-book dark:prose-invert prose-headings:tracking-tight max-w-none app-card p-6"
+        >
+          <Content components={mdxContentComponents} />
+        </div>
 
         {faq && faq.length > 0 && (
           <section class="app-card mt-8 p-6">

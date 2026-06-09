@@ -70,8 +70,6 @@ const getCollectionLabel = (collection: string) =>
     books: '도서',
   })[collection] ?? collection;
 const pagePath = `/concepts/${entry.id}`;
-const tinaPath = `concepts/${entry.id}.mdx`;
-const tinaField = (field: string) => `${tinaPath}#${field}`;
 const jsonLd = [
   buildArticleJsonLd({
     title,
@@ -105,7 +103,7 @@ const jsonLd = [
             <span class="mx-2 text-[var(--fg-muted)] opacity-50">/</span>
             <span class="text-[var(--fg-muted)]">{entry.id}</span>
           </p>
-          <h1 class="mt-3 text-3xl font-bold tracking-tight text-[var(--fg)]" data-tina-field={tinaField('title')}>
+          <h1 class="mt-3 text-3xl font-bold tracking-tight text-[var(--fg)]">
             {title}
           </h1>
           {englishName && <p class="mt-1 text-sm italic text-[var(--fg-muted)]">{englishName}</p>}
@@ -118,13 +116,13 @@ const jsonLd = [
           {shortDefinition && (
             <p class="mt-5 rounded-sm border border-[color-mix(in_srgb,var(--accent)_30%,transparent)] bg-[color-mix(in_srgb,var(--accent)_8%,var(--surface-2))] px-4 py-3 text-base leading-relaxed text-[var(--fg)]">
               <span class="font-semibold text-[var(--accent)]">짧은 정의</span>
-              <span class="mt-1 block whitespace-pre-wrap" data-tina-field={tinaField('shortDefinition')}>
+              <span class="mt-1 block whitespace-pre-wrap">
                 {shortDefinition}
               </span>
             </p>
           )}
           {showSummaryInHeader && (
-            <p class="mt-4 text-base leading-relaxed text-[var(--fg-muted)]" data-tina-field={tinaField('summary')}>
+            <p class="mt-4 text-base leading-relaxed text-[var(--fg-muted)]">
               {summary}
             </p>
           )}
@@ -138,7 +136,6 @@ const jsonLd = [
 
         <div
           class="prose prose-book dark:prose-invert prose-headings:tracking-tight max-w-none app-card p-6"
-          data-tina-field={tinaField('body')}
         >
           <Content components={mdxContentComponents} />
         </div>

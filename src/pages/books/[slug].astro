@@ -75,8 +75,6 @@ const getCollectionLabel = (collection: string) =>
     books: '도서',
   })[collection] ?? collection;
 const pagePath = `/books/${entry.id}`;
-const tinaPath = `books/${entry.id}.mdx`;
-const tinaField = (field: string) => `${tinaPath}#${field}`;
 const mdxComponents = {
   AnalogyBlock,
   BookCoverImage,
@@ -129,7 +127,7 @@ const jsonLd = [
         <span class="mx-2 text-[var(--fg-muted)] opacity-50">/</span>
         <span class="text-[var(--fg-muted)]">{entry.id}</span>
       </p>
-      <h1 class="mt-4 text-3xl font-bold tracking-tight text-[var(--fg)]" data-tina-field={tinaField('title')}>
+      <h1 class="mt-4 text-3xl font-bold tracking-tight text-[var(--fg)]">
         {title}
       </h1>
       <ArticleMeta data={entry.data} />
@@ -143,7 +141,7 @@ const jsonLd = [
         ))}
       </div>
       {summary && (
-        <p class="mt-6 text-lg leading-relaxed text-[var(--fg-muted)]" data-tina-field={tinaField('summary')}>
+        <p class="mt-6 text-lg leading-relaxed text-[var(--fg-muted)]">
           {summary}
         </p>
       )}
@@ -168,7 +166,6 @@ const jsonLd = [
 
     <div
       class="prose prose-book dark:prose-invert prose-headings:tracking-tight max-w-none app-card p-6"
-      data-tina-field={tinaField('body')}
     >
       <Content components={mdxComponents} />
     </div>

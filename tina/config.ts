@@ -127,7 +127,7 @@ export default defineConfig({
         path: 'src/content/guides',
         format: 'mdx',
         ui: {
-          router: ({ document }) => `/edit/guides/${document._sys.filename}`,
+          router: ({ document }) => `/guides/${document._sys.filename}`,
           defaultItem: () => ({ status: 'draft', domains: [], tags: [], categories: [] }),
         },
         fields: [
@@ -155,7 +155,7 @@ export default defineConfig({
         path: 'src/content/concepts',
         format: 'mdx',
         ui: {
-          router: ({ document }) => `/edit/concepts/${document._sys.filename}`,
+          router: ({ document }) => `/concepts/${document._sys.filename}`,
           defaultItem: () => ({ status: 'draft', domains: [], tags: [], categories: [] }),
         },
         fields: [
@@ -190,7 +190,7 @@ export default defineConfig({
         path: 'src/content/books',
         format: 'mdx',
         ui: {
-          router: ({ document }) => `/edit/books/${document._sys.filename}`,
+          router: ({ document }) => `/books/${document._sys.filename}`,
           defaultItem: () => ({ status: 'draft', domains: [], tags: [], categories: [] }),
         },
         fields: [
@@ -227,7 +227,7 @@ export default defineConfig({
         path: 'src/content/columns',
         format: 'mdx',
         ui: {
-          router: ({ document }) => `/edit/columns/${document._sys.filename}`,
+          router: ({ document }) => `/columns/${document._sys.filename}`,
           defaultItem: () => ({ status: 'draft', domains: [], tags: [], categories: [] }),
         },
         fields: [

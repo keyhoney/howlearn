@@ -21,7 +21,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "tina:dev": "tinacms dev -c \"astro dev\"",
-    "tina:build": "tinacms build && astro build && pagefind --site dist --quiet",
+    "tina:build": "npm run build",
     "cms:sync": "tsx scripts/cms-sync.ts",
     "content:validate": "tsx scripts/validate-content-index.ts",
     "smoke:check": "tsx scripts/smoke-check.ts",
