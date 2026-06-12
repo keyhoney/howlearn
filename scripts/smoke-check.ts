@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { validateLegacyMathRedirects } from './validate-legacy-math-redirects';
 
 const DIST_DIR = path.join(process.cwd(), 'dist');
 
@@ -13,6 +14,7 @@ const requiredPaths = [
   'robots.txt',
   'rss.xml',
   'sitemap-index.xml',
+  '_redirects',
   path.join('pagefind', 'pagefind.js'),
 ];
 
@@ -42,6 +44,8 @@ async function main() {
     }
     process.exit(1);
   }
+
+  await validateLegacyMathRedirects(path.join(DIST_DIR, '_redirects'));
 
   console.log(`smoke-check passed: ${requiredPaths.length} critical outputs verified`);
 }

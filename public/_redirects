@@ -2,3 +2,13 @@
 /sitemap-index /sitemap-index.xml 301
 /rss /rss.xml 301
 /feed.xml /rss.xml 301
+
+# 앱 분리 이전(통합 howlearn.kr) 수학 문제·학습 도구 URL → math.howlearn.kr
+/dashboard https://math.howlearn.kr/dashboard/ 301
+/dashboard/ https://math.howlearn.kr/dashboard/ 301
+/essay-problems https://math.howlearn.kr/essay-problems/ 301
+/essay-problems/ https://math.howlearn.kr/essay-problems/ 301
+/essay-problems/* https://math.howlearn.kr/essay-problems/:splat 301
+/problems https://math.howlearn.kr/problems/ 301
+/problems/ https://math.howlearn.kr/problems/ 301
+/problems/* https://math.howlearn.kr/problems/:splat 301
