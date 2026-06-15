@@ -8,6 +8,7 @@ import {
   buildBreadcrumbJsonLd,
   buildLearningResourceJsonLd,
 } from '../../lib/seo';
+import { buildContentPageDescription, buildContentPageTitle } from '../../lib/content-seo';
 import { SITE_URL } from '../../consts';
 import ArticleMeta from '../../components/content/ArticleMeta.astro';
 import ArticleVisitSetup from '../../components/content/ArticleVisitSetup.astro';
@@ -61,11 +62,29 @@ const {
   references,
   coverImage,
   ogImage,
+  seoTitle,
   seoDescription,
   categories,
 } = entry.data;
 const description = seoDescription ?? summary;
 const heroImage = coverImage ?? ogImage;
+const pageTitle = buildContentPageTitle({
+  type: 'books',
+  title,
+  summary: description,
+  seoTitle,
+  seoDescription,
+  tags: entry.data.tags,
+  categories,
+});
+const pageDescription = buildContentPageDescription({
+  type: 'books',
+  title,
+  summary: description,
+  seoDescription,
+  tags: entry.data.tags,
+  categories,
+});
 const relatedItems = await getRelatedContent(entry, 4);
 const getCollectionLabel = (collection: string) =>
   ({
@@ -97,8 +116,8 @@ const mdxComponents = {
 };
 const jsonLd = [
   buildArticleJsonLd({
-    title,
-    description,
+    title: pageTitle,
+    description: pageDescription,
     path: pagePath,
     image: heroImage,
     datePublished: publishedAt,
@@ -109,16 +128,22 @@ const jsonLd = [
     { name: title, item: new URL(pagePath, SITE_URL).toString() },
   ]),
   buildLearningResourceJsonLd({
-    title,
-    description,
+    title: pageTitle,
+    description: pageDescription,
     path: pagePath,
     keywords: categories,
   }),
 ];
 ---
 
-<MathLayout title={title} description={description} image={heroImage} jsonLd={jsonLd}>
+<MathLayout title={pageTitle} description={pageDescription} image={heroImage} jsonLd={jsonLd}>
   <article class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <div class="hidden" aria-hidden="true">
+      <span data-pagefind-meta="type">book</span>
+      {categories?.map((category) => <span data-pagefind-meta="categories">{category}</span>)}
+      {entry.data.domains?.map((domain) => <span data-pagefind-meta="domains">{domain}</span>)}
+      {entry.data.tags?.map((tag) => <span data-pagefind-meta="tags">{tag}</span>)}
+    </div>
     <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px]">
       <div>
     <header class="not-prose app-card mb-8 p-6">

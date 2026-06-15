@@ -1,5 +1,6 @@
 ﻿---
 import { NAV_LINKS, SITE_TITLE, MATH_SITE_URL } from '../../consts';
+import RecentReads from '../content/RecentReads.astro';
 
 interface Props {
   pathname: string;
@@ -137,6 +138,7 @@ const EXTERNAL_LINKS = [
         ))
       }
     </ul>
+    {!iconOnly && <RecentReads title="최근 읽은 글" limit={5} class="mt-6 border-[var(--sidebar-border)] bg-transparent" />}
   </nav>
 
   {!iconOnly && (

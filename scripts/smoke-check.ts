@@ -15,6 +15,8 @@ const requiredPaths = [
   'rss.xml',
   'sitemap-index.xml',
   '_redirects',
+  'favicon.png',
+  'og-default.png',
   path.join('pagefind', 'pagefind.js'),
 ];
 

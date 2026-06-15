@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-12T02:09:20.973Z",
+  "generatedAt": "2026-06-15T06:06:35.766Z",
   "count": 60,
   "items": [
     {
@@ -20,7 +20,12 @@
         "교육심리학",
         "동기 및 정서심리학"
       ],
-      "relatedContentIds": [],
+      "relatedContentIds": [
+        "guide-child-shows-only-correct-answers-after-grading",
+        "guide-child-gets-angry-at-reviewing-wrong-answers",
+        "guide-before-test-anxiety-parent-first-response",
+        "guide-math-careless-mistakes-check-before-scolding"
+      ],
       "publishedAt": "2024-04-19T00:00:00.000Z"
     },
     {
@@ -42,7 +47,12 @@
         "동기 및 정서심리학",
         "인지심리학"
       ],
-      "relatedContentIds": [],
+      "relatedContentIds": [
+        "guide-child-freezes-when-exam-range-gets-large",
+        "guide-exam-study-blocked-vs-interleaved",
+        "guide-after-test-child-only-says-next-time-better",
+        "guide-exercise-and-learning"
+      ],
       "publishedAt": "2023-10-28T00:00:00.000Z"
     },
     {
@@ -62,7 +72,12 @@
       "categories": [
         "교육심리학"
       ],
-      "relatedContentIds": [],
+      "relatedContentIds": [
+        "guide-math-problem-freeze-what-to-check-first",
+        "guide-math-solution-guide-timing",
+        "guide-child-keeps-asking-is-this-right-how-to-respond",
+        "guide-child-overwhelmed-by-one-page-what-to-reduce"
+      ],
       "publishedAt": "2024-10-29T00:00:00.000Z"
     },
     {
@@ -83,7 +98,12 @@
         "교육심리학",
         "인지심리학"
       ],
-      "relatedContentIds": [],
+      "relatedContentIds": [
+        "guide-elementary-korean-reading-comprehension",
+        "guide-math-solution-guide-timing",
+        "guide-child-memorized-formula-but-fails-on-variation",
+        "guide-seems-to-forget-right-after-explanation-what-to-try"
+      ],
       "publishedAt": "2024-09-09T00:00:00.000Z"
     },
     {
@@ -104,7 +124,12 @@
         "교육심리학",
         "동기 및 정서심리학"
       ],
-      "relatedContentIds": [],
+      "relatedContentIds": [
+        "guide-child-overwhelmed-by-one-page-what-to-reduce",
+        "guide-getting-started-homework-parent-first-step",
+        "guide-exam-study-blocked-vs-interleaved",
+        "guide-after-test-child-only-says-next-time-better"
+      ],
       "publishedAt": "2024-05-02T00:00:00.000Z"
     },
     {
@@ -125,7 +150,12 @@
         "교육심리학",
         "동기 및 정서심리학"
       ],
-      "relatedContentIds": [],
+      "relatedContentIds": [
+        "guide-child-shows-only-correct-answers-after-grading",
+        "guide-after-test-child-only-says-next-time-better",
+        "guide-child-keeps-choosing-only-easy-problems",
+        "guide-how-to-change-praise-when-child-loses-motivation-fast"
+      ],
       "publishedAt": "2023-11-06T00:00:00.000Z"
     },
     {
@@ -168,7 +198,12 @@
         "교육심리학",
         "인지심리학"
       ],
-      "relatedContentIds": [],
+      "relatedContentIds": [
+        "guide-can-follow-but-cannot-solve-alone-how-to-help",
+        "guide-math-solution-guide-timing",
+        "guide-math-careless-mistakes-check-before-scolding",
+        "guide-child-watches-lectures-but-solves-few-problems"
+      ],
       "publishedAt": "2024-05-06T00:00:00.000Z"
     },
     {
@@ -189,7 +224,12 @@
         "교육심리학",
         "동기 및 정서심리학"
       ],
-      "relatedContentIds": [],
+      "relatedContentIds": [
+        "guide-how-to-change-praise-when-child-loses-motivation-fast",
+        "guide-child-shows-only-correct-answers-after-grading",
+        "guide-does-my-child-need-private-tutoring",
+        "guide-child-gets-angry-at-reviewing-wrong-answers"
+      ],
       "publishedAt": "2023-11-18T00:00:00.000Z"
     },
     {
@@ -297,7 +337,12 @@
         "동기 및 정서심리학",
         "인지심리학"
       ],
-      "relatedContentIds": [],
+      "relatedContentIds": [
+        "guide-memorization-subject-study-method",
+        "guide-child-keeps-asking-is-this-right-how-to-respond",
+        "guide-getting-started-homework-parent-first-step",
+        "guide-exam-study-blocked-vs-interleaved"
+      ],
       "publishedAt": "2025-03-22T00:00:00.000Z"
     },
     {

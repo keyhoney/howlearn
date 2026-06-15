@@ -3,6 +3,7 @@ import { describe, it } from 'node:test';
 import { STORAGE_KEYS } from '../storage-keys';
 import {
   enqueueConceptsFromArticle,
+  getRecentReads,
   pruneConceptQueue,
   recordConceptVisit,
   recordRecentRead,
@@ -55,6 +56,7 @@ describe('reading-history', () => {
       const titles = readRecentTitles();
       assert.equal(titles.length, 2);
       assert.equal(titles[0], 'A updated');
+      assert.deepEqual(getRecentReads(1).map((item) => item.title), ['A updated']);
     });
   });
 

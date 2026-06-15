@@ -56,6 +56,11 @@ export function recordRecentRead(input: Omit<RecentRead, 'ts'> & { ts?: number }
   writeRecentStore(items.slice(0, MAX_RECENT));
 }
 
+export function getRecentReads(limit = 5): RecentRead[] {
+  const store = readRecentStore();
+  return store.items.slice(0, limit);
+}
+
 export function recordConceptVisit(slug: string): void {
   if (typeof localStorage === 'undefined' || !slug.trim()) return;
   const key = slug.trim();

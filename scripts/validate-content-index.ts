@@ -8,6 +8,7 @@ type ContentItem = {
   title: string;
   summary: string;
   status: 'draft' | 'published';
+  tags?: string[];
   relatedContentIds?: string[];
 };
 
@@ -37,6 +38,7 @@ async function main() {
   }
 
   const errors: string[] = [];
+  const warnings: string[] = [];
   const ids = new Set<string>();
 
   if (!Array.isArray(parsed.items)) {
@@ -59,6 +61,19 @@ async function main() {
     if (!['draft', 'published'].includes(item.status)) {
       errors.push(`invalid status: ${item.id}`);
     }
+    if (item.status === 'published') {
+      const summaryLength = String(item.summary ?? '').trim().length;
+      if (summaryLength > 0 && (summaryLength < 40 || summaryLength > 200)) {
+        warnings.push(`summary length outside 40-200 chars: ${item.id} (${summaryLength})`);
+      }
+      const tags = Array.isArray(item.tags) ? item.tags : [];
+      if ((item.type === 'guide' || item.type === 'concept') && tags.length === 0) {
+        warnings.push(`published ${item.type} has no tags: ${item.id}`);
+      }
+      if ((item.type === 'guide' || item.type === 'concept') && tags.length >= 3 && (!item.relatedContentIds || item.relatedContentIds.length === 0)) {
+        warnings.push(`published ${item.type} has 3+ tags but no relatedContentIds: ${item.id}`);
+      }
+    }
 
     if (ids.has(item.id)) {
       errors.push(`duplicate id: ${item.id}`);
@@ -78,6 +93,16 @@ async function main() {
 
   if (errors.length > 0) {
     fail(errors);
+  }
+
+  if (warnings.length > 0) {
+    console.log(`content-index validation warnings: ${warnings.length}`);
+    for (const warning of warnings.slice(0, 30)) {
+      console.log(`- ${warning}`);
+    }
+    if (warnings.length > 30) {
+      console.log(`- ...and ${warnings.length - 30} more warnings`);
+    }
   }
 
   console.log(

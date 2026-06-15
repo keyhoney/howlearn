@@ -16,6 +16,7 @@ import {
   buildFaqJsonLd,
   buildLearningResourceJsonLd,
 } from '../../lib/seo';
+import { buildContentPageDescription, buildContentPageTitle } from '../../lib/content-seo';
 import { SITE_URL } from '../../consts';
 
 export const getStaticPaths = (async () => {
@@ -38,12 +39,29 @@ if (!entry) {
   return Astro.redirect('/columns');
 }
 const { Content, headings } = await render(entry);
-const { title, summary, publishedAt, faq, references, coverImage, seoDescription } =
+const { title, summary, publishedAt, faq, references, coverImage, seoTitle, seoDescription } =
   entry.data;
 const description = seoDescription ?? summary;
+const pageTitle = buildContentPageTitle({
+  type: 'columns',
+  title,
+  summary: description,
+  seoTitle,
+  seoDescription,
+  tags: entry.data.tags,
+  categories: entry.data.categories,
+});
+const pageDescription = buildContentPageDescription({
+  type: 'columns',
+  title,
+  summary: description,
+  seoDescription,
+  tags: entry.data.tags,
+  categories: entry.data.categories,
+});
 const relatedItems = await getRelatedContent(entry, 4);
 const conceptLinkRegistry = await getPublishedConceptLinkRegistry();
-const conceptsInArticle = getConceptsInArticle(entry.body, conceptLinkRegistry, { faq });
+const conceptsInArticle = getConceptsInArticle(entry.body ?? '', conceptLinkRegistry, { faq });
 const conceptSlugsForVisit = conceptsInArticle
   .filter((c) => c.published)
   .map((c) => ({ slug: c.slug, title: c.title }));
@@ -58,8 +76,8 @@ const getCollectionLabel = (collection: string) =>
 const pagePath = `/columns/${entry.id}`;
 const jsonLd = [
   buildArticleJsonLd({
-    title,
-    description,
+    title: pageTitle,
+    description: pageDescription,
     path: pagePath,
     image: coverImage,
     datePublished: publishedAt,
@@ -70,8 +88,8 @@ const jsonLd = [
     { name: title, item: new URL(pagePath, SITE_URL).toString() },
   ]),
   buildLearningResourceJsonLd({
-    title,
-    description,
+    title: pageTitle,
+    description: pageDescription,
     path: pagePath,
     keywords: entry.data.tags,
   }),
@@ -79,8 +97,14 @@ const jsonLd = [
 ];
 ---
 
-<MathLayout title={title} description={description} image={coverImage} jsonLd={jsonLd}>
+<MathLayout title={pageTitle} description={pageDescription} image={coverImage} jsonLd={jsonLd}>
   <article class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8" data-concept-tooltip-root data-reading-progress-root>
+    <div class="hidden" aria-hidden="true">
+      <span data-pagefind-meta="type">column</span>
+      {entry.data.categories?.map((category) => <span data-pagefind-meta="categories">{category}</span>)}
+      {entry.data.domains?.map((domain) => <span data-pagefind-meta="domains">{domain}</span>)}
+      {entry.data.tags?.map((tag) => <span data-pagefind-meta="tags">{tag}</span>)}
+    </div>
     <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px]">
       <div>
         <header class="not-prose app-card mb-8 p-6">

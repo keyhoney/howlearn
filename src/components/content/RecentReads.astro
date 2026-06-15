@@ -1,0 +1,23 @@
+---
+interface Props {
+  title?: string;
+  limit?: number;
+  class?: string;
+}
+
+const { title = '최근 읽은 글', limit = 5, class: className = '' } = Astro.props;
+---
+
+<section class:list={['app-card p-4', className]} data-recent-reads-root data-limit={limit}>
+  <h2 class="text-sm font-bold tracking-tight text-[var(--fg)]">{title}</h2>
+  <p class="mt-2 hidden text-xs leading-relaxed text-[var(--fg-muted)]" data-recent-reads-empty>
+    아직 읽은 글이 없습니다.
+  </p>
+  <ul class="mt-2 space-y-1" data-recent-reads-list></ul>
+</section>
+
+<script>
+  import { initRecentReads } from '../../lib/client/recent-reads-ui';
+
+  document.addEventListener('DOMContentLoaded', initRecentReads);
+</script>

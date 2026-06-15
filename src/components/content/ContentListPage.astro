@@ -4,14 +4,16 @@ import {
   filterContentByQuery,
   getAllContent,
   getAvailableTagsForDomain,
+  getFeaturedGuides,
   type ContentDomain,
 } from '../../lib/content-utils';
 import { serializeContentListItems, type ContentListCardType } from '../../lib/content-list-serialize';
+import ArticleListCard from './ArticleListCard.astro';
 import AppPagination from '../ui/AppPagination.astro';
 
 interface Props {
   domain: ContentDomain;
-  basePath: '/guides' | '/columns' | '/concepts';
+  basePath: '/guides' | '/columns' | '/concepts' | '/books';
   layoutTitle: string;
   layoutDescription: string;
   pageTitle: string;
@@ -19,6 +21,7 @@ interface Props {
   cardType: ContentListCardType;
   searchPlaceholder: string;
   showTagFilter?: boolean;
+  showFeatured?: boolean;
 }
 
 const {
@@ -31,6 +34,7 @@ const {
   cardType,
   searchPlaceholder,
   showTagFilter = true,
+  showFeatured = false,
 } = Astro.props;
 
 const q = Astro.url.searchParams.get('q') ?? '';
@@ -40,6 +44,7 @@ const all = await getAllContent();
 const domainItems = filterContentByQuery(all, { domain });
 const serializedItems = serializeContentListItems(domainItems, domain);
 const tags = showTagFilter ? getAvailableTagsForDomain(all, domain) : [];
+const featuredItems = showFeatured && domain === 'guides' ? await getFeaturedGuides(3) : [];
 ---
 
 <BaseLayout title={layoutTitle} description={layoutDescription}>
@@ -75,6 +80,24 @@ const tags = showTagFilter ? getAvailableTagsForDomain(all, domain) : [];
     <div class:list={['mt-4', tag ? '' : 'hidden']} data-content-list-tag-chip>
       {tag ? `선택 태그: ${tag}` : ''}
     </div>
+
+    {
+      featuredItems.length > 0 && !q && !tag && (
+        <section class="mt-8">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <h2 class="text-xl font-bold tracking-tight text-[var(--fg)]">추천 가이드</h2>
+            <span class="app-badge app-badge-type-guide">Featured</span>
+          </div>
+          <ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {featuredItems.map((entry) => (
+              <li>
+                <ArticleListCard id={entry.id} basePath="/guides" body={entry.body} data={entry.data} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
 
     <ul id="content-list-results" class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></ul>
     <AppPagination

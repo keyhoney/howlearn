@@ -1,6 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { MATH_SITE_URL, SITE_DESCRIPTION } from '../consts';
+import ArticleListCard from '../components/content/ArticleListCard.astro';
+import RecentReads from '../components/content/RecentReads.astro';
+import { getFeaturedGuides } from '../lib/content-utils';
 
 const sections = [
   {
@@ -32,6 +35,8 @@ const sections = [
     badgeLabel: '도서',
   },
 ];
+
+const featuredGuides = await getFeaturedGuides(3);
 ---
 
 <BaseLayout title="HowLearn" description={SITE_DESCRIPTION}>
@@ -56,6 +61,33 @@ const sections = [
         문제 풀어보기
       </a>
     </div>
+  </section>
+
+  {
+    featuredGuides.length > 0 && (
+      <section class="container mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
+        <div class="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p class="app-dashboard-kicker">Featured guides</p>
+            <h2 class="text-2xl font-bold tracking-tight text-[var(--fg)]">추천 학부모 가이드</h2>
+          </div>
+          <a href="/guides" class="text-sm font-semibold text-[var(--accent)] hover:underline">
+            전체 가이드 보기
+          </a>
+        </div>
+        <ul class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {featuredGuides.map((entry) => (
+            <li>
+              <ArticleListCard id={entry.id} basePath="/guides" body={entry.body} data={entry.data} />
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <section class="container mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
+    <RecentReads title="이어서 읽기" limit={5} />
   </section>
 
   <section class="container mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8">

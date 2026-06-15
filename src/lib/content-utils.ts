@@ -40,6 +40,18 @@ export async function getPublishedGuides() {
   );
 }
 
+export async function getFeaturedGuides(limit = 5) {
+  const guides = await getPublishedGuides();
+  return guides
+    .filter((entry) => entry.data.featured)
+    .sort((a, b) => {
+      const ad = a.data.publishedAt?.valueOf() ?? 0;
+      const bd = b.data.publishedAt?.valueOf() ?? 0;
+      return bd - ad;
+    })
+    .slice(0, limit);
+}
+
 export async function getPublishedConcepts() {
   return (await getCollection('concepts')).filter(
     (e) => e.data.status === 'published',
@@ -179,13 +191,27 @@ export async function getRelatedContent(
   limit = 6,
 ): Promise<AnyContentEntry[]> {
   const all = await getAllContent();
+  const currentContentId = toContentIndexId(item);
+  const manualIds = item.data.relatedContentIds ?? [];
+  const byContentId = new Map(all.map((entry) => [toContentIndexId(entry), entry]));
+  const manualItems = manualIds
+    .map((id) => byContentId.get(id))
+    .filter((entry): entry is AnyContentEntry => entry != null && toContentIndexId(entry) !== currentContentId)
+    .slice(0, limit);
+  const manualIdSet = new Set(manualItems.map(toContentIndexId));
+  if (manualItems.length >= limit) return manualItems;
+
   const tokenizedSource = tokenizeText(`${item.data.title} ${item.data.summary}`);
   const sourceDomains = new Set(item.data.domains ?? []);
   const sourceTags = new Set(item.data.tags ?? []);
   const sourceCategories = new Set(item.data.categories ?? []);
 
-  return all
-    .filter((candidate) => !(candidate.collection === item.collection && candidate.id === item.id))
+  const fallbackItems = all
+    .filter((candidate) => {
+      const candidateId = toContentIndexId(candidate);
+      if (candidateId === currentContentId) return false;
+      return !manualIdSet.has(candidateId);
+    })
     .map((candidate) => {
       const domainOverlap = getOverlapCount(sourceDomains, new Set(candidate.data.domains ?? []));
       const tagOverlap = getOverlapCount(sourceTags, new Set(candidate.data.tags ?? []));
@@ -210,8 +236,20 @@ export async function getRelatedContent(
       const bd = b.candidate.data.publishedAt?.valueOf() ?? 0;
       return bd - ad;
     })
-    .slice(0, limit)
+    .slice(0, Math.max(0, limit - manualItems.length))
     .map((v) => v.candidate);
+
+  return [...manualItems, ...fallbackItems];
+}
+
+function toContentIndexId(item: AnyContentEntry): string {
+  const prefix: Record<ContentDomain, string> = {
+    guides: 'guide',
+    concepts: 'concept',
+    books: 'book',
+    columns: 'column',
+  };
+  return `${prefix[item.collection]}-${item.id}`;
 }
 
 export async function getContentReferringToConcept(
