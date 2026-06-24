@@ -17,6 +17,8 @@ import {
   buildLearningResourceJsonLd,
 } from '../../lib/seo';
 import { buildContentPageDescription, buildContentPageTitle } from '../../lib/content-seo';
+import { resolveOgImageUrl } from '../../lib/og-image';
+import HiddenRepresentativeImage from '../../components/HiddenRepresentativeImage.astro';
 import { SITE_URL } from '../../consts';
 
 export const getStaticPaths = (async () => {
@@ -74,12 +76,18 @@ const getCollectionLabel = (collection: string) =>
     books: '도서',
   })[collection] ?? collection;
 const pagePath = `/guides/${entry.id}`;
+const pageOgImage = resolveOgImageUrl({
+  type: 'guides',
+  slug: entry.id,
+  coverImage,
+  ogImage: entry.data.ogImage,
+});
 const jsonLd = [
   buildArticleJsonLd({
     title: pageTitle,
     description: pageDescription,
     path: pagePath,
-    image: coverImage,
+    image: pageOgImage,
     datePublished: publishedAt,
   }),
   buildBreadcrumbJsonLd([
@@ -97,8 +105,9 @@ const jsonLd = [
 ];
 ---
 
-<MathLayout title={pageTitle} description={pageDescription} image={coverImage} jsonLd={jsonLd}>
+<MathLayout title={pageTitle} description={pageDescription} image={pageOgImage} jsonLd={jsonLd}>
   <article class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8" data-concept-tooltip-root data-reading-progress-root>
+    <HiddenRepresentativeImage src={pageOgImage} />
     <div class="hidden" aria-hidden="true">
       <span data-pagefind-meta="type">guide</span>
       {entry.data.categories?.map((category) => <span data-pagefind-meta="categories">{category}</span>)}

@@ -1,5 +1,6 @@
 ﻿---
 import { NAV_LINKS, SITE_DESCRIPTION, SITE_TITLE, MATH_SITE_URL } from '../consts';
+import SiteLogoMark from './SiteLogoMark.astro';
 const year = new Date().getFullYear();
 const ADMIN_UID_ALLOWLIST = String(import.meta.env.PUBLIC_ADMIN_UID_ALLOWLIST || '')
   .split(',')
@@ -16,10 +17,7 @@ const ADMIN_UID_ALLOWLIST = String(import.meta.env.PUBLIC_ADMIN_UID_ALLOWLIST ||
     <div class="grid grid-cols-2 gap-6 sm:gap-8 md:grid-cols-4">
       <div class="col-span-2 min-w-0 md:col-span-1">
         <a href="/" class="inline-flex items-center gap-2 font-bold tracking-tight text-base sm:text-lg" aria-label={`${SITE_TITLE} 홈`}>
-          <picture>
-            <source srcset="/favicon.svg" type="image/svg+xml" />
-            <img src="/favicon.png" width="20" height="20" alt="" class="h-5 w-5 rounded-sm" />
-          </picture>
+          <SiteLogoMark size="sm" />
           <span class="inline-flex items-baseline">
             <span style="color:#FF9A32;">How</span>
             <span style="color:#95D6D4;">Learn</span>

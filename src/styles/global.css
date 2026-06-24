@@ -180,6 +180,11 @@ html.dark summary:focus-visible {
   box-shadow: 0 0 0 2px color-mix(in srgb, #ffffff 60%, transparent);
 }
 
+.site-logo-mark {
+  display: inline-block;
+  background: url('/favicon.svg') center / contain no-repeat;
+}
+
 .sr-only {
   position: absolute !important;
   width: 1px;

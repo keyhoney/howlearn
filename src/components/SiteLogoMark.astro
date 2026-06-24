@@ -1,0 +1,17 @@
+---
+interface Props {
+  size?: 'sm' | 'md';
+  class?: string;
+  label?: string;
+}
+
+const { size = 'md', class: className = '', label } = Astro.props;
+const sizeClass = size === 'sm' ? 'h-5 w-5' : 'h-6 w-6';
+---
+
+<span
+  class:list={['site-logo-mark shrink-0 rounded-sm', sizeClass, className]}
+  aria-hidden={label ? undefined : true}
+  role={label ? 'img' : undefined}
+  aria-label={label}
+></span>

@@ -9,6 +9,8 @@ import {
   buildLearningResourceJsonLd,
 } from '../../lib/seo';
 import { buildContentPageDescription, buildContentPageTitle } from '../../lib/content-seo';
+import { resolveOgImageUrl } from '../../lib/og-image';
+import HiddenRepresentativeImage from '../../components/HiddenRepresentativeImage.astro';
 import { SITE_URL } from '../../consts';
 import ArticleMeta from '../../components/content/ArticleMeta.astro';
 import ArticleVisitSetup from '../../components/content/ArticleVisitSetup.astro';
@@ -94,6 +96,12 @@ const getCollectionLabel = (collection: string) =>
     books: '도서',
   })[collection] ?? collection;
 const pagePath = `/books/${entry.id}`;
+const pageOgImage = resolveOgImageUrl({
+  type: 'books',
+  slug: entry.id,
+  coverImage: heroImage,
+  ogImage,
+});
 const mdxComponents = {
   AnalogyBlock,
   BookCoverImage,
@@ -119,7 +127,7 @@ const jsonLd = [
     title: pageTitle,
     description: pageDescription,
     path: pagePath,
-    image: heroImage,
+    image: pageOgImage,
     datePublished: publishedAt,
   }),
   buildBreadcrumbJsonLd([
@@ -136,8 +144,9 @@ const jsonLd = [
 ];
 ---
 
-<MathLayout title={pageTitle} description={pageDescription} image={heroImage} jsonLd={jsonLd}>
+<MathLayout title={pageTitle} description={pageDescription} image={pageOgImage} jsonLd={jsonLd}>
   <article class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <HiddenRepresentativeImage src={pageOgImage} />
     <div class="hidden" aria-hidden="true">
       <span data-pagefind-meta="type">book</span>
       {categories?.map((category) => <span data-pagefind-meta="categories">{category}</span>)}

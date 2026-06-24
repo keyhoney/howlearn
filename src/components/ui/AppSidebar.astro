@@ -1,6 +1,7 @@
 ﻿---
 import { NAV_LINKS, SITE_TITLE, MATH_SITE_URL } from '../../consts';
 import RecentReads from '../content/RecentReads.astro';
+import SiteLogoMark from '../SiteLogoMark.astro';
 
 interface Props {
   pathname: string;
@@ -45,19 +46,13 @@ const EXTERNAL_LINKS = [
     iconOnly ? (
       <div class="flex items-center justify-center border-b border-[var(--sidebar-border)] px-2 py-4">
         <a href="/" class="inline-flex h-9 w-9 items-center justify-center rounded-sm border border-[var(--sidebar-border)]">
-          <picture>
-            <source srcset="/favicon.svg" type="image/svg+xml" />
-            <img src="/favicon.png" width="20" height="20" alt={`${SITE_TITLE} 로고`} class="h-5 w-5 rounded-sm" />
-          </picture>
+          <SiteLogoMark size="sm" label={`${SITE_TITLE} 로고`} />
         </a>
       </div>
     ) : (
       <div class="flex items-center justify-between gap-2 px-6 py-5 border-b border-[var(--sidebar-border)]">
         <a href="/" class="inline-flex min-w-0 items-center gap-2 truncate" aria-label={`${SITE_TITLE} 홈`}>
-          <picture>
-            <source srcset="/favicon.svg" type="image/svg+xml" />
-            <img src="/favicon.png" width="24" height="24" alt="" class="h-6 w-6 rounded-sm" />
-          </picture>
+          <SiteLogoMark />
           <span class="inline-flex items-baseline text-lg font-bold tracking-tight">
             <span style="color:#FF9A32;">How</span>
             <span style="color:#95D6D4;">Learn</span>
