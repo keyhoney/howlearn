@@ -20,6 +20,8 @@ test('home exposes primary content areas', async ({ page }) => {
 test('guides list supports filtering', async ({ page }) => {
   await page.goto('/guides');
   await expect(page.getByRole('heading', { name: '학부모 가이드' })).toBeVisible();
+  await expect(page.getByRole('link', { name: '학부모 가이드', exact: true }).first()).toBeVisible();
+  await expect(page.locator('meta[name="generator"]')).toHaveAttribute('content', /Astro/);
   await page.getByPlaceholder('제목/요약 검색').fill('시험');
   await page.getByRole('button', { name: '필터 적용' }).click();
   await expect(page.getByText(/검색 결과|총/)).toBeVisible();
@@ -44,4 +46,12 @@ test('search finds metacognition content', async ({ page }) => {
   await expect(page.getByRole('heading', { name: '검색' })).toBeVisible();
   await expect(page.getByText(/검색 결과/)).toBeVisible({ timeout: 15_000 });
   await expect(page.locator('#search-results a').first()).toBeVisible();
+});
+
+test('missing page returns 404 content', async ({ page }) => {
+  const response = await page.goto('/__howlearn-e2e-missing-page');
+  expect(response?.status()).toBe(404);
+  await expect(page.getByRole('main').getByText('404', { exact: true })).toBeVisible();
+  await expect(page.getByRole('main').getByRole('heading', { level: 1 })).toBeVisible();
+  await expect(page.locator('main a[href="/"]').first()).toBeVisible();
 });

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { CONTACT_EMAIL } from '../consts';
 
 const sections = [
   {
@@ -36,6 +37,8 @@ const sections = [
     title: '5. 쿠키 및 유사 기술의 사용',
     items: [
       '서비스 운영, 이용 환경 개선, 접속 통계 분석, 이용자 설정 저장을 위해 쿠키 및 유사 기술을 사용할 수 있습니다.',
+      'Google Analytics는 이용자 동의 후 분석 쿠키를 설정할 수 있으며, Google AdSense 승인·운영 시 광고 관련 쿠키가 사용될 수 있습니다.',
+      '맞춤형 광고 설정은 Google 광고 설정(https://adssettings.google.com)에서 변경할 수 있습니다.',
       '이용자는 브라우저 설정을 통해 쿠키 저장을 거부하거나 이미 저장된 쿠키를 삭제할 수 있습니다.',
     ],
   },
@@ -43,7 +46,11 @@ const sections = [
     title: '6. 개인정보의 제3자 제공 및 처리 위탁',
     items: [
       '본 사이트는 원칙적으로 이용자의 개인정보를 판매하지 않으며, 법령상 근거 또는 이용자 동의가 있는 경우를 제외하고 제3자에게 제공하지 않습니다.',
-      '다만 서비스 운영을 위해 분석, 호스팅/배포/CDN, 보안 관련 업무를 외부 서비스 제공자에게 위탁하거나 해당 제공자가 정보를 처리할 수 있습니다.',
+      '다만 서비스 운영을 위해 아래 외부 서비스 제공자가 정보를 처리할 수 있습니다.',
+      'Google LLC — Google Analytics(접속 통계), Google AdSense(광고 게재·성과 측정, 승인 후)',
+      'Google Firebase — 선택적 회원 로그인(이메일 인증)',
+      'Formspree — 문의 폼 접수·전달',
+      'Cloudflare, Inc. — 호스팅·CDN·보안',
     ],
   },
   {
@@ -115,7 +122,17 @@ const sections = [
       <h2 class="text-base font-semibold text-[var(--fg)]">문의</h2>
       <p class="mt-2 text-sm text-[var(--fg-muted)]">
         본 방침 또는 개인정보 처리에 관한 문의는 <a href="/contact" class="underline hover:text-[var(--accent)]">문의하기</a> 페이지를 이용해 주세요.
+        {CONTACT_EMAIL && (
+          <>
+            {' '}또는 <a href={`mailto:${CONTACT_EMAIL}`} class="underline hover:text-[var(--accent)]">{CONTACT_EMAIL}</a>로 연락해 주세요.
+          </>
+        )}
       </p>
+      {CONTACT_EMAIL && (
+        <p class="mt-2 text-sm text-[var(--fg-muted)]">
+          개인정보 보호책임자: HowLearn 운영자 ({CONTACT_EMAIL})
+        </p>
+      )}
     </section>
   </section>
 </BaseLayout>

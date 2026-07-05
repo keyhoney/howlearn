@@ -1,6 +1,8 @@
 ---
 import ReadingTimeBadge from './ReadingTimeBadge.astro';
+import ArticleCardDates from './ArticleCardDates.astro';
 import { resolveConceptCardMeta, type ConceptCardInput } from '@/lib/card-meta';
+import { resolveListArticleDates } from '@/lib/article-meta';
 import { getCategoryBadgeClass } from '@/lib/category-badge';
 
 interface Props {
@@ -11,8 +13,9 @@ interface Props {
 
 const { id, body, data } = Astro.props;
 const meta = resolveConceptCardMeta(data);
+const dates = resolveListArticleDates(data);
 const hasFooterMeta = meta.footerTags.length > 0 || body;
-const hasHeaderRow = meta.headerBadges.length > 0 || data.publishedAt;
+const hasHeaderRow = meta.headerBadges.length > 0 || dates.publishedAt || dates.latestRevision;
 ---
 
 <a
@@ -34,11 +37,7 @@ const hasHeaderRow = meta.headerBadges.length > 0 || data.publishedAt;
             <span aria-hidden="true" />
           )
         }
-        {data.publishedAt && (
-          <time class="font-mono text-xs text-[var(--fg-muted)]" datetime={data.publishedAt.toISOString()}>
-            {data.publishedAt.toLocaleDateString('ko-KR')}
-          </time>
-        )}
+        {(dates.publishedAt || dates.latestRevision) && <ArticleCardDates data={data} />}
       </div>
     )
   }

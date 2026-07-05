@@ -6,6 +6,7 @@ import {
 } from './card-meta';
 import { getCategoryBadgeClass } from './category-badge';
 import { formatReadingTime } from './reading-time';
+import { formatArticleDateShort, getRevisionKindLabel } from './article-meta';
 import type { ContentListCardType, SerializedContentListItem } from './content-list-serialize';
 
 function escapeHtml(text: string): string {
@@ -23,7 +24,25 @@ function formatPublishedAt(iso?: string): string {
   if (!iso) return '';
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return '';
-  return date.toLocaleDateString('ko-KR');
+  return formatArticleDateShort(date);
+}
+
+function buildListDatesHtml(item: SerializedContentListItem): string {
+  const publishedHtml = item.publishedAt
+    ? `<time datetime="${escapeHtml(item.publishedAt)}">${escapeHtml(formatPublishedAt(item.publishedAt))}</time>`
+    : '';
+  const revisionHtml =
+    item.latestRevisionAt && item.latestRevisionKind
+      ? `<time datetime="${escapeHtml(item.latestRevisionAt)}" class="text-[0.7rem] leading-tight"><span class="font-sans font-medium">${escapeHtml(getRevisionKindLabel(item.latestRevisionKind))}</span> ${escapeHtml(formatPublishedAt(item.latestRevisionAt))}</time>`
+      : '';
+
+  if (!publishedHtml && !revisionHtml) return '';
+
+  return `<div class="flex shrink-0 flex-col items-end gap-0.5 text-right font-mono text-xs text-[var(--fg-muted)]">${publishedHtml}${revisionHtml}</div>`;
+}
+
+function hasListDates(item: SerializedContentListItem): boolean {
+  return Boolean(item.publishedAt || item.latestRevisionAt);
 }
 
 function buildReadingTimeHtml(minutes?: number): string {
@@ -46,7 +65,7 @@ function buildArticleCardHtml(
     publishedAt: item.publishedAt ? new Date(item.publishedAt) : undefined,
   };
   const meta = resolveArticleListCardMeta(input);
-  const hasHeaderRow = meta.headerBadges.length > 0 || Boolean(item.publishedAt);
+  const hasHeaderRow = meta.headerBadges.length > 0 || hasListDates(item);
   const hasFooterMeta = meta.footerTags.length > 0 || item.readingMinutes != null;
   const href = `${basePath}/${encodeURIComponent(item.id)}${listQuery}`;
 
@@ -74,7 +93,7 @@ function buildArticleCardHtml(
           hasHeaderRow
             ? `<div class="flex flex-wrap items-start justify-between gap-2">
                 ${meta.headerBadges.length > 0 ? `<div class="flex flex-wrap gap-1.5">${headerBadgesHtml}</div>` : '<span aria-hidden="true"></span>'}
-                ${item.publishedAt ? `<time class="font-mono text-xs text-[var(--fg-muted)]" datetime="${escapeHtml(item.publishedAt)}">${escapeHtml(formatPublishedAt(item.publishedAt))}</time>` : ''}
+                ${hasListDates(item) ? buildListDatesHtml(item) : ''}
               </div>`
             : ''
         }
@@ -106,7 +125,7 @@ function buildConceptCardHtml(item: SerializedContentListItem, listQuery: string
     publishedAt: item.publishedAt ? new Date(item.publishedAt) : undefined,
   };
   const meta = resolveConceptCardMeta(input);
-  const hasHeaderRow = meta.headerBadges.length > 0 || Boolean(item.publishedAt);
+  const hasHeaderRow = meta.headerBadges.length > 0 || hasListDates(item);
   const hasFooterMeta = meta.footerTags.length > 0 || item.readingMinutes != null;
   const href = `/concepts/${encodeURIComponent(item.id)}${listQuery}`;
 
@@ -134,7 +153,7 @@ function buildConceptCardHtml(item: SerializedContentListItem, listQuery: string
           hasHeaderRow
             ? `<div class="flex flex-wrap items-start justify-between gap-2">
                 ${meta.headerBadges.length > 0 ? `<div class="flex flex-wrap gap-1.5">${headerBadgesHtml}</div>` : '<span aria-hidden="true"></span>'}
-                ${item.publishedAt ? `<time class="font-mono text-xs text-[var(--fg-muted)]" datetime="${escapeHtml(item.publishedAt)}">${escapeHtml(formatPublishedAt(item.publishedAt))}</time>` : ''}
+                ${hasListDates(item) ? buildListDatesHtml(item) : ''}
               </div>`
             : ''
         }

@@ -3,6 +3,8 @@
 interface ImportMetaEnv {
   readonly PUBLIC_SITE_URL?: string;
   readonly PUBLIC_MATH_SITE_URL?: string;
+  readonly PUBLIC_CONTACT_EMAIL?: string;
+  readonly PUBLIC_ADSENSE_PUBLISHER_ID?: string;
   readonly PUBLIC_FORMSPREE_FORM_ID?: string;
   readonly FORMSPREE_FORM_ID?: string;
   readonly PUBLIC_FIREBASE_API_KEY?: string;

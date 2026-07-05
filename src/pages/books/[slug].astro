@@ -10,7 +10,7 @@ import {
 } from '../../lib/seo';
 import { buildContentPageDescription, buildContentPageTitle } from '../../lib/content-seo';
 import { resolveOgImageUrl } from '../../lib/og-image';
-import HiddenRepresentativeImage from '../../components/HiddenRepresentativeImage.astro';
+import ArticleHeroImage from '../../components/content/ArticleHeroImage.astro';
 import { SITE_URL } from '../../consts';
 import ArticleMeta from '../../components/content/ArticleMeta.astro';
 import ArticleVisitSetup from '../../components/content/ArticleVisitSetup.astro';
@@ -60,6 +60,8 @@ const {
   summary,
   subtitle,
   publishedAt,
+  updatedAt,
+  author,
   purchaseLinks,
   references,
   coverImage,
@@ -129,6 +131,8 @@ const jsonLd = [
     path: pagePath,
     image: pageOgImage,
     datePublished: publishedAt,
+    dateModified: updatedAt,
+    author,
   }),
   buildBreadcrumbJsonLd([
     { name: '홈', item: SITE_URL },
@@ -146,7 +150,7 @@ const jsonLd = [
 
 <MathLayout title={pageTitle} description={pageDescription} image={pageOgImage} jsonLd={jsonLd}>
   <article class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-    <HiddenRepresentativeImage src={pageOgImage} />
+    <ArticleHeroImage src={pageOgImage} alt={title} />
     <div class="hidden" aria-hidden="true">
       <span data-pagefind-meta="type">book</span>
       {categories?.map((category) => <span data-pagefind-meta="categories">{category}</span>)}
@@ -169,7 +173,6 @@ const jsonLd = [
         <p class="mt-2 text-lg text-[var(--fg-muted)]">{subtitle}</p>
       )}
       <div class="mt-4 flex flex-wrap gap-2">
-        {publishedAt && <span class="app-chip">{publishedAt.toLocaleDateString('ko-KR')}</span>}
         {categories?.slice(0, 3).map((c) => (
           <span class="app-chip">{c}</span>
         ))}

@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { NAV_LINKS } from '../consts';
+
+Astro.response.status = 404;
+Astro.response.statusText = 'Not Found';
+---
+
+<BaseLayout
+  title="페이지를 찾을 수 없음"
+  description="요청하신 페이지가 없거나 이동했습니다."
+  noindex
+>
+  <section class="app-content-wrap">
+    <header class="app-card p-6 text-center">
+      <p class="text-sm font-medium text-[var(--accent)]">404</p>
+      <h1 class="app-section-title mt-2">페이지를 찾을 수 없습니다</h1>
+      <p class="mx-auto mt-3 max-w-lg text-sm text-[var(--fg-muted)]">
+        주소가 잘못되었거나 페이지가 삭제·이동되었을 수 있습니다. 아래 메뉴에서 원하는
+        콘텐츠를 찾아보세요.
+      </p>
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <a href="/" class="app-btn-primary inline-flex min-h-10 items-center px-4 text-sm">
+          홈으로
+        </a>
+        <a href="/search" class="app-btn-secondary inline-flex min-h-10 items-center px-4 text-sm">
+          검색하기
+        </a>
+      </div>
+    </header>
+
+    <section class="app-card mt-4 p-6">
+      <h2 class="text-base font-semibold text-[var(--fg)]">주요 섹션</h2>
+      <ul class="mt-4 grid gap-2 sm:grid-cols-2">
+        {
+          NAV_LINKS.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class="block rounded-sm border border-[var(--card-border)] bg-[var(--surface-2)] px-4 py-3 text-sm font-medium text-[var(--accent)] hover:underline"
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </section>
+</BaseLayout>

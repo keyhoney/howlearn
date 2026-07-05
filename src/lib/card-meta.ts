@@ -5,6 +5,10 @@ export type ConceptCardInput = {
   tags?: string[];
   shortDefinition?: string;
   publishedAt?: Date;
+  updatedAt?: Date;
+  datePublished?: Date;
+  dateModified?: Date;
+  dateReviewed?: Date;
 };
 
 export type ArticleListCardInput = {
@@ -15,6 +19,10 @@ export type ArticleListCardInput = {
   tags?: string[];
   domains?: string[];
   publishedAt?: Date;
+  updatedAt?: Date;
+  datePublished?: Date;
+  dateModified?: Date;
+  dateReviewed?: Date;
 };
 
 export type ArticleListCardMeta = {

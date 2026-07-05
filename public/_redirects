@@ -12,3 +12,11 @@
 /problems https://math.howlearn.kr/problems/ 301
 /problems/ https://math.howlearn.kr/problems/ 301
 /problems/* https://math.howlearn.kr/problems/:splat 301
+
+# learninsight(구 Next.js) nav 잔존 경로 → 현행 Astro 구조
+/domains https://www.howlearn.kr/concepts/ 301
+/domains/ https://www.howlearn.kr/concepts/ 301
+/domains/* https://www.howlearn.kr/concepts/:splat 301
+/toolkit https://www.howlearn.kr/guides/ 301
+/toolkit/ https://www.howlearn.kr/guides/ 301
+/toolkit/* https://www.howlearn.kr/guides/:splat 301

@@ -1,4 +1,5 @@
 import { SITE_TITLE, SITE_URL } from '../consts';
+import { PRIMARY_AUTHOR, getAuthorProfileUrl, resolveAuthorName } from './author';
 
 type Crumb = { name: string; item: string };
 
@@ -25,6 +26,7 @@ export function buildArticleJsonLd(params: {
   author?: string;
 }) {
   const url = new URL(params.path, SITE_URL).toString();
+  const authorName = resolveAuthorName(params.author);
   return {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -34,12 +36,15 @@ export function buildArticleJsonLd(params: {
     datePublished: params.datePublished?.toISOString(),
     dateModified: (params.dateModified ?? params.datePublished)?.toISOString(),
     author: {
-      '@type': 'Organization',
-      name: params.author ?? SITE_TITLE,
+      '@type': 'Person',
+      name: authorName,
+      jobTitle: PRIMARY_AUTHOR.title,
+      url: getAuthorProfileUrl(),
     },
     publisher: {
       '@type': 'Organization',
       name: SITE_TITLE,
+      url: SITE_URL,
     },
     mainEntityOfPage: url,
   };
@@ -76,5 +81,48 @@ export function buildLearningResourceJsonLd(params: {
     educationalLevel: 'secondary',
     learningResourceType: 'StudyGuide',
     keywords: (params.keywords ?? []).join(', '),
+  };
+}
+
+export function buildPersonJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: PRIMARY_AUTHOR.name,
+    jobTitle: PRIMARY_AUTHOR.title,
+    description: PRIMARY_AUTHOR.summary,
+    url: getAuthorProfileUrl(),
+    worksFor: {
+      '@type': 'Organization',
+      name: SITE_TITLE,
+      url: SITE_URL,
+    },
+  };
+}
+
+export function buildOrganizationJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: SITE_TITLE,
+    url: SITE_URL,
+    description:
+      '인지과학과 학습 연구를 바탕으로 학부모 가이드, 학습 과학 개념, 수학 학습 칼럼을 제공하는 학습 플랫폼',
+    founder: {
+      '@type': 'Person',
+      name: PRIMARY_AUTHOR.name,
+      url: getAuthorProfileUrl(),
+    },
+  };
+}
+
+export function buildWebSiteJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE_TITLE,
+    url: SITE_URL,
+    description: '학습 과학 기반 가이드, 개념 해설, 수학 학습 칼럼과 도서 추천',
+    inLanguage: 'ko',
   };
 }

@@ -4,20 +4,26 @@ import '../styles/global.css';
 import { SITE_TITLE, SITE_URL } from '../consts';
 import { shouldNoIndexPathname } from '../lib/seo-paths';
 import GoogleAnalytics from './GoogleAnalytics.astro';
+import CookieConsent from './CookieConsent.astro';
+import AdSense from './AdSense.astro';
 
 interface Props {
   title: string;
   description: string;
   image?: string;
+  noindex?: boolean;
 }
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? SITE_URL);
-const { title, description, image = '/og-default.png' } = Astro.props;
-const imageUrl = new URL(image, Astro.url);
-const noindex = shouldNoIndexPathname(Astro.url.pathname);
+const siteOrigin = Astro.site ?? SITE_URL;
+const canonicalURL = new URL(Astro.url.pathname, siteOrigin);
+const { title, description, image = '/og-default.png', noindex: noindexProp = false } = Astro.props;
+const imageUrl = new URL(image, siteOrigin);
+const noindex = noindexProp || shouldNoIndexPathname(Astro.url.pathname);
 ---
 
 {import.meta.env.PROD && <GoogleAnalytics />}
+{import.meta.env.PROD && <AdSense />}
+{import.meta.env.PROD && <CookieConsent />}
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -49,17 +55,17 @@ const noindex = shouldNoIndexPathname(Astro.url.pathname);
 
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content={SITE_TITLE} />
-<meta property="og:url" content={Astro.url} />
+<meta property="og:url" content={canonicalURL.href} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-<meta property="og:image" content={imageUrl} />
+<meta property="og:image" content={imageUrl.href} />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content={title} />
 
 <meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content={Astro.url} />
+<meta property="twitter:url" content={canonicalURL.href} />
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
-<meta property="twitter:image" content={imageUrl} />
+<meta property="twitter:image" content={imageUrl.href} />
 <meta property="twitter:image:alt" content={title} />

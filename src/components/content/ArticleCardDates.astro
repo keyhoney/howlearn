@@ -1,0 +1,32 @@
+---
+import {
+  formatArticleDateShort,
+  getRevisionKindLabel,
+  resolveListArticleDates,
+  type ArticleMetaInput,
+} from '@/lib/article-meta';
+
+interface Props {
+  data: ArticleMetaInput;
+}
+
+const { data } = Astro.props;
+const { publishedAt, latestRevision } = resolveListArticleDates(data);
+const hasDates = Boolean(publishedAt || latestRevision);
+---
+
+{
+  hasDates && (
+    <div class="flex shrink-0 flex-col items-end gap-0.5 text-right font-mono text-xs text-[var(--fg-muted)]">
+      {publishedAt && (
+        <time datetime={publishedAt.toISOString()}>{formatArticleDateShort(publishedAt)}</time>
+      )}
+      {latestRevision && (
+        <time datetime={latestRevision.date.toISOString()} class="text-[0.7rem] leading-tight">
+          <span class="font-sans font-medium">{getRevisionKindLabel(latestRevision.kind)}</span>{' '}
+          {formatArticleDateShort(latestRevision.date)}
+        </time>
+      )}
+    </div>
+  )
+}

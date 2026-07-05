@@ -1,5 +1,11 @@
 import type { AnyContentEntry, ContentDomain } from './content-utils';
 import { estimateReadingMinutes } from './reading-time';
+import {
+  resolveLatestRevision,
+  resolvePublishedAt,
+  type ArticleMetaInput,
+  type RevisionKind,
+} from './article-meta';
 
 export type ContentListCardType = 'article' | 'concept';
 
@@ -14,8 +20,21 @@ export type SerializedContentListItem = {
   tags?: string[];
   domains?: string[];
   publishedAt?: string;
+  latestRevisionAt?: string;
+  latestRevisionKind?: RevisionKind;
   readingMinutes?: number;
 };
+
+function serializeRevisionFields(data: ArticleMetaInput) {
+  const publishedAt = resolvePublishedAt(data);
+  const latestRevision = resolveLatestRevision(data, publishedAt);
+
+  return {
+    publishedAt: publishedAt?.toISOString(),
+    latestRevisionAt: latestRevision?.date.toISOString(),
+    latestRevisionKind: latestRevision?.kind,
+  };
+}
 
 export function serializeContentListItems(
   items: AnyContentEntry[],
@@ -31,6 +50,7 @@ export function serializeContentListItems(
           : typeof data.description === 'string'
             ? data.description
             : undefined;
+      const revisionFields = serializeRevisionFields(item.data);
 
       return {
         id: item.id,
@@ -43,7 +63,7 @@ export function serializeContentListItems(
         categories: item.data.categories ?? [],
         tags: item.data.tags ?? [],
         domains: item.data.domains ?? [],
-        publishedAt: item.data.publishedAt?.toISOString(),
+        ...revisionFields,
         readingMinutes: item.body ? estimateReadingMinutes(item.body) : undefined,
       };
     });

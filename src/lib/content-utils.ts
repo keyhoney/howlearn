@@ -52,6 +52,24 @@ export async function getFeaturedGuides(limit = 5) {
     .slice(0, limit);
 }
 
+function sortByPublishedDesc<T extends { data: { publishedAt?: Date; datePublished?: Date } }>(
+  entries: T[],
+): T[] {
+  return [...entries].sort((a, b) => {
+    const ad = a.data.publishedAt?.valueOf() ?? a.data.datePublished?.valueOf() ?? 0;
+    const bd = b.data.publishedAt?.valueOf() ?? b.data.datePublished?.valueOf() ?? 0;
+    return bd - ad;
+  });
+}
+
+export async function getLatestColumns(limit = 3) {
+  return sortByPublishedDesc(await getPublishedColumns()).slice(0, limit);
+}
+
+export async function getLatestConcepts(limit = 3) {
+  return sortByPublishedDesc(await getPublishedConcepts()).slice(0, limit);
+}
+
 export async function getPublishedConcepts() {
   return (await getCollection('concepts')).filter(
     (e) => e.data.status === 'published',

@@ -34,7 +34,7 @@ function assertPagesEnv() {
   const isPagesBuild = process.env.CF_PAGES === '1';
   if (!isPagesBuild) return;
 
-  const requiredVars = ['FORMSPREE_FORM_ID', 'PUBLIC_SITE_URL'] as const;
+  const requiredVars = ['FORMSPREE_FORM_ID', 'PUBLIC_SITE_URL', 'PUBLIC_ADSENSE_PUBLISHER_ID'] as const;
   const missing = requiredVars.filter((name) => !String(process.env[name] ?? '').trim());
   if (missing.length > 0) {
     console.error(`deploy config validation failed: missing env vars: ${missing.join(', ')}`);

@@ -25,11 +25,11 @@ export function initRecentReads(): void {
     if (!(list instanceof HTMLElement)) return;
 
     if (items.length === 0) {
-      empty?.classList.remove('hidden');
-      list.innerHTML = '';
+      root.classList.add('hidden');
       return;
     }
 
+    root.classList.remove('hidden');
     empty?.classList.add('hidden');
     list.innerHTML = items
       .map((item) => {

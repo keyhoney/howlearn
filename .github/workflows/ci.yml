@@ -13,6 +13,8 @@ jobs:
     env:
       PUBLIC_SITE_URL: https://www.howlearn.kr
       PUBLIC_MATH_SITE_URL: https://math.howlearn.kr
+      PUBLIC_CONTACT_EMAIL: contact@howlearn.kr
+      PUBLIC_ADSENSE_PUBLISHER_ID: pub-0000000000000000
       FORMSPREE_FORM_ID: ci-placeholder
       CF_PAGES: "1"
     steps:
@@ -33,6 +35,9 @@ jobs:
 
       - name: Validate redirects
         run: npm run redirects:validate
+
+      - name: Validate content body length
+        run: npm run content:validate-body
 
       - name: Run unit tests
         run: npm run test:unit

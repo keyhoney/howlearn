@@ -1,0 +1,64 @@
+---
+const CONSENT_KEY = 'howlearn-cookie-consent';
+---
+
+<div
+  id="cookie-consent-banner"
+  class="fixed inset-x-0 bottom-0 z-50 hidden border-t border-[var(--border)] bg-[var(--card)] p-4 shadow-lg sm:p-5"
+  role="dialog"
+  aria-live="polite"
+  aria-label="쿠키 안내"
+>
+  <div class="container mx-auto flex max-w-7xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <p class="text-sm text-[var(--fg-muted)]">
+      HowLearn은 서비스 개선을 위해 Google Analytics를 사용할 수 있습니다. 자세한 내용은
+      <a href="/cookies" class="underline hover:text-[var(--accent)]">쿠키 정책</a>을 참고해 주세요.
+    </p>
+    <div class="flex shrink-0 flex-wrap gap-2">
+      <button type="button" id="cookie-consent-essential" class="app-btn-secondary min-h-10 px-4 text-sm">
+        필수만
+      </button>
+      <button type="button" id="cookie-consent-accept" class="app-btn-primary min-h-10 px-4 text-sm">
+        분석 허용
+      </button>
+    </div>
+  </div>
+</div>
+
+<script is:inline define:vars={{ CONSENT_KEY }}>
+  (function () {
+    const banner = document.getElementById('cookie-consent-banner');
+    const acceptBtn = document.getElementById('cookie-consent-accept');
+    const essentialBtn = document.getElementById('cookie-consent-essential');
+
+    function hideBanner() {
+      banner?.classList.add('hidden');
+    }
+
+    function persistConsent(value) {
+      try {
+        localStorage.setItem(CONSENT_KEY, value);
+      } catch {
+        /* ignore */
+      }
+      window.dispatchEvent(new CustomEvent('howlearn:cookie-consent', { detail: { value } }));
+      hideBanner();
+    }
+
+    function readConsent() {
+      try {
+        return localStorage.getItem(CONSENT_KEY);
+      } catch {
+        return null;
+      }
+    }
+
+    const existing = readConsent();
+    if (!existing) {
+      banner?.classList.remove('hidden');
+    }
+
+    acceptBtn?.addEventListener('click', () => persistConsent('analytics'));
+    essentialBtn?.addEventListener('click', () => persistConsent('essential'));
+  })();
+</script>

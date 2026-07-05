@@ -18,7 +18,7 @@ import {
 } from '../../lib/seo';
 import { buildContentPageDescription, buildContentPageTitle } from '../../lib/content-seo';
 import { resolveOgImageUrl } from '../../lib/og-image';
-import HiddenRepresentativeImage from '../../components/HiddenRepresentativeImage.astro';
+import ArticleHeroImage from '../../components/content/ArticleHeroImage.astro';
 import { SITE_URL } from '../../consts';
 
 export const getStaticPaths = (async () => {
@@ -41,7 +41,7 @@ if (!entry) {
   return Astro.redirect('/guides');
 }
 const { Content, headings } = await render(entry);
-const { title, summary, description: legacyDescription, intro, publishedAt, faq, references, coverImage, seoTitle, seoDescription } =
+const { title, summary, description: legacyDescription, intro, publishedAt, updatedAt, author, faq, references, coverImage, seoTitle, seoDescription } =
   entry.data;
 const description = seoDescription ?? summary ?? legacyDescription ?? intro ?? title;
 const pageTitle = buildContentPageTitle({
@@ -89,6 +89,8 @@ const jsonLd = [
     path: pagePath,
     image: pageOgImage,
     datePublished: publishedAt,
+    dateModified: updatedAt,
+    author,
   }),
   buildBreadcrumbJsonLd([
     { name: '홈', item: SITE_URL },
@@ -107,7 +109,7 @@ const jsonLd = [
 
 <MathLayout title={pageTitle} description={pageDescription} image={pageOgImage} jsonLd={jsonLd}>
   <article class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8" data-concept-tooltip-root data-reading-progress-root>
-    <HiddenRepresentativeImage src={pageOgImage} />
+    <ArticleHeroImage src={pageOgImage} alt={title} />
     <div class="hidden" aria-hidden="true">
       <span data-pagefind-meta="type">guide</span>
       {entry.data.categories?.map((category) => <span data-pagefind-meta="categories">{category}</span>)}

@@ -1,0 +1,23 @@
+---
+import { OG_IMAGE_HEIGHT, OG_IMAGE_WIDTH } from '../../lib/og-image';
+
+interface Props {
+  src: string;
+  alt: string;
+}
+
+const { src, alt } = Astro.props;
+---
+
+<figure class="mb-8 overflow-hidden rounded-sm border border-[var(--card-border)] bg-[var(--surface-2)]">
+  <img
+    src={src}
+    alt={alt}
+    width={OG_IMAGE_WIDTH}
+    height={OG_IMAGE_HEIGHT}
+    decoding="async"
+    loading="eager"
+    fetchpriority="high"
+    class="h-auto w-full object-cover"
+  />
+</figure>

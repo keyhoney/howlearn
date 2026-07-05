@@ -19,6 +19,3 @@ export async function validateLegacyMathRedirects(filePath = REDIRECTS_PATH): Pr
     );
   }
 }
-
-await validateLegacyMathRedirects();
-console.log('legacy math redirect rules OK');
