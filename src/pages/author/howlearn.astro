@@ -9,23 +9,36 @@ const jsonLd = [buildPersonJsonLd()];
 <BaseLayout
   title={`${PRIMARY_AUTHOR.name} · 저자 소개`}
   description={PRIMARY_AUTHOR.summary}
+  image={PRIMARY_AUTHOR.image}
   jsonLd={jsonLd}
 >
   <section class="app-content-wrap">
     <header class="app-card p-6">
-      <p class="text-sm font-medium text-[var(--accent)]">저자 프로필</p>
-      <h1 class="app-section-title mt-2">{PRIMARY_AUTHOR.name}</h1>
-      <p class="mt-2 text-sm font-medium text-[var(--fg)]">{PRIMARY_AUTHOR.title}</p>
-      <p class="mt-3 text-sm leading-relaxed text-[var(--fg-muted)]">
-        {PRIMARY_AUTHOR.summary}
-      </p>
-      <div class="mt-4 flex flex-wrap gap-2">
-        <a href="/about" class="app-btn-secondary inline-flex min-h-10 items-center px-4 text-sm">
-          HowLearn 소개
-        </a>
-        <a href="/guides" class="app-btn-primary inline-flex min-h-10 items-center px-4 text-sm">
-          학부모 가이드 보기
-        </a>
+      <div class="flex flex-col gap-5 sm:flex-row sm:items-start">
+        <img
+          src={PRIMARY_AUTHOR.image}
+          alt={PRIMARY_AUTHOR.imageAlt}
+          width="160"
+          height="200"
+          class="h-44 w-36 shrink-0 rounded-sm border border-[var(--card-border)] object-cover object-top shadow-sm"
+          loading="eager"
+        />
+        <div class="min-w-0 flex-1">
+          <p class="text-sm font-medium text-[var(--accent)]">저자 프로필</p>
+          <h1 class="app-section-title mt-2">{PRIMARY_AUTHOR.name}</h1>
+          <p class="mt-2 text-sm font-medium text-[var(--fg)]">{PRIMARY_AUTHOR.title}</p>
+          <p class="mt-3 text-sm leading-relaxed text-[var(--fg-muted)]">
+            {PRIMARY_AUTHOR.summary}
+          </p>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <a href="/about" class="app-btn-secondary inline-flex min-h-10 items-center px-4 text-sm">
+              HowLearn 소개
+            </a>
+            <a href="/guides" class="app-btn-primary inline-flex min-h-10 items-center px-4 text-sm">
+              학부모 가이드 보기
+            </a>
+          </div>
+        </div>
       </div>
     </header>
 

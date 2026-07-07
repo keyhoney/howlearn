@@ -1,3 +1,5 @@
+import { BOOKS_SECTION_PUBLIC } from '../consts';
+
 /** sitemap·robots noindex에서 제외할 경로 (정확 일치) */
 const NOINDEX_EXACT = new Set([
   '/login',
@@ -5,7 +7,11 @@ const NOINDEX_EXACT = new Set([
 ]);
 
 /** sitemap·robots noindex에서 제외할 경로 접두사 */
-const NOINDEX_PREFIXES = ['/edit/', '/admin/'] as const;
+const NOINDEX_PREFIXES = [
+  '/edit/',
+  '/admin/',
+  ...(!BOOKS_SECTION_PUBLIC ? (['/books'] as const) : []),
+] as const;
 
 function normalizePathname(pathname: string): string {
   if (pathname.length > 1 && pathname.endsWith('/')) {

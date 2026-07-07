@@ -1,7 +1,7 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
 import AppLayoutShell from './AppLayoutShell.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { BOOKS_SECTION_PUBLIC, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import { getLayoutContext } from './layout-utils';
 
 interface Props {
@@ -21,10 +21,11 @@ const {
 } = Astro.props;
 const pageTitle = title === SITE_TITLE ? SITE_TITLE : `${title} | ${SITE_TITLE}`;
 const { pathname } = getLayoutContext(Astro.url);
+const pagefindIgnore = !BOOKS_SECTION_PUBLIC && pathname.startsWith('/books');
 ---
 
 <!doctype html>
-<html lang="ko">
+<html lang="ko" data-pagefind-ignore={pagefindIgnore || undefined}>
   <head>
     <BaseHead title={pageTitle} description={description} image={image} noindex={noindex} />
     {jsonLd.map((schema) => <script type="application/ld+json" set:html={JSON.stringify(schema)} />)}

@@ -625,6 +625,12 @@ html.dark .exam-problem-page .prose blockquote.hl-exam-bogi,
   color: #ffffff;
 }
 
+.app-sidebar-recent-reads {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--sidebar-border);
+}
+
 .app-sidebar-link svg {
   flex-shrink: 0;
 }

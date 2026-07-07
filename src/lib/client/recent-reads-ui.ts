@@ -31,13 +31,22 @@ export function initRecentReads(): void {
 
     root.classList.remove('hidden');
     empty?.classList.add('hidden');
+    const variant = root.dataset.recentReadsVariant ?? 'default';
+    const isSidebar = variant === 'sidebar';
+    const linkClass = isSidebar
+      ? 'block rounded-sm px-2 py-2 text-sm text-[var(--sidebar-fg)] hover:bg-[var(--sidebar-bg-active)]'
+      : 'block rounded-sm px-2 py-2 text-sm text-[var(--fg)] hover:bg-[var(--surface-2)]';
+    const labelClass = isSidebar
+      ? 'mt-0.5 block text-xs text-[var(--sidebar-fg-muted)]'
+      : 'mt-0.5 block text-xs text-[var(--fg-muted)]';
+
     list.innerHTML = items
       .map((item) => {
         const label = domainLabels[item.domain] ?? '콘텐츠';
         return `<li>
-          <a href="${escapeHtml(item.url)}" class="block rounded-sm px-2 py-2 text-sm text-[var(--fg)] hover:bg-[var(--surface-2)]">
+          <a href="${escapeHtml(item.url)}" class="${linkClass}">
             <span class="block truncate font-medium">${escapeHtml(item.title)}</span>
-            <span class="mt-0.5 block text-xs text-[var(--fg-muted)]">${escapeHtml(label)}</span>
+            <span class="${labelClass}">${escapeHtml(label)}</span>
           </a>
         </li>`;
       })

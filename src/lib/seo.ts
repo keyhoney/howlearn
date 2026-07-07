@@ -1,5 +1,5 @@
 import { SITE_TITLE, SITE_URL } from '../consts';
-import { PRIMARY_AUTHOR, getAuthorProfileUrl, resolveAuthorName } from './author';
+import { PRIMARY_AUTHOR, getAuthorImageUrl, getAuthorProfileUrl, resolveAuthorName } from './author';
 
 type Crumb = { name: string; item: string };
 
@@ -40,6 +40,7 @@ export function buildArticleJsonLd(params: {
       name: authorName,
       jobTitle: PRIMARY_AUTHOR.title,
       url: getAuthorProfileUrl(),
+      image: getAuthorImageUrl(),
     },
     publisher: {
       '@type': 'Organization',
@@ -92,6 +93,7 @@ export function buildPersonJsonLd() {
     jobTitle: PRIMARY_AUTHOR.title,
     description: PRIMARY_AUTHOR.summary,
     url: getAuthorProfileUrl(),
+    image: getAuthorImageUrl(),
     worksFor: {
       '@type': 'Organization',
       name: SITE_TITLE,
@@ -112,6 +114,7 @@ export function buildOrganizationJsonLd() {
       '@type': 'Person',
       name: PRIMARY_AUTHOR.name,
       url: getAuthorProfileUrl(),
+      image: getAuthorImageUrl(),
     },
   };
 }
@@ -122,7 +125,7 @@ export function buildWebSiteJsonLd() {
     '@type': 'WebSite',
     name: SITE_TITLE,
     url: SITE_URL,
-    description: '학습 과학 기반 가이드, 개념 해설, 수학 학습 칼럼과 도서 추천',
+    description: '학습 과학 기반 가이드, 개념 해설, 수학 학습 칼럼',
     inLanguage: 'ko',
   };
 }

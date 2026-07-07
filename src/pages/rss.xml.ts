@@ -1,7 +1,7 @@
 import rss from '@astrojs/rss';
 import type { APIRoute } from 'astro';
 import { SITE_DESCRIPTION, SITE_TITLE, SITE_URL } from '../consts';
-import { getAllContent } from '../lib/content-utils';
+import { getDiscoverableContent } from '../lib/content-utils';
 import {
   OG_IMAGE_HEIGHT,
   OG_IMAGE_WIDTH,
@@ -30,10 +30,10 @@ function mediaContentTag(imageUrl: string): string {
   return `<media:content url="${url}" medium="image" type="${type}" width="${OG_IMAGE_WIDTH}" height="${OG_IMAGE_HEIGHT}"/>`;
 }
 
-/** guides, concepts, books, columns (published) — problems·essay-problems는 제외 */
+/** guides, concepts, columns (published) — books·problems·essay-problems는 제외 */
 export const GET: APIRoute = async (context) => {
   const site = String(context.site ?? SITE_URL);
-  const items = await getAllContent();
+  const items = await getDiscoverableContent();
   const feedItems = items
     .map((item) => {
       const imageUrl = toAbsoluteOgImageUrl(

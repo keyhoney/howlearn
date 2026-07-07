@@ -7,6 +7,7 @@
  */
 
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
+import { BOOKS_SECTION_PUBLIC } from '../consts';
 import {
   buildConceptLinkRegistry,
   buildConceptMentions,
@@ -94,6 +95,14 @@ export async function getPublishedColumns() {
 }
 
 export type ContentDomain = 'guides' | 'concepts' | 'books' | 'columns';
+
+function isPubliclyDiscoverableEntry(entry: { collection: string }): boolean {
+  return BOOKS_SECTION_PUBLIC || entry.collection !== 'books';
+}
+
+export function filterDiscoverableContent<T extends { collection: string }>(entries: T[]): T[] {
+  return entries.filter(isPubliclyDiscoverableEntry);
+}
 export type AnyContentEntry =
   | CollectionEntry<'guides'>
   | CollectionEntry<'concepts'>
@@ -135,6 +144,11 @@ export async function getAllContent(): Promise<AnyContentEntry[]> {
     getPublishedColumns(),
   ]);
   return [...guides, ...concepts, ...books, ...columns];
+}
+
+/** 네비·검색·RSS 등 공개 탐색 경로용 (도서 섹션 비공개 시 books 제외) */
+export async function getDiscoverableContent(): Promise<AnyContentEntry[]> {
+  return filterDiscoverableContent(await getAllContent());
 }
 
 export async function getContentBySlug(
@@ -208,7 +222,7 @@ export async function getRelatedContent(
   item: AnyContentEntry,
   limit = 6,
 ): Promise<AnyContentEntry[]> {
-  const all = await getAllContent();
+  const all = filterDiscoverableContent(await getAllContent());
   const currentContentId = toContentIndexId(item);
   const manualIds = item.data.relatedContentIds ?? [];
   const byContentId = new Map(all.map((entry) => [toContentIndexId(entry), entry]));

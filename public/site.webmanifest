@@ -1,7 +1,7 @@
 {
   "name": "HowLearn",
   "short_name": "HowLearn",
-  "description": "학습 과학 기반 가이드와 수학 문제 풀이를 통합한 학습 플랫폼",
+  "description": "학습 과학 기반 가이드, 개념 해설, 수학 학습 칼럼",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#111827",

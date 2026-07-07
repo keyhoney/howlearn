@@ -6,6 +6,8 @@ export const PRIMARY_AUTHOR = {
   title: '현직 수학 교사 · 중등 정교사(수학)',
   summary:
     '학습과학 연구와 수학교육 현장 경험을 연결해 HowLearn 콘텐츠를 집필·검토합니다.',
+  image: '/images/author/howlearn.png',
+  imageAlt: '주기헌 프로필 사진',
   credentials: [
     '한국교원대학교 수학교육과 졸업',
     '2014년부터 현직 수학 교사',
@@ -18,6 +20,10 @@ export const PRIMARY_AUTHOR = {
 
 export function getAuthorProfileUrl(slug = PRIMARY_AUTHOR.slug): string {
   return new URL(`/author/${slug}`, SITE_URL).toString();
+}
+
+export function getAuthorImageUrl(): string {
+  return new URL(PRIMARY_AUTHOR.image, SITE_URL).toString();
 }
 
 export function resolveAuthorName(author?: string): string {
